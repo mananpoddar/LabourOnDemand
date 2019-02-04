@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/label_job"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:enabled="false"
+        android:text="Skill"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/work_et_skill"
+        app:layout_constraintTop_toTopOf="@+id/work_et_skill" />
+
+    <EditText
+        android:id="@+id/work_et_skill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:focusable="false"
+        android:inputType="text"
+        android:text="Carpenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/label_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="Rating"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/work_rb"
+        app:layout_constraintStart_toStartOf="@+id/work_rb" />
+
+    <RatingBar
+        android:id="@+id/work_rb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/work_et_skill" />
+
+</android.support.constraint.ConstraintLayout>

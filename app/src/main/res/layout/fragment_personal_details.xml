@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <EditText
+        android:id="@+id/personal_et_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:textSize="20sp"
+        android:focusable="false"
+        android:inputType="phone"
+        android:text="96328658"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/personal_et_email" />
+
+    <EditText
+        android:id="@+id/personal_et_dob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="20sp"
+        android:ems="10"
+        android:focusable="false"
+        android:inputType="number"
+        android:text="27/01/1999"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/personal_et_phone" />
+
+    <EditText
+        android:id="@+id/personal_et_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:textSize="20sp"
+        android:inputType="textEmailAddress"
+        android:text="Email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:text="email"
+        app:layout_constraintStart_toStartOf="@+id/personal_et_email"
+        app:layout_constraintTop_toTopOf="@+id/personal_et_email"
+        android:enabled="false"
+        android:textSize="10sp"/>
+
+    <TextView
+        android:id="@+id/phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="phone"
+        app:layout_constraintStart_toStartOf="@+id/personal_et_phone"
+        app:layout_constraintTop_toTopOf="@+id/personal_et_phone"
+        android:enabled="false"
+        android:textSize="10sp"/>
+
+    <TextView
+        android:id="@+id/personal_tv_dob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dob"
+        app:layout_constraintStart_toStartOf="@+id/personal_et_dob"
+        app:layout_constraintTop_toTopOf="@+id/personal_et_dob"
+        android:enabled="false"
+        android:textSize="10sp"/>
+
+</android.support.constraint.ConstraintLayout>

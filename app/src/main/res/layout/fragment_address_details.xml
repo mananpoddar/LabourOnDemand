@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/address_details_et_a1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="14"
+        android:inputType="textPostalAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:focusable="false"
+        android:text="AddressLine2"/>
+
+    <EditText
+        android:id="@+id/address_details_et_a2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:ems="14"
+        android:inputType="textPostalAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/address_details_et_a1"
+        android:focusable="false"
+        android:text="AddressLine2"/>
+
+    <EditText
+        android:id="@+id/address_details_et_a3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:ems="14"
+        android:inputType="textPostalAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/address_details_et_a2"
+        android:focusable="false"
+        android:text="AddressLine1"/>
+
+    <TextView
+        android:id="@+id/line1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="AddressLine2"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/address_details_et_a1"
+        app:layout_constraintTop_toTopOf="@+id/address_details_et_a1" />
+
+    <TextView
+        android:id="@+id/line2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="AddressLine2"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/address_details_et_a2"
+        app:layout_constraintTop_toTopOf="@+id/address_details_et_a2" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="AddressLine3"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/address_details_et_a3"
+        app:layout_constraintTop_toTopOf="@+id/address_details_et_a3" />
+
+    <EditText
+        android:id="@+id/address_details_et_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:ems="6"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/address_details_et_a3"
+        android:focusable="false"
+        android:text="Bangalore" />
+
+    <TextView
+        android:id="@+id/city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pincode"
+        app:layout_constraintStart_toStartOf="@+id/address_details_et_city"
+        app:layout_constraintTop_toTopOf="@+id/address_details_et_city"
+        android:textSize="10sp"
+        android:enabled="false"/>
+
+
+
+</android.support.constraint.ConstraintLayout>

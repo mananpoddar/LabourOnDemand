@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "417069227041",
+    "firebase_url": "https://labourondemand-8e636.firebaseio.com",
+    "project_id": "labourondemand-8e636",
+    "storage_bucket": "labourondemand-8e636.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417069227041:android:5819e84e872453cc",
+        "android_client_info": {
+          "package_name": "com.example.labourondemand"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "417069227041-2dov03gvkqfphfjd8pt53c7edlrgmo63.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.labourondemand",
+            "certificate_hash": "0b55ebde84e2c7c53f525396bca8ca4fefec15cb"
+          }
+        },
+        {
+          "client_id": "417069227041-m6qkc87vu5ujcl1dcrkqf62ju4avnvpe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzIchBSvfuQxql0DtRnb5UIxyLFOYd4FE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417069227041-m6qkc87vu5ujcl1dcrkqf62ju4avnvpe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
