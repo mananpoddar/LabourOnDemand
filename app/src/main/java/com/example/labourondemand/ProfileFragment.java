@@ -22,7 +22,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         TabLayout tabLayout = view.findViewById(R.id.tablayout);
-        ImageButton editButton = view.findViewById(R.id.edit_button);
+        ImageButton editButton = view.findViewById(R.id.profile_iv_edit);
         //tabLayout.addTab(tabLayout.newTab().setText("Personal"));
         //tabLayout.addTab(tabLayout.newTab().setText("Address"));
         //if(isLabourer) tabLayout.addTab(tabLayout.newTab().setText("Work"));
