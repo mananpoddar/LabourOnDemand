@@ -19,13 +19,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -68,13 +64,13 @@ public class FormActivity extends AppCompatActivity {
 
         services.setSkill(getIntent().getExtras().getString("skill"));
 
-        viewPager = findViewById(R.id.pd_vp);
-        floatingActionButton = findViewById(R.id.form_fab_add);
-        description = findViewById(R.id.form_et_pd);
-        addressLine1 = findViewById(R.id.form_et_a1);
-        addressLine2 = findViewById(R.id.form_et_a2);
-        landmark = findViewById(R.id.form_et_landmark);
-        city = findViewById(R.id.form_et_city);
+        viewPager = findViewById(R.id.activity_form_vp);
+        floatingActionButton = findViewById(R.id.activity_form_fab);
+        description = findViewById(R.id.activity_form_et_description);
+        addressLine1 = findViewById(R.id.activity_form_et_address1);
+        addressLine2 = findViewById(R.id.activity_form_et_address2);
+        landmark = findViewById(R.id.activity_form_et_landmark);
+        city = findViewById(R.id.activity_form_et_city);
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();

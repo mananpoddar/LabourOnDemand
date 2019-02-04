@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,12 +28,12 @@ public class CustomerMainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        carpenter = findViewById(R.id.Carpenter_image);
-        plumber = findViewById(R.id.Plumber_image);
-        painter = findViewById(R.id.Painter_image);
-        electrician = findViewById(R.id.Electricain_image);
-        housemaid = findViewById(R.id.Housemaid_image);
-        constructionWorker = findViewById(R.id.Construction_Worker_image);
+        carpenter = findViewById(R.id.dashboard_ib_carpenter);
+        plumber = findViewById(R.id.dashboard_ib_plumber);
+        painter = findViewById(R.id.dashboard_ib_painter);
+        electrician = findViewById(R.id.dashboard_ib_electrician);
+        housemaid = findViewById(R.id.dashboard_ib_housemaid);
+        constructionWorker = findViewById(R.id.dashboard_ib_construction_worker);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
