@@ -1,5 +1,6 @@
 package com.example.labourondemand;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,9 +16,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private ImageButton carpenter, plumber, electrician, housemaid, constructionWorker, painter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,14 @@ public class CustomerMainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        carpenter = findViewById(R.id.Carpenter_image);
+        plumber = findViewById(R.id.Plumber_image);
+        painter = findViewById(R.id.Painter_image);
+        electrician = findViewById(R.id.Electricain_image);
+        housemaid = findViewById(R.id.Housemaid_image);
+        constructionWorker = findViewById(R.id.Construction_Worker_image);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -44,9 +56,56 @@ public class CustomerMainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        final Intent intent = new Intent(this,FormActivity.class);
+
+        carpenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent.putExtra("skill","carpenter");
+                startActivity(intent);
+            }
+        });
+        painter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent.putExtra("skill","painter");
+                startActivity(intent);
+            }
+        });
+        electrician.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent.putExtra("skill","electrician");
+                startActivity(intent);
+            }
+        });
+        plumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent.putExtra("skill","plumber");
+                startActivity(intent);
+            }
+        });
+        housemaid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent.putExtra("skill","housemaid");
+                startActivity(intent);
+            }
+        });
+        constructionWorker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent.putExtra("skill","constructionWorker");
+                startActivity(intent);
+            }
+        });
+
+
     }
 
-    public void loadFragment(Fragment fragment, int i) {
+    /*public void loadFragment(Fragment fragment, int i) {
         // load fragment
         if (i == 0) {
             removeAllFragments(getSupportFragmentManager());
@@ -60,13 +119,13 @@ public class CustomerMainActivity extends AppCompatActivity
             transaction.addToBackStack(null);
             transaction.commit();
         }
-    }
-
+    }*/
+/*
     private static void removeAllFragments(FragmentManager fragmentManager) {
         while (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStackImmediate();
         }
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
