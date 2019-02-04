@@ -59,11 +59,11 @@ public class AddressDetailsFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            user = bundle.getParcelable("user");
+            user = bundle.getParcelable("labourer");
         }
     }
 
-    private User user;
+    private User user = new User();
     private EditText a1,a2,a3,city;
 
     @Override
