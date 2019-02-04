@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:id="@+id/parent_layout"
+    android:background="@drawable/border_for_recycler_view_items">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/listItemLabourer_img_customerProfile"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/listItemLabourer_img_locationFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:text="Bombay"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/listItemLabourer_img_customerProfile"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/listItemLabourer_img_locationTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:text="Pune"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/listItemLabourer_img_locationFrom"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="From"
+        app:layout_constraintBottom_toTopOf="@+id/listItemLabourer_img_locationFrom"
+        app:layout_constraintStart_toStartOf="@+id/listItemLabourer_img_locationFrom" />
+
+    <TextView
+        android:id="@+id/to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To"
+        app:layout_constraintBottom_toTopOf="@+id/listItemLabourer_img_locationTo"
+        app:layout_constraintStart_toStartOf="@+id/listItemLabourer_img_locationTo" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/listItemLabourer_img_locationTo"
+        app:layout_constraintStart_toEndOf="@+id/listItemLabourer_img_customerProfile"
+        app:layout_constraintTop_toBottomOf="@+id/listItemLabourer_img_locationFrom" />
+
+    <TextView
+        android:id="@+id/customer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Shanthanu"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="@+id/listItemLabourer_img_customerProfile"
+        app:layout_constraintStart_toStartOf="@+id/listItemLabourer_img_customerProfile"
+        app:layout_constraintTop_toBottomOf="@+id/listItemLabourer_img_customerProfile" />
+
+</android.support.constraint.ConstraintLayout>
