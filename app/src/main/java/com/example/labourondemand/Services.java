@@ -13,15 +13,13 @@ public class Services implements Parcelable {
 
     private String skill, customerUID, description, feedback, labourUID;
     private long customerAmount;
-    private List<String> images= new ArrayList<>();
+    private ArrayList<String> images;
     private GeoPoint from, to;
-    private String a1, a2, landmark, city;
+    private String a1, a2, landmark, city, serviceID;
     private HashMap<String, Long> labourerResponses;
 
-    public Services(String skill, String customerUID, String description, String feedback, String labourUID,
-                    long customerAmount, List<String> images, GeoPoint from, GeoPoint to, String a1, String a2,
 
-                    String landmark, String city, HashMap<String, Long> labourerResponses) {
+    public Services(String skill, String customerUID, String description, String feedback, String labourUID, long customerAmount, ArrayList<String> images, GeoPoint from, GeoPoint to, String a1, String a2, String landmark, String city, String serviceID, HashMap<String, Long> labourerResponses) {
         this.skill = skill;
         this.customerUID = customerUID;
         this.description = description;
@@ -35,8 +33,14 @@ public class Services implements Parcelable {
         this.a2 = a2;
         this.landmark = landmark;
         this.city = city;
+        this.serviceID = serviceID;
         this.labourerResponses = labourerResponses;
     }
+
+    public Services() {
+        this.images = new ArrayList<>();
+    }
+
 
     protected Services(Parcel in) {
         skill = in.readString();
@@ -50,6 +54,24 @@ public class Services implements Parcelable {
         a2 = in.readString();
         landmark = in.readString();
         city = in.readString();
+        serviceID = in.readString();
+    }
+
+    public static final Creator<Services> CREATOR = new Creator<Services>() {
+        @Override
+        public Services createFromParcel(Parcel in) {
+            return new Services(in);
+        }
+
+        @Override
+        public Services[] newArray(int size) {
+            return new Services[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
@@ -65,24 +87,8 @@ public class Services implements Parcelable {
         dest.writeString(a2);
         dest.writeString(landmark);
         dest.writeString(city);
+        dest.writeString(serviceID);
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Services> CREATOR = new Creator<Services>() {
-        @Override
-        public Services createFromParcel(Parcel in) {
-            return new Services(in);
-        }
-
-        @Override
-        public Services[] newArray(int size) {
-            return new Services[size];
-        }
-    };
 
     public String getSkill() {
         return skill;
@@ -98,6 +104,14 @@ public class Services implements Parcelable {
 
     public void setCustomerUID(String customerUID) {
         this.customerUID = customerUID;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getFeedback() {
@@ -128,7 +142,7 @@ public class Services implements Parcelable {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(ArrayList<String> images) {
         this.images = images;
     }
 
@@ -146,22 +160,6 @@ public class Services implements Parcelable {
 
     public void setTo(GeoPoint to) {
         this.to = to;
-    }
-
-    public HashMap<String, Long> getLabourerResponses() {
-        return labourerResponses;
-    }
-
-    public void setLabourerResponses(HashMap<String, Long> labourerResponses) {
-        this.labourerResponses = labourerResponses;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getA1() {
@@ -194,5 +192,21 @@ public class Services implements Parcelable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getServiceID() {
+        return serviceID;
+    }
+
+    public void setServiceID(String serviceID) {
+        this.serviceID = serviceID;
+    }
+
+    public HashMap<String, Long> getLabourerResponses() {
+        return labourerResponses;
+    }
+
+    public void setLabourerResponses(HashMap<String, Long> labourerResponses) {
+        this.labourerResponses = labourerResponses;
     }
 }
