@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/listItemLabourer_img_locationFrom"
+        android:id="@+id/listItemLabourer_tv_locationFrom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/listItemLabourer_img_locationTo"
+        android:id="@+id/listItemLabourer_tv_locationTo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -40,7 +40,7 @@
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/listItemLabourer_img_locationFrom"
+        app:layout_constraintStart_toEndOf="@+id/listItemLabourer_tv_locationFrom"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -48,16 +48,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="From"
-        app:layout_constraintBottom_toTopOf="@+id/listItemLabourer_img_locationFrom"
-        app:layout_constraintStart_toStartOf="@+id/listItemLabourer_img_locationFrom" />
+        app:layout_constraintBottom_toTopOf="@+id/listItemLabourer_tv_locationFrom"
+        app:layout_constraintStart_toStartOf="@+id/listItemLabourer_tv_locationFrom" />
 
     <TextView
         android:id="@+id/to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="To"
-        app:layout_constraintBottom_toTopOf="@+id/listItemLabourer_img_locationTo"
-        app:layout_constraintStart_toStartOf="@+id/listItemLabourer_img_locationTo" />
+        app:layout_constraintBottom_toTopOf="@+id/listItemLabourer_tv_locationTo"
+        app:layout_constraintStart_toStartOf="@+id/listItemLabourer_tv_locationTo" />
 
     <RatingBar
         android:id="@+id/ratingBar"
@@ -71,9 +71,9 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/listItemLabourer_img_locationTo"
+        app:layout_constraintEnd_toEndOf="@+id/listItemLabourer_tv_locationTo"
         app:layout_constraintStart_toEndOf="@+id/listItemLabourer_img_customerProfile"
-        app:layout_constraintTop_toBottomOf="@+id/listItemLabourer_img_locationFrom" />
+        app:layout_constraintTop_toBottomOf="@+id/listItemLabourer_tv_locationFrom" />
 
     <TextView
         android:id="@+id/customer_name"
