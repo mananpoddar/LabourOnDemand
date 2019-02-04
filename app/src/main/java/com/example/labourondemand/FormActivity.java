@@ -3,6 +3,7 @@ package com.example.labourondemand;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -16,20 +17,30 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import id.zelory.compressor.Compressor;
 
 public class FormActivity extends AppCompatActivity {
 
@@ -42,11 +53,12 @@ public class FormActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private FirebaseStorage storage;
     private Uri mainImageURI;
-    private ArrayList<String> pictures = new ArrayList<>();
+    private ArrayList<Uri> pictures = new ArrayList<>();
     private FirebaseFirestore firebaseFirestore;
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
     private Slide slide;
+    private Bitmap compressedImageFile;
     private String TAG = FormActivity.class.getName();
 
     @Override
@@ -119,21 +131,103 @@ public class FormActivity extends AppCompatActivity {
 
     private void sendToFirebase() {
 
+        final ArrayList<String> uris = new ArrayList<>();
         HashMap<String, Object> map = new HashMap<>();
+
+        if(pictures.size()>0){
+            for(final Uri uri : pictures){
+                File newImageFile = new File(uri.getPath());
+                try {
+
+                    compressedImageFile = new Compressor(FormActivity.this)
+                            .setMaxHeight(160)
+                            .setMaxWidth(120)
+                            .setQuality(50)
+                            .compressToBitmap(newImageFile);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] thumbData = baos.toByteArray();
+
+                final UploadTask image_path = storageReference.child("services").child(pictures.indexOf(uri) + services.getServiceID() + ".jpg").putBytes(thumbData);
+
+                image_path.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        Log.d("inside fi", taskSnapshot.toString());
+                        storageReference.child("services").child(pictures.indexOf(uri) + services.getServiceID() + ".jpg").getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+
+                                        uris.add(uri.toString());
+                                        Log.d("uri",uri.toString()+"!");
+
+                                        if(uris.size() == pictures.size()){
+                                            HashMap<String, Object> images = new HashMap<>();
+                                            images.put("images",uris);
+                                            firebaseFirestore.collection("services").document(services.getServiceID()).set(images, SetOptions.merge())
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Log.d("done",uris.toString());
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.d("failure 1", e.toString());
+                                                        }
+                                                    });
+                                        }
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("failure 2", e.toString());
+
+                                        Toast.makeText(FormActivity.this, "(IMAGE Error uri) : " + e.toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Log.d("failure 3", e.toString());
+                        Toast.makeText(FormActivity.this ,"(IMAGE Error) : " + e, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+
+
+        }else {
+            map.put("images", new ArrayList<String>());
+        }
+
+
         map.put("labourUID","");
         map.put("customerUID",firebaseAuth.getUid());
         map.put("customeramount",0);
         map.put("description",services.getDescription());
         map.put("feedback","");
-        map.put("images", pictures);
+        //map.put("images", pictures);
         map.put("labourresponses", new HashMap<>());
         map.put("a1",services.getA1());
         map.put("a2",services.getA2());
         map.put("city",services.getCity());
         map.put("landmark",services.getLandmark());
-        map.put("description",services.getDescription());
 
-        firebaseFirestore.collection("services").document(services.getServiceID()).set(map)
+        firebaseFirestore.collection("services").document(services.getServiceID()).set(map,SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -198,7 +292,7 @@ public class FormActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
 
                 mainImageURI = result.getUri();
-                pictures.add(mainImageURI.toString());
+                pictures.add(mainImageURI);
                 slide.added(mainImageURI.toString());
                 viewPager.setCurrentItem(pictures.size()-1);
                 //viewPager.setAdapter(new Slide(getApplicationContext(), pictures));
