@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class ForgotPasswordActivity extends AppCompatActivity {
     private String TAG = ForgotPasswordActivity.class.getName();
     private Button send;
-    private TextView info;
     private EditText email;
     private FirebaseAuth auth;
     private String message = "Check your Inbox for an email with password reset link";
@@ -32,9 +31,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password);
 
         send = findViewById(R.id.forgot_password_send);
-        info = findViewById(R.id.forgot_password_infoText);
         email = findViewById(R.id.forgot_password_email);
-        info.setVisibility(View.INVISIBLE);
         auth = FirebaseAuth.getInstance();
 
 
