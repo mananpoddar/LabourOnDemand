@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimaryLight">
 
     <ProgressBar
         android:id="@+id/profile_pb"
@@ -54,7 +54,6 @@
         android:focusable="false"
         android:inputType="text"
         android:text="NAME"
-        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +64,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorPrimary"
+
         app:layout_constraintTop_toBottomOf="@+id/profile_et_name">
 
     </android.support.design.widget.TabLayout>

@@ -70,14 +70,13 @@ public class FormActivity extends AppCompatActivity {
 
         services.setSkill(getIntent().getExtras().getString("skill"));
 
-        viewPager = findViewById(R.id.pd_vp);
-        floatingActionButton = findViewById(R.id.form_fab_add);
-        description = findViewById(R.id.form_et_pd);
-        addressLine1 = findViewById(R.id.form_et_a1);
-        addressLine2 = findViewById(R.id.form_et_a2);
-        landmark = findViewById(R.id.form_et_landmark);
-        city = findViewById(R.id.form_et_city);
-        amount = findViewById(R.id.form_et_amount);
+        viewPager = findViewById(R.id.activity_form_vp);
+        floatingActionButton = findViewById(R.id.activity_form_fab);
+        description = findViewById(R.id.activity_form_et_description);
+        addressLine1 = findViewById(R.id.activity_form_et_address1);
+        addressLine2 = findViewById(R.id.activity_form_et_address2);
+        landmark = findViewById(R.id.activity_form_et_landmark);
+        city = findViewById(R.id.activity_form_et_city);
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
