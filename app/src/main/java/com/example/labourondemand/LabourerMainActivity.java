@@ -95,6 +95,8 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
+            Intent settings = new Intent(LabourerMainActivity.this,SettingsActivity.class);
+            startActivity(settings);
 
         } else if (id == R.id.nav_share) {
 

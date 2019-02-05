@@ -1,5 +1,6 @@
 package com.example.labourondemand;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -113,7 +114,8 @@ public class CustomerMainActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
+            Intent settings = new Intent(CustomerMainActivity.this,SettingsActivity.class);
+            startActivity(settings);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

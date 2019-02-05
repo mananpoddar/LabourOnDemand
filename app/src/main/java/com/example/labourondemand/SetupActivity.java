@@ -216,10 +216,10 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
     private void sendToFirebase() {
 
         progressBar.setVisibility(View.VISIBLE);
+        userId = firebaseAuth.getCurrentUser().getUid();
 
         if (isChanged) {
 
-            userId = firebaseAuth.getCurrentUser().getUid();
 
             File newImageFile = new File(mainImageURI.getPath());
             try {
@@ -295,9 +295,15 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
 
         }*/
 
+
         Map<String, Object> userMap = new HashMap<>();
+        if(download_uri != null) {
+            userMap.put("image", download_uri.toString());
+        }
+        else {
+            userMap.put("image", "null");
+        }
         userMap.put("name", name.getText().toString());
-        userMap.put("image", download_uri.toString());
         userMap.put("phone", phone.getText().toString());
         userMap.put("city", city.getText().toString());
         userMap.put("state", state.getText().toString());
