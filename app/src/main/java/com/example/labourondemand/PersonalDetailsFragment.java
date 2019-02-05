@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,12 +60,14 @@ public class PersonalDetailsFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            user = bundle.getParcelable("user");
+            user = bundle.getParcelable("labourer");
+            Log.d(TAG,"u"+user.getAddressLine1());
         }
     }
 
-    private User user;
+    private User user = new User();
     private EditText email, phone, dob;
+    private String TAG = PersonalDetailsFragment.class.getName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +80,8 @@ public class PersonalDetailsFragment extends Fragment {
         dob = view.findViewById(R.id.personal_et_dob);
 
         email.setText("email");
-        phone.setText(user.getPhone());
+        Log.d(TAG,user.getCity());
+        phone.setText(String.valueOf(user.getPhone()));
         dob.setText(user.getDob());
 
         return view;

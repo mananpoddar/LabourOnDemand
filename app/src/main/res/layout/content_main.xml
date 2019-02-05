@@ -1,13 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:id="@+id/customer_main_fl"
+    <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".CustomerMainActivity"
-    tools:showIn="@layout/app_bar_main">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MainActivity">
+
+
+            <TextView
+                android:id="@+id/dashboard_tv_skill"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="61dp"
+                android:layout_marginLeft="61dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="100dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="Category"
+                android:textSize="24sp"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+
+            <ImageButton
+                android:id="@+id/dashboard_ib_carpenter"
+                android:layout_width="149dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="42dp"
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="19dp"
+                android:layout_marginEnd="220dp"
+                android:layout_marginRight="220dp"
+                android:layout_marginBottom="358dp"
+                android:contentDescription="carpenter_image"
+                android:background="#ff5722"
+                android:onClick="open_description"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_tv_skill"
+                app:srcCompat="@drawable/carpenter" />
+
+
+            <TextView
+                android:id="@+id/dashboard_tv_carpenter"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:text="Carpenter"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_carpenter"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_carpenter"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_ib_carpenter" />
+
+            <ImageButton
+                android:id="@+id/dashboard_ib_painter"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="19dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="358dp"
+                android:onClick="open_description"
+                android:scaleType="centerCrop"
+                android:background="#ff5722"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.041"
+                app:layout_constraintStart_toEndOf="@+id/dashboard_ib_carpenter"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_tv_skill"
+                app:srcCompat="@drawable/painter" />
+
+            <TextView
+                android:id="@+id/dashboard_tv_painter"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:text="Painter"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_painter"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_painter"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_ib_painter" />
+
+
+            <ImageButton
+                android:id="@+id/dashboard_ib_construction_worker"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="210dp"
+                android:onClick="open_description"
+                android:scaleType="centerCrop"
+                android:background="#ff5722"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_carpenter"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_carpenter"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_tv_carpenter"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/images" />
+
+            <TextView
+                android:id="@+id/dashboard_tv_construction_worker"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:text="Construction_Worker"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_construction_worker"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_construction_worker"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_ib_construction_worker" />
+
+            <ImageButton
+                android:id="@+id/dashboard_ib_electrician"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:onClick="open_description"
+                android:background="#ff5722"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/dashboard_tv_construction_worker"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_painter"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_painter"
+                app:layout_constraintTop_toTopOf="@+id/dashboard_ib_construction_worker"
+                app:srcCompat="@drawable/electrician" />
+
+            <TextView
+                android:id="@+id/dashboard_tv_electrician"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:text="Electrician"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_electrician"
+                app:layout_constraintHorizontal_bias="0.565"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_electrician"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_ib_electrician" />
+
+            <ImageButton
+                android:id="@+id/dashboard_ib_housemaid"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="54dp"
+                android:onClick="open_description"
+                android:background="#ff5722"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_construction_worker"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_construction_worker"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_tv_construction_worker"
+                app:srcCompat="@drawable/housemaid" />
+
+            <TextView
+                android:id="@+id/dashboard_tv_house_maid"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:text="House_maid"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_housemaid"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_housemaid"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_ib_housemaid" />
+
+            <ImageButton
+                android:id="@+id/dashboard_ib_plumber"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:onClick="open_description"
+                android:background="#ff5722"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/dashboard_tv_house_maid"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_electrician"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_electrician"
+                app:layout_constraintTop_toTopOf="@+id/dashboard_ib_housemaid"
+                app:srcCompat="@drawable/plumber" />
+
+            <TextView
+                android:id="@+id/dashboard_tv_plumber"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:text="Plumber"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/dashboard_ib_plumber"
+                app:layout_constraintStart_toStartOf="@+id/dashboard_ib_plumber"
+                app:layout_constraintTop_toBottomOf="@+id/dashboard_ib_plumber" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>

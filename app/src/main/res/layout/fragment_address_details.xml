@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,14 +16,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorPrimary"
         android:ems="14"
-        android:inputType="textPostalAddress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:focusable="false"
-        android:text="AddressLine2"/>
+        android:inputType="textPostalAddress"
+        android:text="AddressLine1"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/address_details_et_a2"
@@ -25,6 +33,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
         android:layout_marginTop="8dp"
         android:ems="14"
         android:inputType="textPostalAddress"
@@ -38,22 +49,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorPrimary"
         android:ems="14"
-        android:inputType="textPostalAddress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address_details_et_a2"
         android:focusable="false"
-        android:text="AddressLine1"/>
+        android:inputType="textPostalAddress"
+        android:text="AddressLine3"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/address_details_et_a2" />
 
     <TextView
         android:id="@+id/line1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
-        android:text="AddressLine2"
+        android:text="AddressLine1"
         android:textSize="10sp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="@+id/address_details_et_a1"
         app:layout_constraintTop_toTopOf="@+id/address_details_et_a1" />
 
@@ -64,6 +80,9 @@
         android:enabled="false"
         android:text="AddressLine2"
         android:textSize="10sp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="@+id/address_details_et_a2"
         app:layout_constraintTop_toTopOf="@+id/address_details_et_a2" />
 
@@ -74,33 +93,81 @@
         android:enabled="false"
         android:text="AddressLine3"
         android:textSize="10sp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="@+id/address_details_et_a3"
         app:layout_constraintTop_toTopOf="@+id/address_details_et_a3" />
 
     <EditText
         android:id="@+id/address_details_et_city"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorPrimary"
         android:ems="6"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address_details_et_a3"
         android:focusable="false"
-        android:text="Bangalore" />
+        android:inputType="text"
+        android:text="Bangalore"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/address_details_et_a3" />
 
     <TextView
         android:id="@+id/city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pincode"
-        app:layout_constraintStart_toStartOf="@+id/address_details_et_city"
-        app:layout_constraintTop_toTopOf="@+id/address_details_et_city"
+        android:backgroundTint="@color/colorPrimary"
+        android:enabled="false"
+        android:text="City"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
         android:textSize="10sp"
-        android:enabled="false"/>
+        app:layout_constraintStart_toStartOf="@+id/address_details_et_city"
+        app:layout_constraintTop_toTopOf="@+id/address_details_et_city" />
 
 
+    <TextView
+        android:id="@+id/state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:enabled="false"
+        android:text="State"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/address_details_et_state"
+        app:layout_constraintTop_toTopOf="@+id/address_details_et_state" />
+
+    <EditText
+        android:id="@+id/address_details_et_state"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:ems="6"
+        android:focusable="false"
+        android:inputType="text"
+        android:text="Karnataka"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/address_details_et_city" />
+
+    <ImageView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_location_city_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/address_details_et_city"
+        app:layout_constraintStart_toEndOf="@+id/address_details_et_city"
+        app:layout_constraintTop_toTopOf="@+id/address_details_et_city" />
 
 </android.support.constraint.ConstraintLayout>
+
+</android.support.v4.widget.NestedScrollView>
