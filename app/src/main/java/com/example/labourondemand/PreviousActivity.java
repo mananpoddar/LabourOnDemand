@@ -6,18 +6,18 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class LabourerPreviousActivity extends LabourerMainActivity{
+public class PreviousActivity extends LabourerMainActivity{
 
 
     //vars (demo)
-    private ArrayList<String> mCustomerNames = new ArrayList<>();
+    private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mFroms = new ArrayList<>();
     private ArrayList<String> mTos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_labourer_previous);
+        setContentView(R.layout.activity_previous);
 
         initText();
         initRecyclerView();
@@ -27,15 +27,15 @@ public class LabourerPreviousActivity extends LabourerMainActivity{
     private void initText() {
         //Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
 
-        mCustomerNames.add("Shanthanu");
-        mCustomerNames.add("Varun");
-        mCustomerNames.add("Narayan");
-        mCustomerNames.add("Prajwal");
-        mCustomerNames.add("Manan");
-        mCustomerNames.add("Srivatsan");
-        mCustomerNames.add("dummy 1");
-        mCustomerNames.add("dummy 2");
-        mCustomerNames.add("dummy 3");
+        mNames.add("Shanthanu");
+        mNames.add("Varun");
+        mNames.add("Narayan");
+        mNames.add("Prajwal");
+        mNames.add("Manan");
+        mNames.add("Srivatsan");
+        mNames.add("dummy 1");
+        mNames.add("dummy 2");
+        mNames.add("dummy 3");
 
         mFroms.add("Bombay");
         mFroms.add("Delhi");
@@ -53,7 +53,7 @@ public class LabourerPreviousActivity extends LabourerMainActivity{
 
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.labourerPrevious_rec_view);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mCustomerNames, mFroms, mTos);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mNames, mFroms, mTos);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
