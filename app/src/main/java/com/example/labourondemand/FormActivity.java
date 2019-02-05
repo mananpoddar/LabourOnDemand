@@ -67,12 +67,12 @@ public class FormActivity extends CustomerMainActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*FrameLayout frameLayout = (FrameLayout)findViewById(R.id.content_main_fl);
+        //FrameLayout frameLayout = (FrameLayout)findViewById(R.id.content_main_fl);
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.activity_form, frameLayout, false);
-        drawerLayout.addView(view, 1);*/
+        View view = inflater.inflate(R.layout.activity_form, null, false);
+        frameLayout.addView(view, 1);
         //frameLayout.addView(view);
-        setContentView(R.layout.activity_form);
+        //setContentView(R.layout.activity_form);
 
         services.setSkill(getIntent().getExtras().getString("skill"));
         customer = (Customer) getIntent().getExtras().get("customer");

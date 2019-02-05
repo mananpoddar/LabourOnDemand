@@ -35,6 +35,7 @@ public class CustomerMainActivity extends AppCompatActivity
     protected DrawerLayout drawerLayout;
     private Intent intent;
     private String current;
+    protected  FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        frameLayout = findViewById(R.id.content_main_fl);
         carpenter = findViewById(R.id.dashboard_ib_carpenter);
         plumber = findViewById(R.id.dashboard_ib_plumber);
         painter = findViewById(R.id.dashboard_ib_painter);

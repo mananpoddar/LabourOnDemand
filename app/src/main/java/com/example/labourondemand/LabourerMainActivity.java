@@ -200,7 +200,8 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
             Intent intent = new Intent(this, ProfileActivity.class);
             /*Bundle bundle = new Bundle();
             bundle.putParcelable("labourer",labourer);*/
-            intent.putExtra("labourer", labourer);
+            intent.putExtra("user", labourer);
+            intent.putExtra("type",labourer);
             Log.d(tag, "labourer : " + labourer.getAddressLine1());
             startActivity(intent);
             finish();
