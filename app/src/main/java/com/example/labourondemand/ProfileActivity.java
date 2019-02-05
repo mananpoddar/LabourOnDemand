@@ -22,12 +22,14 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
 
     private Boolean isLabourer = false, isEditting;
     private Labourer labourer = new Labourer();
+    private Customer customer = new Customer();
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
     private String TAG = ProfileActivity.class.getName();
     private TextView name;
     private CircleImageView photo;
     private ProgressBar progressBar;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,15 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
 
         /*Bundle bundle = getIntent().getExtras().getBundle("labourer");*//*
         labourer = bundle.getParcelable("labourer");*/
-        labourer = (Labourer) getIntent().getParcelableExtra("labourer");
+        type = (String) getIntent().getExtras().get("type");
+        if(type.equals("labourer")){
+            isLabourer = true;
+            labourer = (Labourer) getIntent().getParcelableExtra("user");
+        }else{
+            //
+            customer = (Customer) getIntent().getParcelableExtra("user");
+        }
+
         Log.d(TAG,"labourer"+ labourer.getAddressLine1());
         Toast.makeText(getApplicationContext(),"Hurray",Toast.LENGTH_LONG).show();
 
@@ -73,7 +83,7 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
 
         viewPagerAdapter.addFragment(personalDetailsFragment, "Personal");
         viewPagerAdapter.addFragment(addressDetailsFragment, "Address");
-        if(labourer.getLabourer()) {
+        if(isLabourer) {
             viewPagerAdapter.addFragment(new WorkDetailsFragment(), "Work");
             viewPager.setOffscreenPageLimit(3);
         }
@@ -126,7 +136,7 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
         TextView city = findViewById(R.id.address_details_et_city);
         TextView state = findViewById(R.id.address_details_et_state);
         TextView skill = null;
-        if(user.getLabourer()) skill = findViewById(R.id.work_et_skill);
+        if(isLabourer) skill = findViewById(R.id.work_et_skill);
         if(isEditting) {
             name.setFocusableInTouchMode(true);
             emailid.setFocusableInTouchMode(true);
@@ -137,7 +147,7 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
             address3.setFocusableInTouchMode(true);
             city.setFocusableInTouchMode(true);
             state.setFocusableInTouchMode(true);
-            if(user.getLabourer()) skill.setFocusableInTouchMode(true);
+            if(isLabourer) skill.setFocusableInTouchMode(true);
         }
         else {
 
@@ -184,8 +194,8 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
                 city.setFocusable(false);
                 state.setFocusableInTouchMode(false);
                 state.setFocusable(false);
-                if(user.getLabourer()) skill.setFocusableInTouchMode(false);
-                if(user.getLabourer()) skill.setFocusable(false);
+                if(isLabourer) skill.setFocusableInTouchMode(false);
+                if(isLabourer) skill.setFocusable(false);
             }
         }
     }
