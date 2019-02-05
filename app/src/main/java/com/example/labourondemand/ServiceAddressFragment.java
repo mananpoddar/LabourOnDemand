@@ -8,18 +8,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddressDetailsFragment.OnFragmentInteractionListener} interface
+ * {@link ServiceAddressFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AddressDetailsFragment#newInstance} factory method to
+ * Use the {@link ServiceAddressFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddressDetailsFragment extends Fragment {
+public class ServiceAddressFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,7 +30,7 @@ public class AddressDetailsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public AddressDetailsFragment() {
+    public ServiceAddressFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +40,11 @@ public class AddressDetailsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddressDetailsFragment.
+     * @return A new instance of fragment ServiceAddressFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddressDetailsFragment newInstance(String param1, String param2) {
-        AddressDetailsFragment fragment = new AddressDetailsFragment();
+    public static ServiceAddressFragment newInstance(String param1, String param2) {
+        ServiceAddressFragment fragment = new ServiceAddressFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,24 +58,16 @@ public class AddressDetailsFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            labourer = bundle.getParcelable("labourer");
+            services = bundle.getParcelable("services");
         }
     }
 
-    private Labourer labourer = new Labourer();
-    private EditText a1,a2,a3,city;
-
+    private Services services;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_address_details, container, false);
-
-        a1 = view.findViewById(R.id.address_details_et_a1);
-        a2 = view.findViewById(R.id.address_details_et_a2);
-        a3 = view.findViewById(R.id.address_details_et_a3);
-        city = view.findViewById(R.id.address_details_et_city);
-
+        View view = inflater.inflate(R.layout.fragment_service_address, container, false);
 
         return view;
     }

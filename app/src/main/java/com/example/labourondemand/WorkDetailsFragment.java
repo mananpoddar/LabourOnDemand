@@ -60,11 +60,11 @@ public class WorkDetailsFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            user = bundle.getParcelable("labourer");
+            labourer = bundle.getParcelable("labourer");
         }
     }
 
-    private User user = new User();
+    private Labourer labourer = new Labourer();
     private EditText skill;
     private RatingBar ratingBar;
 
@@ -77,9 +77,9 @@ public class WorkDetailsFragment extends Fragment {
        skill = view.findViewById(R.id.work_et_skill);
        ratingBar = view.findViewById(R.id.work_rb);
 
-       //skill.setText(user.getSkill());
+       //skill.setText(labourer.getSkill());
 
-       //ratingBar.setRating(Float.parseFloat(user.getAverageRating().toString()));
+       //ratingBar.setRating(Float.parseFloat(labourer.getAverageRating().toString()));
 
        return view;
     }

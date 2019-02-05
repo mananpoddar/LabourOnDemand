@@ -2,8 +2,10 @@ package com.example.labourondemand;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,12 +15,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageButton carpenter, plumber, electrician, housemaid, constructionWorker, painter;
+    private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
+    private Customer customer ;
+    private String Tags = CustomerMainActivity.class.getName();
+    protected DrawerLayout drawerLayout;
+    private Intent intent;
+    private String current;
+    protected  FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +44,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        frameLayout = findViewById(R.id.content_main_fl);
         carpenter = findViewById(R.id.dashboard_ib_carpenter);
         plumber = findViewById(R.id.dashboard_ib_plumber);
         painter = findViewById(R.id.dashboard_ib_painter);
@@ -35,6 +52,24 @@ public class CustomerMainActivity extends AppCompatActivity
         housemaid = findViewById(R.id.dashboard_ib_housemaid);
         constructionWorker = findViewById(R.id.dashboard_ib_construction_worker);
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        intent = new Intent(this,FormActivity.class);
+
+        if(getIntent().getExtras() != null) {
+            customer = (Customer) getIntent().getExtras().get("customer");
+            current = getIntent().getExtras().getString("currentService");
+        }
+        if(customer == null) {
+            fetchFromFirebase();
+        }else if(current != null){
+            Intent intent = new Intent(CustomerMainActivity.this,CustomerDashboard2Activity.class);
+            intent.putExtra("customer",customer);
+            startActivity(intent);
+            finish();
+        }else{
+            intent.putExtra("customer",customer);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -45,16 +80,16 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.customer_main_dl);
+        drawerLayout = findViewById(R.id.customer_main_dl);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        final Intent intent = new Intent(this,FormActivity.class);
+
 
         carpenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +137,32 @@ public class CustomerMainActivity extends AppCompatActivity
 
     }
 
+    private void fetchFromFirebase() {
+        firebaseFirestore.collection("customer").document(firebaseAuth.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        //labourer = new Labourer();
+                        customer = documentSnapshot.toObject(Customer.class);
+                        Log.d(Tags, documentSnapshot.getData().toString() + "!"+customer.getCurrentService());
+                        intent.putExtra("customer",customer);
+                        if(customer.getCurrentService() != null && customer.getCurrentService().length() > 0){
+                            // go todifferent activity
+                            Intent intent = new Intent(CustomerMainActivity.this,CustomerDashboard2Activity.class);
+                            intent.putExtra("customer",customer);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+    }
+
     /*public void loadFragment(Fragment fragment, int i) {
         // load fragment
         if (i == 0) {
@@ -126,9 +187,8 @@ public class CustomerMainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.customer_main_dl);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -177,8 +237,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.customer_main_dl);
-        drawer.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 }

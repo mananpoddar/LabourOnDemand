@@ -60,12 +60,12 @@ public class PersonalDetailsFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            user = bundle.getParcelable("labourer");
-            Log.d(TAG,"u"+user.getAddressLine1());
+            labourer = bundle.getParcelable("labourer");
+            Log.d(TAG,"u"+ labourer.getAddressLine1());
         }
     }
 
-    private User user = new User();
+    private Labourer labourer = new Labourer();
     private EditText email, phone, dob;
     private String TAG = PersonalDetailsFragment.class.getName();
 
@@ -80,9 +80,9 @@ public class PersonalDetailsFragment extends Fragment {
         dob = view.findViewById(R.id.personal_et_dob);
 
         email.setText("email");
-        Log.d(TAG,user.getCity());
-        phone.setText(String.valueOf(user.getPhone()));
-        dob.setText(user.getDob());
+        Log.d(TAG, labourer.getCity());
+        phone.setText(String.valueOf(labourer.getPhone()));
+        dob.setText(labourer.getDob());
 
         return view;
     }

@@ -2,24 +2,26 @@ package com.example.labourondemand;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.google.firebase.Timestamp;
+
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
-public class User implements Parcelable {
+public class Labourer implements Parcelable {
 
     private String name, image, skill, dob, workExperience, city, state, currentService, addressLine1, addressLine2, addressLine3;
+    private Long currentServicePrice;
     private String phone;
     private Double averageRating;
     private GeoPoint currentLocation;
     private Boolean isBusy, isLabourer;
-    private ArrayList<String> services;
+    private ArrayList<String> servicesId;
+    private ArrayList<Services> services;
 
-    public User() {
+    public Labourer() {
     }
 
-    public User(String name, String image, String skill, String dob, String workExperience, String city, String state, String currentService, String addressLine1, String addressLine2, String addressLine3, String phone, Double averageRating, GeoPoint currentLocation, Boolean isBusy, Boolean isLabourer, ArrayList<String> services) {
+    public Labourer(String name, String image, String skill, String dob, String workExperience, String city, String state, String currentService, String addressLine1, String addressLine2, String addressLine3, String phone, Double averageRating, GeoPoint currentLocation, Boolean isBusy, Boolean isLabourer, ArrayList<String> services) {
         this.name = name;
         this.image = image;
         this.skill = skill;
@@ -36,10 +38,10 @@ public class User implements Parcelable {
         this.currentLocation = currentLocation;
         this.isBusy = isBusy;
         this.isLabourer = isLabourer;
-        this.services = services;
+        this.servicesId = services;
     }
 
-    protected User(Parcel in) {
+    protected Labourer(Parcel in) {
         name = in.readString();
         image = in.readString();
         skill = in.readString();
@@ -61,18 +63,18 @@ public class User implements Parcelable {
         isBusy = tmpIsBusy == 0 ? null : tmpIsBusy == 1;
         byte tmpIsLabourer = in.readByte();
         isLabourer = tmpIsLabourer == 0 ? null : tmpIsLabourer == 1;
-        services = in.createStringArrayList();
+        servicesId = in.createStringArrayList();
     }
 
-    public static final Creator<User> CREATOR = new Creator<User>() {
+    public static final Creator<Labourer> CREATOR = new Creator<Labourer>() {
         @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
+        public Labourer createFromParcel(Parcel in) {
+            return new Labourer(in);
         }
 
         @Override
-        public User[] newArray(int size) {
-            return new User[size];
+        public Labourer[] newArray(int size) {
+            return new Labourer[size];
         }
     };
 
@@ -205,10 +207,26 @@ public class User implements Parcelable {
     }
 
     public ArrayList<String> getServices() {
-        return services;
+        return servicesId;
     }
 
-    public void setServices(ArrayList<String> services) {
+    public Long getCurrentServicePrice() {
+        return currentServicePrice;
+    }
+
+    public void setCurrentServicePrice(Long currentServicePrice) {
+        this.currentServicePrice = currentServicePrice;
+    }
+
+    public ArrayList<String> getServicesId() {
+        return servicesId;
+    }
+
+    public void setServicesId(ArrayList<String> servicesId) {
+        this.servicesId = servicesId;
+    }
+
+    public void setServices(ArrayList<Services> services) {
         this.services = services;
     }
 
@@ -239,6 +257,6 @@ public class User implements Parcelable {
         }
         dest.writeByte((byte) (isBusy == null ? 0 : isBusy ? 1 : 2));
         dest.writeByte((byte) (isLabourer == null ? 0 : isLabourer ? 1 : 2));
-        dest.writeStringList(services);
+        dest.writeStringList(servicesId);
     }
 }

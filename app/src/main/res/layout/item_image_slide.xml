@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:padding="8dp"
+
         android:id="@+id/custom_layout_iv_pictures"
         android:layout_width="400dp"
         android:layout_height="200dp"

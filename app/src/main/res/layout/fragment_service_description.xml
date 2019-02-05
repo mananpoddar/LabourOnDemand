@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/profile_ll_personal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingBottom="@dimen/padding_normal">
+
+        <TextView
+            android:id="@+id/profile_tv_email_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_larger"
+            android:text="Tags"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_small" />
+
+        <TextView
+            android:id="@+id/service_description_tv_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" TAG1 TAG2 TAG3"
+            android:textSize="@dimen/text_size_normal" />
+
+        <TextView
+            android:id="@+id/profile_tv_date_of_birth_label"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_larger"
+            android:text="Description"
+            android:ems="20"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_small" />
+
+        <TextView
+            android:id="@+id/service_description_tv_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_normal" />
+
+        <TextView
+            android:id="@+id/service_description_tv_skill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_larger"
+            android:layout_marginBottom="@dimen/text_size_larger"
+            android:text="Skill"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_small" />
+
+    </LinearLayout>
+
+</ScrollView>

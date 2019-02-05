@@ -17,6 +17,13 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".SettingsActivity"></activity>
         <activity android:name=".ForgotPasswordActivity" />
+        <activity
+            android:name=".Form2Activity"
+            android:label="@string/title_activity_form2"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity android:name=".CustomerDashboard2Activity" />
+        <activity android:name=".DetailServiceActivity" />
+        <activity android:name=".FormActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SetupActivity" />
         <activity android:name=".RegisterActivity" />
