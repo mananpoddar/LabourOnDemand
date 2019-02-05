@@ -22,13 +22,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private static final String TAG = "RecyclerViewAdapter";
 
-    private ArrayList<String> mCustomerNames = new ArrayList<>();
+    private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mFroms = new ArrayList<>();
     private ArrayList<String> mTos = new ArrayList<>();
     private Context mContext;
 
-    public RecyclerViewAdapter(Context mContext, ArrayList<String> mCustomerNames, ArrayList<String> mFroms, ArrayList<String> mTos) {
-        this.mCustomerNames = mCustomerNames;
+    public RecyclerViewAdapter(Context mContext, ArrayList<String> mNames, ArrayList<String> mFroms, ArrayList<String> mTos) {
+        this.mNames = mNames;
         this.mFroms = mFroms;
         this.mTos = mTos;
         this.mContext = mContext;
@@ -48,23 +48,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_launcher_foreground));
 
-        holder.customer_name.setText(mCustomerNames.get(position));
+        holder.name.setText(mNames.get(position));
         holder.location_from.setText(mFroms.get(position));
         holder.location_to.setText(mTos.get(position));
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick! clicked on: " + mCustomerNames.get(position));
+                Log.d(TAG, "onClick! clicked on: " + mNames.get(position));
 
-                Toast.makeText(mContext, mCustomerNames.get(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, mNames.get(position), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mCustomerNames.size();
+        return mNames.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -72,15 +72,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         CircleImageView image;
         TextView location_from;
         TextView location_to;
-        TextView customer_name;
+        TextView name;
         ConstraintLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.listItemLabourer_img_customerProfile);
+            image = itemView.findViewById(R.id.listItemLabourer_img_image);
             location_from = itemView.findViewById(R.id.listItemLabourer_tv_locationFrom);
             location_to = itemView.findViewById(R.id.listItemLabourer_tv_locationTo);
-            customer_name = itemView.findViewById(R.id.customer_name);
+            name = itemView.findViewById(R.id.customer_name);
             parentLayout = itemView.findViewById(R.id.parent_layout);
         }
     }

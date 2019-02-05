@@ -10,7 +10,7 @@
     android:background="@drawable/border_for_recycler_view_items">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/listItemLabourer_img_customerProfile"
+        android:id="@+id/listItemLabourer_img_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@mipmap/ic_launcher"
@@ -27,7 +27,7 @@
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/listItemLabourer_img_customerProfile"
+        app:layout_constraintStart_toEndOf="@+id/listItemLabourer_img_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -72,7 +72,7 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/listItemLabourer_tv_locationTo"
-        app:layout_constraintStart_toEndOf="@+id/listItemLabourer_img_customerProfile"
+        app:layout_constraintStart_toEndOf="@+id/listItemLabourer_img_image"
         app:layout_constraintTop_toBottomOf="@+id/listItemLabourer_tv_locationFrom" />
 
     <TextView
@@ -82,8 +82,8 @@
         android:layout_marginTop="2dp"
         android:text="Shanthanu"
         android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/listItemLabourer_img_customerProfile"
-        app:layout_constraintStart_toStartOf="@+id/listItemLabourer_img_customerProfile"
-        app:layout_constraintTop_toBottomOf="@+id/listItemLabourer_img_customerProfile" />
+        app:layout_constraintEnd_toEndOf="@+id/listItemLabourer_img_image"
+        app:layout_constraintStart_toStartOf="@+id/listItemLabourer_img_image"
+        app:layout_constraintTop_toBottomOf="@+id/listItemLabourer_img_image" />
 
 </android.support.constraint.ConstraintLayout>
