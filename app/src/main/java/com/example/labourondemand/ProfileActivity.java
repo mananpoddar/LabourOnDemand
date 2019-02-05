@@ -21,7 +21,7 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
         WorkDetailsFragment.OnFragmentInteractionListener,AddressDetailsFragment.OnFragmentInteractionListener{
 
     private Boolean isLabourer = false, isEditting;
-    private User user = new User();
+    private Labourer labourer = new Labourer();
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
     private String TAG = ProfileActivity.class.getName();
@@ -34,26 +34,26 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.fragment_profile, null, false);
-        drawerLayout.addView(view, 2);
+        drawerLayout.addView(view, 0);
 
         name = view.findViewById(R.id.profile_et_name);
         photo = view.findViewById(R.id.profile_civ_photo);
         progressBar = view.findViewById(R.id.profile_pb);
         progressBar.setVisibility(View.VISIBLE);
 
-        /*Bundle bundle = getIntent().getExtras().getBundle("user");*//*
-        user = bundle.getParcelable("labourer");*/
-        user = (User) getIntent().getParcelableExtra("labourer");
-        Log.d(TAG,"user"+user.getAddressLine1());
+        /*Bundle bundle = getIntent().getExtras().getBundle("labourer");*//*
+        labourer = bundle.getParcelable("labourer");*/
+        labourer = (Labourer) getIntent().getParcelableExtra("labourer");
+        Log.d(TAG,"labourer"+ labourer.getAddressLine1());
         Toast.makeText(getApplicationContext(),"Hurray",Toast.LENGTH_LONG).show();
 
         TabLayout tabLayout = view.findViewById(R.id.tablayout);
         ImageView editButton = view.findViewById(R.id.profile_iv_edit);
 
 
-        name.setText(user.getName());
+        name.setText(labourer.getName());
         Glide.with(getApplicationContext())
-                .load(user.getImage())
+                .load(labourer.getImage())
                 .into(photo);
         //tabLayout.addTab(tabLayout.newTab().setText("Personal"));
         //tabLayout.addTab(tabLayout.newTab().setText("Address"));
@@ -61,7 +61,7 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
         //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable("labourer", user);
+        bundle.putParcelable("labourer", labourer);
 
         viewPager = view.findViewById(R.id.viewpager);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -73,7 +73,7 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
 
         viewPagerAdapter.addFragment(personalDetailsFragment, "Personal");
         viewPagerAdapter.addFragment(addressDetailsFragment, "Address");
-        if(user.getLabourer()) {
+        if(labourer.getLabourer()) {
             viewPagerAdapter.addFragment(new WorkDetailsFragment(), "Work");
         }
 
@@ -100,7 +100,7 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
         });*/
 
         isEditting = false;
-        
+
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

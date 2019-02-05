@@ -17,30 +17,8 @@ public class Services implements Parcelable {
     private GeoPoint from, to;
     private String a1, a2, landmark, city, serviceID;
     private HashMap<String, Long> labourerResponses;
-
-
-    public Services(String skill, String customerUID, String description, String feedback, String labourUID, long customerAmount, ArrayList<String> images, GeoPoint from, GeoPoint to, String a1, String a2, String landmark, String city, String serviceID, HashMap<String, Long> labourerResponses) {
-        this.skill = skill;
-        this.customerUID = customerUID;
-        this.description = description;
-        this.feedback = feedback;
-        this.labourUID = labourUID;
-        this.customerAmount = customerAmount;
-        this.images = images;
-        this.from = from;
-        this.to = to;
-        this.a1 = a1;
-        this.a2 = a2;
-        this.landmark = landmark;
-        this.city = city;
-        this.serviceID = serviceID;
-        this.labourerResponses = labourerResponses;
-    }
-
-    public Services() {
-        this.images = new ArrayList<>();
-    }
-
+    private Customer customer;
+    private Labourer labourer;
 
     protected Services(Parcel in) {
         skill = in.readString();
@@ -55,23 +33,8 @@ public class Services implements Parcelable {
         landmark = in.readString();
         city = in.readString();
         serviceID = in.readString();
-    }
-
-    public static final Creator<Services> CREATOR = new Creator<Services>() {
-        @Override
-        public Services createFromParcel(Parcel in) {
-            return new Services(in);
-        }
-
-        @Override
-        public Services[] newArray(int size) {
-            return new Services[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
+        customer = in.readParcelable(Customer.class.getClassLoader());
+        labourer = in.readParcelable(Labourer.class.getClassLoader());
     }
 
     @Override
@@ -88,7 +51,57 @@ public class Services implements Parcelable {
         dest.writeString(landmark);
         dest.writeString(city);
         dest.writeString(serviceID);
+        dest.writeParcelable(customer, flags);
+        dest.writeParcelable(labourer, flags);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Services> CREATOR = new Creator<Services>() {
+        @Override
+        public Services createFromParcel(Parcel in) {
+            return new Services(in);
+        }
+
+        @Override
+        public Services[] newArray(int size) {
+            return new Services[size];
+        }
+    };
+
+    public Labourer getLabourer() {
+        return labourer;
+    }
+
+    public void setLabourer(Labourer labourer) {
+        this.labourer = labourer;
+    }
+
+    public Services(String skill, String customerUID, String description, String feedback, String labourUID, long customerAmount, ArrayList<String> images, GeoPoint from, GeoPoint to, String a1, String a2, String landmark, String city, String serviceID, HashMap<String, Long> labourerResponses, Customer customer) {
+        this.skill = skill;
+        this.customerUID = customerUID;
+        this.description = description;
+        this.feedback = feedback;
+        this.labourUID = labourUID;
+        this.customerAmount = customerAmount;
+        this.images = images;
+        this.from = from;
+        this.to = to;
+        this.a1 = a1;
+        this.a2 = a2;
+        this.landmark = landmark;
+        this.city = city;
+        this.serviceID = serviceID;
+        this.labourerResponses = labourerResponses;
+        this.customer = customer;
+    }
+
+    public Services() {
+    }
+
 
     public String getSkill() {
         return skill;
@@ -138,7 +151,7 @@ public class Services implements Parcelable {
         this.customerAmount = customerAmount;
     }
 
-    public List<String> getImages() {
+    public ArrayList<String> getImages() {
         return images;
     }
 
@@ -208,5 +221,13 @@ public class Services implements Parcelable {
 
     public void setLabourerResponses(HashMap<String, Long> labourerResponses) {
         this.labourerResponses = labourerResponses;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

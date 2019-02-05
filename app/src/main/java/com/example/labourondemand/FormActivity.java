@@ -59,6 +59,8 @@ public class FormActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private Slide slide;
     private Bitmap compressedImageFile;
+    private EditText amount;
+    private Button submit;
     private String TAG = FormActivity.class.getName();
 
     @Override
@@ -75,10 +77,12 @@ public class FormActivity extends AppCompatActivity {
         addressLine2 = findViewById(R.id.form_et_a2);
         landmark = findViewById(R.id.form_et_landmark);
         city = findViewById(R.id.form_et_city);
+        amount = findViewById(R.id.form_et_amount);
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-
+        submit = findViewById(R.id.form_btn_submit);
+        amount = findViewById(R.id.form_et_amount);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +92,12 @@ public class FormActivity extends AppCompatActivity {
 
         slide = new Slide(this, new ArrayList<String>() );
         viewPager.setAdapter(slide);
-
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save_description(v);
+            }
+        });
     }
 
     public void save_description(View view) {
@@ -98,7 +107,6 @@ public class FormActivity extends AppCompatActivity {
         String address_line_2_string = addressLine2.getText().toString();
         String landmark_string = landmark.getText().toString();
         String city_string = city.getText().toString();
-
 
         if (problem_description.length() == 0 || address_line_1_string.length() == 0 || address_line_2_string.length() == 0 || landmark_string.length() == 0 || city_string.length() == 0) {
             if (problem_description.length() == 0) {
@@ -118,7 +126,7 @@ public class FormActivity extends AppCompatActivity {
             }
         } else {
             services.setServiceID(firebaseAuth.getUid()+"+"+String.valueOf(System.currentTimeMillis()));
-            services.setSkill("");
+            services.setSkill(getIntent().getExtras().getString("skill"));
             services.setA1(address_line_1_string);
             services.setA2(address_line_2_string);
             services.setDescription(problem_description);

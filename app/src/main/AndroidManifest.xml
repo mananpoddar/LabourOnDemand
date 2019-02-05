@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".FormActivity"></activity>
+        <activity android:name=".CustomerDashboard2Activity"></activity>
+        <activity android:name=".DetailServiceActivity" />
+        <activity android:name=".FormActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SetupActivity" />
         <activity android:name=".RegisterActivity" />

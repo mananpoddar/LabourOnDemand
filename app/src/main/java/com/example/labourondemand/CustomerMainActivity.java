@@ -2,11 +2,13 @@ package com.example.labourondemand;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,10 +20,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageButton carpenter, plumber, electrician, housemaid, constructionWorker, painter;
+    private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
+    private Customer customer = new Customer();
+    private String Tags = CustomerMainActivity.class.getName();
+    protected DrawerLayout drawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +52,9 @@ public class CustomerMainActivity extends AppCompatActivity
         housemaid = findViewById(R.id.Housemaid_image);
         constructionWorker = findViewById(R.id.Construction_Worker_image);
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        fetchFromFirebase();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -48,10 +65,10 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.customer_main_dl);
+        drawerLayout = (DrawerLayout) findViewById(R.id.customer_main_dl);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -103,6 +120,32 @@ public class CustomerMainActivity extends AppCompatActivity
         });
 
 
+    }
+
+    private void fetchFromFirebase() {
+        firebaseFirestore.collection("customer").document(firebaseAuth.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        //labourer = new Labourer();
+                        customer = documentSnapshot.toObject(Customer.class);
+                        Log.d(Tags, documentSnapshot.getData().toString() + "!");
+
+                        if(customer.getCurrentService() != null){
+                            // go todifferent activity
+                            Intent intent = new Intent(CustomerMainActivity.this,CustomerDashboard2Activity.class);
+                            intent.putExtra("customer",customer);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     /*public void loadFragment(Fragment fragment, int i) {

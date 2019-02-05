@@ -14,7 +14,7 @@ import android.widget.ImageButton;
 public class ProfileFragment extends Fragment {
 
     private Boolean isLabourer = false, isEditting;
-    private User user;
+    private Labourer labourer;
 
     @Nullable
     @Override
@@ -29,7 +29,7 @@ public class ProfileFragment extends Fragment {
         //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable("labouorer", user);
+        bundle.putParcelable("labouorer", labourer);
 
         final ViewPager viewPager = view.findViewById(R.id.viewpager);
         final ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
