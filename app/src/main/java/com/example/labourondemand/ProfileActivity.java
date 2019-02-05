@@ -75,6 +75,10 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
         viewPagerAdapter.addFragment(addressDetailsFragment, "Address");
         if(user.getLabourer()) {
             viewPagerAdapter.addFragment(new WorkDetailsFragment(), "Work");
+            viewPager.setOffscreenPageLimit(3);
+        }
+        else {
+            viewPager.setOffscreenPageLimit(2);
         }
 
         viewPager.setAdapter(viewPagerAdapter);
@@ -111,16 +115,18 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
     }
 
     public void edit(View v){
-        /*isEditting = !isEditting;
-        name = findViewById(R.id.name);
-        emailid = findViewById(R.id.edit_emailid);
-        phone = findViewById(R.id.edit_phone_number);
-        dob = findViewById(R.id.edit_dob);
-        address1 = findViewById(R.id.address1);
-        address2 = findViewById(R.id.address2);
-        address3 = findViewById(R.id.address3);
-        pincode = findViewById(R.id.edit_pincode);
-        if(isLabourer) job = findViewById(R.id.edit_job);
+        isEditting = !isEditting;
+        name = findViewById(R.id.profile_et_name);
+        TextView emailid = findViewById(R.id.personal_et_email);
+        TextView phone = findViewById(R.id.personal_et_phone);
+        TextView dob = findViewById(R.id.personal_et_dob);
+        TextView address1 = findViewById(R.id.address_details_et_a1);
+        TextView address2 = findViewById(R.id.address_details_et_a2);
+        TextView address3 = findViewById(R.id.address_details_et_a3);
+        TextView city = findViewById(R.id.address_details_et_city);
+        TextView state = findViewById(R.id.address_details_et_state);
+        TextView skill = null;
+        if(user.getLabourer()) skill = findViewById(R.id.work_et_skill);
         if(isEditting) {
             name.setFocusableInTouchMode(true);
             emailid.setFocusableInTouchMode(true);
@@ -129,8 +135,9 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
             address1.setFocusableInTouchMode(true);
             address2.setFocusableInTouchMode(true);
             address3.setFocusableInTouchMode(true);
-            pincode.setFocusableInTouchMode(true);
-            if(isLabourer) job.setFocusableInTouchMode(true);
+            city.setFocusableInTouchMode(true);
+            state.setFocusableInTouchMode(true);
+            if(user.getLabourer()) skill.setFocusableInTouchMode(true);
         }
         else {
 
@@ -152,11 +159,11 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
                 Toast.makeText(getApplicationContext(), "Error in Personal!", Toast.LENGTH_SHORT).show();
             }
 
-            if(!isValidPincode(pincode.getText().toString().trim())) {
-                pincode.setError("Invalid pincode");
-                isEditting = true;
-                Toast.makeText(getApplicationContext(), "Error in Address!", Toast.LENGTH_SHORT).show();
-            }
+//            if(!isValidPincode(pincode.getText().toString().trim())) {
+//                pincode.setError("Invalid pincode");
+//                isEditting = true;
+//                Toast.makeText(getApplicationContext(), "Error in Address!", Toast.LENGTH_SHORT).show();
+//            }
 
             if(!isEditting) {
                 name.setFocusableInTouchMode(false);
@@ -173,12 +180,14 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
                 address2.setFocusable(false);
                 address3.setFocusableInTouchMode(false);
                 address3.setFocusable(false);
-                pincode.setFocusableInTouchMode(false);
-                pincode.setFocusable(false);
-                if(isLabourer) job.setFocusableInTouchMode(false);
-                if(isLabourer) job.setFocusable(false);
+                city.setFocusableInTouchMode(false);
+                city.setFocusable(false);
+                state.setFocusableInTouchMode(false);
+                state.setFocusable(false);
+                if(user.getLabourer()) skill.setFocusableInTouchMode(false);
+                if(user.getLabourer()) skill.setFocusable(false);
             }
-        }*/
+        }
     }
 
     public boolean isValidEmail(String email) {

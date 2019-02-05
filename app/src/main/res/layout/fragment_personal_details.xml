@@ -17,14 +17,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorPrimary"
         android:ems="10"
         android:focusable="false"
         android:inputType="phone"
         android:text="96328658"
-        android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/personal_img_phone"
         app:layout_constraintTop_toBottomOf="@+id/personal_et_email" />
 
     <EditText
@@ -33,14 +33,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorPrimary"
         android:ems="10"
         android:focusable="false"
         android:inputType="number"
         android:text="27/01/1999"
-        android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/personal_img_cake"
         app:layout_constraintTop_toBottomOf="@+id/personal_et_phone" />
 
     <EditText
@@ -49,22 +49,20 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorPrimary"
         android:ems="10"
         android:focusable="false"
         android:inputType="textEmailAddress"
         android:text="Email"
-        android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:focusable="false" />
+        app:layout_constraintStart_toEndOf="@+id/personal_img_email"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
-        android:text="email"
         android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary"
@@ -72,20 +70,15 @@
         app:layout_constraintTop_toTopOf="@+id/personal_et_email"
         android:enabled="false"
         android:text="Email"
-        android:textSize="10sp"
-        app:layout_constraintStart_toStartOf="@+id/personal_et_email"
-        app:layout_constraintTop_toTopOf="@+id/personal_et_email" />
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/phone_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="phone"
         android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="@+id/personal_et_phone"
-        app:layout_constraintTop_toTopOf="@+id/personal_et_phone"
         android:enabled="false"
         android:text="Phone"
         android:textSize="10sp"
@@ -96,12 +89,9 @@
         android:id="@+id/personal_tv_dob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="dob"
         android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="@+id/personal_et_dob"
-        app:layout_constraintTop_toTopOf="@+id/personal_et_dob"
         android:enabled="false"
         android:text="DOB"
         android:textSize="10sp"
