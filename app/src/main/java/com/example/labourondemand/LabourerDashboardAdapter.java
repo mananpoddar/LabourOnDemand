@@ -52,7 +52,7 @@ class LabourerDashboardAdapter extends RecyclerView.Adapter<LabourerDashboardAda
     public LabourerDashboardAdapter(Context context, ArrayList<Services> services, Integer type) {
         this.context = context;
         this.services = services;
-        this.labourerMainActivity = (LabourerMainActivity)context;
+        //this.labourerMainActivity = (LabourerMainActivity)context;
         this.type = type;
     }
 
@@ -60,7 +60,7 @@ class LabourerDashboardAdapter extends RecyclerView.Adapter<LabourerDashboardAda
         this.context = context;
         this.type = type;
         this.labourers = labourers;
-        this.customerMainActivity = (CustomerMainActivity) context;
+        //this.customerMainActivity = (CustomerMainActivity) context;
     }
 
     @NonNull

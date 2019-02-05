@@ -51,26 +51,30 @@ public class CustomerDashboard2Activity extends CustomerMainActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         services = documentSnapshot.toObject(Services.class);
+                        if(services.getLabourerResponses() != null) {
 
-                        for(final String s: services.getLabourerResponses().keySet()){
+                            for (final String s : services.getLabourerResponses().keySet()) {
 
-                            firebaseFirestore.collection("labourer").document(s)
-                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    Labourer labourer = new Labourer();
-                                    labourer.setCurrentServicePrice(services.getLabourerResponses().get(s));
-                                    labourer = documentSnapshot.toObject(Labourer.class);
-                                    customerDashboardAdapter.addedFromCustomer(labourer);
+                                firebaseFirestore.collection("labourer").document(s)
+                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        Labourer labourer = new Labourer();
+                                        labourer.setCurrentServicePrice(services.getLabourerResponses().get(s));
+                                        labourer = documentSnapshot.toObject(Labourer.class);
+                                        customerDashboardAdapter.addedFromCustomer(labourer);
 
-                                }
-                                 })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
+                                    }
+                                })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
 
-                                        }
-                                    });
+                                            }
+                                        });
+                            }
+                        }else{
+
                         }
                     }
                 })

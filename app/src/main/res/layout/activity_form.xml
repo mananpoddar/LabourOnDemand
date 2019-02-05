@@ -171,29 +171,33 @@
             android:id="@+id/amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/form_et_city"
+            android:layout_below="@+id/activity_form_et_city"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
+            android:textColor="@color/colorPrimary"
             android:gravity="center"
             android:text="Ampunt"
             android:textSize="32sp" />
 
         <EditText
-            android:id="@+id/form_et_amount"
+            android:id="@+id/activity_form_et_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Enter price"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
             android:layout_below="@+id/amount"/>
 
         <Button
             android:id="@+id/activity_form_btn_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_form_et_city"
+            android:layout_below="@+id/activity_form_et_amount"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:onClick="save_description"

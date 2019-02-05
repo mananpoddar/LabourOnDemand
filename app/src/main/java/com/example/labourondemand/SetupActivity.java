@@ -63,6 +63,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
     private Uri mainImageURI = null;
     private ProgressBar progressBar;
     private EditText name, phone, dob, skill, workExperience;
+    private TextInputLayout date;
     private EditText a1, a2, a3, state, city;
     private Boolean server = true, isChanged = false;
     private FirebaseAuth firebaseAuth;
@@ -90,6 +91,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         name = findViewById(R.id.setup_details_et_name);
         phone = findViewById(R.id.setup_details_et_phone);
         dob = findViewById(R.id.setup_details_et_dob);
+        date = findViewById(R.id.setup_details_til_dob);
         skill = findViewById(R.id.setup_details_et_skill);
         workExperience = findViewById(R.id.setup_details_et_work_experience);
         skillTil = findViewById(R.id.setup_tip_skill);
@@ -111,6 +113,12 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
             workExperience.setVisibility(View.GONE);
         }
 
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectDate(v);
+            }
+        });
         dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -264,7 +272,6 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
 
                         String error = task.getException().getMessage();
                         Toast.makeText(SetupActivity.this, "(IMAGE Error) : " + error, Toast.LENGTH_LONG).show();
-
                         progressBar.setVisibility(View.INVISIBLE);
 
                     }

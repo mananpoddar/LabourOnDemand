@@ -1,6 +1,7 @@
 package com.example.labourondemand;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,18 +15,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,7 +41,7 @@ import java.util.HashMap;
 
 import id.zelory.compressor.Compressor;
 
-public class FormActivity extends AppCompatActivity {
+public class FormActivity extends CustomerMainActivity {
 
     private Services services = new Services();
 
@@ -54,6 +53,7 @@ public class FormActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private Uri mainImageURI;
     private ArrayList<Uri> pictures = new ArrayList<>();
+    private Customer customer;
     private FirebaseFirestore firebaseFirestore;
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
@@ -63,13 +63,26 @@ public class FormActivity extends AppCompatActivity {
     private Button submit;
     private String TAG = FormActivity.class.getName();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*FrameLayout frameLayout = (FrameLayout)findViewById(R.id.content_main_fl);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.activity_form, frameLayout, false);
+        drawerLayout.addView(view, 1);*/
+        //frameLayout.addView(view);
         setContentView(R.layout.activity_form);
 
         services.setSkill(getIntent().getExtras().getString("skill"));
-
+        customer = (Customer) getIntent().getExtras().get("customer");
+       /* viewPager = view.findViewById(R.id.activity_form_vp);
+        floatingActionButton = view.findViewById(R.id.activity_form_fab);
+        description = view.findViewById(R.id.activity_form_et_description);
+        addressLine1 = view.findViewById(R.id.activity_form_et_address1);
+        addressLine2 = view.findViewById(R.id.activity_form_et_address2);
+        landmark = view.findViewById(R.id.activity_form_et_landmark);
+        city = view.findViewById(R.id.activity_form_et_city);*/
         viewPager = findViewById(R.id.activity_form_vp);
         floatingActionButton = findViewById(R.id.activity_form_fab);
         description = findViewById(R.id.activity_form_et_description);
@@ -80,8 +93,9 @@ public class FormActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-        submit = findViewById(R.id.form_btn_submit);
-        amount = findViewById(R.id.form_et_amount);
+        submit = findViewById(R.id.activity_form_btn_submit);
+        amount = findViewById(R.id.activity_form_et_amount);
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,8 +120,9 @@ public class FormActivity extends AppCompatActivity {
         String address_line_2_string = addressLine2.getText().toString();
         String landmark_string = landmark.getText().toString();
         String city_string = city.getText().toString();
+        String amonut_string = amount.getText().toString();
 
-        if (problem_description.length() == 0 || address_line_1_string.length() == 0 || address_line_2_string.length() == 0 || landmark_string.length() == 0 || city_string.length() == 0) {
+        if (problem_description.length() == 0 || address_line_1_string.length() == 0 || address_line_2_string.length() == 0 || landmark_string.length() == 0 || city_string.length() == 0 || amonut_string.length() == 0) {
             if (problem_description.length() == 0) {
                 description.setError("Please enter a description before submitting");
             }
@@ -123,6 +138,9 @@ public class FormActivity extends AppCompatActivity {
             if (city_string.length() == 0) {
                 city.setError("Please enter a city before submitting");
             }
+            if (amonut_string.length() == 0) {
+                city.setError("Please enter amount before submitting");
+            }
         } else {
             services.setServiceID(firebaseAuth.getUid()+"+"+String.valueOf(System.currentTimeMillis()));
             services.setSkill(getIntent().getExtras().getString("skill"));
@@ -130,7 +148,8 @@ public class FormActivity extends AppCompatActivity {
             services.setA2(address_line_2_string);
             services.setDescription(problem_description);
             services.setCity(city_string);
-
+            services.setLandmark(landmark_string);
+            services.setCustomerAmount(Long.valueOf(amonut_string));
             sendToFirebase();
         }
 
@@ -147,8 +166,8 @@ public class FormActivity extends AppCompatActivity {
                 try {
 
                     compressedImageFile = new Compressor(FormActivity.this)
-                            .setMaxHeight(160)
-                            .setMaxWidth(120)
+                            .setMaxHeight(200)
+                            .setMaxWidth(400)
                             .setQuality(50)
                             .compressToBitmap(newImageFile);
 
@@ -173,7 +192,7 @@ public class FormActivity extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
 
                                         uris.add(uri.toString());
-                                        Log.d("uri",uri.toString()+"!");
+                                        Log.d("uri",uri.toString()+"!"+uris.size());
 
                                         if(uris.size() == pictures.size()){
                                             HashMap<String, Object> images = new HashMap<>();
@@ -224,11 +243,12 @@ public class FormActivity extends AppCompatActivity {
 
         map.put("labourUID","");
         map.put("customerUID",firebaseAuth.getUid());
-        map.put("customeramount",0);
+        map.put("customerAmount",services.getCustomerAmount());
         map.put("description",services.getDescription());
         map.put("feedback","");
+        map.put("skill",services.getSkill());
         //map.put("images", pictures);
-        map.put("labourresponses", new HashMap<>());
+        map.put("labourResponses", new HashMap<>());
         map.put("a1",services.getA1());
         map.put("a2",services.getA2());
         map.put("city",services.getCity());
@@ -239,9 +259,28 @@ public class FormActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
 
-                        Intent intent = new Intent(FormActivity.this,LabourerMainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        HashMap<String , String> m = new HashMap<>();
+                        m.put("currentService",services.getServiceID());
+                        firebaseFirestore.collection("customer").document(firebaseAuth.getUid()).set(m,SetOptions.merge())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("success","!");
+                                        Intent intent = new Intent(FormActivity.this,CustomerMainActivity.class);
+                                        intent.putExtra("currentService",services.getServiceID());
+                                        intent.putExtra("customer",customer);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("error",e.toString());
+                                    }
+                                });
+
+
 
                     }
                 })
@@ -285,7 +324,7 @@ public class FormActivity extends AppCompatActivity {
 
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
-                .setAspectRatio(1, 1)
+                .setAspectRatio(400, 200)
                 .start(FormActivity.this);
 
     }

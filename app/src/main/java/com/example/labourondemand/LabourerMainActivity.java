@@ -70,9 +70,6 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
             visibleText.setVisibility(View.VISIBLE);
         }
 
-
-
-
         setSupportActionBar(toolbar);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -103,11 +100,15 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         //labourer = new Labourer();
-                        labourer = documentSnapshot.toObject(Labourer.class);
-                        Log.d(tag, documentSnapshot.getData().toString() + "!");
-                        labourer.setLabourer(true);
-                        if(labourer.getCurrentService() == null) {
-                            fetchServices();
+                        if (documentSnapshot.getData() != null) {
+                            labourer = documentSnapshot.toObject(Labourer.class);
+                            Log.d(tag, documentSnapshot.getData().toString() + "!");
+                            labourer.setLabourer(true);
+                            if (labourer.getCurrentService() == null) {
+                                fetchServices();
+                            }
+                        } else {
+                            Log.d(tag, "null");
                         }
                     }
                 })
