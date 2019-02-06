@@ -109,7 +109,7 @@
                         android:textColorHint="@color/colorPrimary"
                         android:textSize="32sp" />
 
-                    <EditText
+                    <android.support.design.widget.TextInputLayout
                         android:id="@+id/activity_form_et_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -118,11 +118,15 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="24dp"
                         android:layout_marginBottom="8dp"
-                        android:ems="20"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorPrimary"
-                        android:hint="Description" />
+                        android:hint="Description">
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="20"
+                            android:backgroundTint="@color/colorPrimary" />
+                    </android.support.design.widget.TextInputLayout>
 
                     <TextView
                         android:id="@+id/activity_form_tv_address"
@@ -142,7 +146,7 @@
                         android:text="Address"
                         android:textSize="32sp" />
 
-                    <EditText
+                    <android.support.design.widget.TextInputLayout
                         android:id="@+id/activity_form_et_address1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -151,14 +155,18 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="24dp"
                         android:layout_marginBottom="8dp"
-                        android:ems="20"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorPrimary"
-                        android:hint="address_line_1" />
-
-
+                        android:hint="Address line 1">
                     <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="20"
+                        android:backgroundTint="@color/colorPrimary" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+
+                    <android.support.design.widget.TextInputLayout
                         android:id="@+id/activity_form_et_address2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -166,43 +174,48 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginLeft="8dp"
                         android:backgroundTint="@color/colorPrimary"
-                        android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorPrimary"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginBottom="8dp"
+                        android:hint="Address Line 2">
+                        <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:ems="20"
-                        android:hint="address_line_2" />
+                        android:backgroundTint="@color/colorPrimary" />
+                    </android.support.design.widget.TextInputLayout>
 
-
-                    <EditText
+                    <android.support.design.widget.TextInputLayout
                         android:id="@+id/activity_form_et_landmark"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/activity_form_et_address2"
                         android:layout_marginStart="8dp"
                         android:layout_marginLeft="8dp"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:ems="20"
                         android:backgroundTint="@color/colorPrimary"
-                        android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorPrimary"
-                        android:hint="landmark" />
-
+                        android:hint="Landmark" >
                     <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="20"
+                        android:backgroundTint="@color/colorPrimary" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
                         android:id="@+id/activity_form_et_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/activity_form_et_landmark"
                         android:layout_marginStart="8dp"
                         android:layout_marginLeft="8dp"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:ems="20"
                         android:backgroundTint="@color/colorPrimary"
-                        android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorPrimary"
-                        android:hint="city" />
+                        android:hint="City" >
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="20"
+                        android:backgroundTint="@color/colorPrimary" />
+                    </android.support.design.widget.TextInputLayout>
 
 
                     <TextView
@@ -221,15 +234,21 @@
                         android:text="Ampunt"
                         android:textSize="32sp" />
 
-                    <EditText
+                    <android.support.design.widget.TextInputLayout
                         android:id="@+id/activity_form_et_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/amount"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColorHint="@color/colorPrimary"
+                        android:hint="Enter price">
+                    <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="Enter price"
                         android:backgroundTint="@color/colorPrimary"
-                        android:textColor="@color/colorPrimary"
-                        android:textColorHint="@color/colorPrimary"
-                        android:layout_below="@+id/amount"/>
+                        android:textColorHint="@color/colorPrimary"/>
+                    </android.support.design.widget.TextInputLayout>
 
                     <Button
                         android:id="@+id/activity_form_btn_submit"

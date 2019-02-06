@@ -62,6 +62,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Carpenter"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="@color/colorPrimary"
                         app:layout_constraintTop_toBottomOf="@id/dashboard_ib_carpenter"
                         app:layout_constraintEnd_toEndOf="@id/dashboard_ib_carpenter"
                         app:layout_constraintStart_toStartOf="@id/dashboard_ib_carpenter"/>
@@ -81,6 +83,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Painter"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="@color/colorPrimary"
                         app:layout_constraintTop_toBottomOf="@id/dashboard_ib_painter"
                         app:layout_constraintEnd_toEndOf="@id/dashboard_ib_painter"
                         app:layout_constraintStart_toStartOf="@id/dashboard_ib_painter"/>
@@ -100,6 +104,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Electrician"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="@color/colorPrimary"
                         app:layout_constraintTop_toBottomOf="@id/dashboard_ib_electrician"
                         app:layout_constraintEnd_toEndOf="@id/dashboard_ib_electrician"
                         app:layout_constraintStart_toStartOf="@id/dashboard_ib_electrician"/>
@@ -119,6 +125,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Carpenter"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="@color/colorPrimary"
                         app:layout_constraintTop_toBottomOf="@id/dashboard_ib_construction_worker"
                         app:layout_constraintEnd_toEndOf="@id/dashboard_ib_construction_worker"
                         app:layout_constraintStart_toStartOf="@id/dashboard_ib_construction_worker"/>
@@ -138,6 +146,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Plumber"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="@color/colorPrimary"
                         app:layout_constraintTop_toBottomOf="@id/dashboard_ib_plumber"
                         app:layout_constraintEnd_toEndOf="@id/dashboard_ib_plumber"
                         app:layout_constraintStart_toStartOf="@id/dashboard_ib_plumber"/>
@@ -157,6 +167,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Housemaid"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="@color/colorPrimary"
                         app:layout_constraintTop_toBottomOf="@id/dashboard_ib_housemaid"
                         app:layout_constraintEnd_toEndOf="@id/dashboard_ib_housemaid"
                         app:layout_constraintStart_toStartOf="@id/dashboard_ib_housemaid"/>

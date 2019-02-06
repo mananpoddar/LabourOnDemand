@@ -30,18 +30,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="Name"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:hint="Name"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:ems="20"
+                    android:backgroundTint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -49,18 +47,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="Phone"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:hint="Phone"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:ems="20"
+                    android:backgroundTint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -69,19 +65,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="Date Of Birth"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_dob"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ems="20"
                     android:backgroundTint="@color/colorPrimary"
-                    android:focusableInTouchMode="false"
-                    android:hint="Date Of Birth"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:focusableInTouchMode="false" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -90,18 +84,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="Skill"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_skill"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:hint="Skill"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:ems="20"
+                    android:backgroundTint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -110,19 +102,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="Work Experience (years)"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_work_experience"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ems="20"
                     android:backgroundTint="@color/colorPrimary"
-                    android:hint="Work Experience (years)"
-                    android:inputType="number"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:inputType="number" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -130,18 +120,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="Address Line 1"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_address_et_address_line_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:hint="Address Line 1"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:backgroundTint="@color/colorPrimary"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -149,18 +136,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="Address Line 2"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_address_et_address_line_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:hint="Address Line 2"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:ems="20"
+                    android:backgroundTint="@color/colorPrimary"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -168,18 +153,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="Address Line 3"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_address_et_address_line_3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:hint="Address Line 3"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:ems="20"
+                    android:backgroundTint="@color/colorPrimary"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -187,18 +170,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="City"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_address_et_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:hint="City"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:ems="20"
+                    android:backgroundTint="@color/colorPrimary"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -206,18 +187,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger"
+                android:hint="State"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_address_et_state"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:hint="State"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
+                    android:ems="20"
+                    android:backgroundTint="@color/colorPrimary"/>
 
             </android.support.design.widget.TextInputLayout>
 
