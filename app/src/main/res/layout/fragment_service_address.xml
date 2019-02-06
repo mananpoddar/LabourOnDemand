@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/profile_ll_personal"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_larger"
             android:text="Address Line 1"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_small" />
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_larger"
             android:text="Address Line 2"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_small" />
 
         <TextView
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_larger"
             android:text="Landmark"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_small" />
 
         <TextView
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_larger"
             android:text="City"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_small" />
 
         <TextView
