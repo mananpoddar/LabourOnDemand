@@ -60,12 +60,19 @@ public class PersonalDetailsFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            labourer = bundle.getParcelable("labourer");
-            Log.d(TAG,"u"+ labourer.getAddressLine1());
+            type = bundle.getString("type");
+
+            if(type.equals("customer")){
+                customer = bundle.getParcelable("customer");
+            }else{
+                labourer = bundle.getParcelable("labourer");
+            }
         }
     }
 
     private Labourer labourer = new Labourer();
+    private Customer customer = new Customer();
+    private String type;
     private EditText email, phone, dob;
     private String TAG = PersonalDetailsFragment.class.getName();
 
@@ -79,10 +86,18 @@ public class PersonalDetailsFragment extends Fragment {
         phone = view.findViewById(R.id.personal_et_phone);
         dob = view.findViewById(R.id.personal_et_dob);
 
-        email.setText("email");
-        Log.d(TAG, labourer.getCity());
-        phone.setText(String.valueOf(labourer.getPhone()));
-        dob.setText(labourer.getDob());
+        if(type.equals("labourer")){
+            email.setText("dummy email");
+            phone.setText(String.valueOf(labourer.getPhone()));
+            dob.setText(labourer.getDob());
+        }else{
+            email.setText("dummy email");
+            phone.setText(String.valueOf(customer.getPhone()));
+            dob.setText(customer.getDob());
+        }
+        //Log.d(TAG, labourer.getCity());
+
+
 
         return view;
     }

@@ -13,15 +13,5 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <!--<android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintBottom_toTopOf="@+id/recycler_view"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="395dp" />-->
 
 </android.support.constraint.ConstraintLayout>

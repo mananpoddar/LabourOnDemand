@@ -1,40 +1,97 @@
 package com.example.labourondemand;
 
-import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-public class DetailServiceActivity extends LabourerMainActivity implements ServiceAmountFragment.OnFragmentInteractionListener,
-                ServiceAddressFragment.OnFragmentInteractionListener,ServiceDescriptionFragment.OnFragmentInteractionListener{
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class DetailServiceActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, ServiceAmountFragment.OnFragmentInteractionListener,
+        ServiceAddressFragment.OnFragmentInteractionListener,ServiceDescriptionFragment.OnFragmentInteractionListener {
+
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
     private Services services = new Services();
+    private EditText description, addressLine1, addressLine2, landmark, city;
+    private Button submitButton;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
+    private Uri filePath;
+    private FloatingActionButton floatingActionButton;
+    private FirebaseStorage storage;
+    private Uri mainImageURI;
+    private ArrayList<Uri> pictures = new ArrayList<>();
+    private Customer customer;
+    private FirebaseFirestore firebaseFirestore;
+    private StorageReference storageReference;
+    private FirebaseAuth firebaseAuth;
+    private Slide slide;
+    private Bitmap compressedImageFile;
+    private EditText amount;
+    private Button submit;
+    private String TAG = ProfileActivity.class.getName();
+    private Boolean isLabourer = false, isEditting;
+    private Labourer labourer = new Labourer();
+    private TextView name;
+    private CircleImageView photo;
+    private ProgressBar progressBar;
+    private String type;
     private ViewPager viewPagerImages, viewPagerData;
     private TabLayout tabs;
-    private Slide slide;
-    private ViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.activity_detail_service, null, false);
-        drawerLayout.addView(view, 0);
+        setContentView(R.layout.activity_detail_service);
+
+        toolbar = findViewById(R.id.detail_service_tl);
+        drawerLayout =  findViewById(R.id.detail_service_dl);
+
+        setSupportActionBar(toolbar);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = findViewById(R.id.detail_service_nav);
+        navigationView.setNavigationItemSelectedListener(this);
 
         services = getIntent().getParcelableExtra("service");
-        viewPagerImages = view.findViewById(R.id.detail_service_vp_images);
-        viewPagerData = view.findViewById(R.id.detail_service_vp_data);
-        tabs = view.findViewById(R.id.detail_service_tl);
+        viewPagerImages = findViewById(R.id.detail_service_vp_images);
+        viewPagerData = findViewById(R.id.detail_service_vp_data);
+        tabs = findViewById(R.id.detail_service_tl);
 
         slide = new Slide(this, services.getImages());
         viewPagerImages.setAdapter(slide);
-
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
         Bundle bundle = new Bundle();
-        bundle.putParcelable("labourer", services);
+        bundle.putParcelable("services", services);
 
         ServiceDescriptionFragment serviceDescriptionFragment = new ServiceDescriptionFragment();
         ServiceAddressFragment serviceAddressFragment = new ServiceAddressFragment();
@@ -56,5 +113,61 @@ public class DetailServiceActivity extends LabourerMainActivity implements Servi
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.profile_activity2, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_dashboard) {
+            // Handle the camera action
+        } else if (id == R.id.nav_history) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

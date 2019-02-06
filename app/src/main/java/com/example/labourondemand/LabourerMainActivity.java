@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,8 +40,9 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
     private Labourer labourer = new Labourer();
     private String tag = LabourerMainActivity.class.getName();
     private RecyclerView recyclerView;
-    private LabourerDashboardAdapter labourerDashboardAdapter;
+    private DashboardAdapter dashboardAdapter;
     private TextView visibleText;
+    private String currentService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,22 +51,31 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        String currentService = getIntent().getStringExtra("currentService");
 
-        toolbar = findViewById(R.id.toolbar);
-        drawerLayout = findViewById(R.id.customer_main_dl);
-        fab = findViewById(R.id.fab);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if(getIntent().getExtras() != null) {
+            currentService = getIntent().getStringExtra("currentService");
+            labourer = (Labourer) getIntent().getExtras().get("labourer");
+        }
+
+        toolbar = findViewById(R.id.labourer_main_tb);
+        drawerLayout = findViewById(R.id.labourer_main_dl);
+        fab = findViewById(R.id.labourer_main_fab);
+        navigationView = findViewById(R.id.labourer_main_nav);
         recyclerView = findViewById(R.id.dashboard_labourer_rv);
         visibleText = findViewById(R.id.visible);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        labourerDashboardAdapter = new LabourerDashboardAdapter(getApplicationContext(),new ArrayList<Services>(),0);
-        recyclerView.setAdapter(labourerDashboardAdapter);
+        dashboardAdapter = new DashboardAdapter(getApplicationContext(),new ArrayList<Services>(),0);
+        recyclerView.setAdapter(dashboardAdapter);
         recyclerView.setHasFixedSize(false);
 
         if( currentService == null ){
-            fetchFromFirebase();
+
+            if(labourer == null) {
+                fetchFromFirebase();
+            }else{
+                fetchServices();
+            }
             visibleText.setVisibility(View.GONE);
         }else{
             visibleText.setVisibility(View.VISIBLE);
@@ -87,7 +98,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
+        navigationView.setCheckedItem(0);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -103,10 +114,13 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                         if (documentSnapshot.getData() != null) {
                             labourer = documentSnapshot.toObject(Labourer.class);
                             Log.d(tag, documentSnapshot.getData().toString() + "!");
-                            labourer.setLabourer(true);
+
                             if (labourer.getCurrentService() == null) {
                                 fetchServices();
+                            }else{
+
                             }
+
                         } else {
                             Log.d(tag, "null");
                         }
@@ -126,8 +140,9 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
                         for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                            Services services = new Services();
+                            Services services ;
                             if(documentSnapshot.getString("skill").equals(labourer.getSkill())){
                                 services = documentSnapshot.toObject(Services.class);
 
@@ -136,8 +151,9 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
+
                                                 finalServices.setCustomer(documentSnapshot.toObject(Customer.class));
-                                                labourerDashboardAdapter.added(finalServices);
+                                                dashboardAdapter.added(finalServices);
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -197,18 +213,19 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
         int id = item.getItemId();
 
         if (id == R.id.nav_dashboard) {
+
+        } else if (id == R.id.nav_history) {
+            //Toast.makeText(this,"History yet to be Developed",)
+            Intent intent = new Intent(this, PreviousActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_person) {
             Intent intent = new Intent(this, ProfileActivity.class);
             /*Bundle bundle = new Bundle();
             bundle.putParcelable("labourer",labourer);*/
             intent.putExtra("user", labourer);
-            intent.putExtra("type",labourer);
+            intent.putExtra("type","labourer");
             Log.d(tag, "labourer : " + labourer.getAddressLine1());
             startActivity(intent);
-            finish();
-        } else if (id == R.id.nav_history) {
-
-        } else if (id == R.id.nav_person) {
-
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

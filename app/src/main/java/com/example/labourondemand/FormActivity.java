@@ -1,25 +1,29 @@
 package com.example.labourondemand;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,8 +45,11 @@ import java.util.HashMap;
 
 import id.zelory.compressor.Compressor;
 
-public class FormActivity extends CustomerMainActivity {
+public class FormActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
     private Services services = new Services();
 
     private EditText description, addressLine1, addressLine2, landmark, city;
@@ -63,26 +70,26 @@ public class FormActivity extends CustomerMainActivity {
     private Button submit;
     private String TAG = FormActivity.class.getName();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //FrameLayout frameLayout = (FrameLayout)findViewById(R.id.content_main_fl);
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.activity_form, null, false);
-        frameLayout.addView(view, 1);
-        //frameLayout.addView(view);
-        //setContentView(R.layout.activity_form);
+        setContentView(R.layout.activity_form);
 
-        services.setSkill(getIntent().getExtras().getString("skill"));
-        customer = (Customer) getIntent().getExtras().get("customer");
-       /* viewPager = view.findViewById(R.id.activity_form_vp);
-        floatingActionButton = view.findViewById(R.id.activity_form_fab);
-        description = view.findViewById(R.id.activity_form_et_description);
-        addressLine1 = view.findViewById(R.id.activity_form_et_address1);
-        addressLine2 = view.findViewById(R.id.activity_form_et_address2);
-        landmark = view.findViewById(R.id.activity_form_et_landmark);
-        city = view.findViewById(R.id.activity_form_et_city);*/
+        toolbar = findViewById(R.id.form_tl);
+        drawerLayout =  findViewById(R.id.form_dl);
+
+        setSupportActionBar(toolbar);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        navigationView = findViewById(R.id.nav_view);
         viewPager = findViewById(R.id.activity_form_vp);
         floatingActionButton = findViewById(R.id.activity_form_fab);
         description = findViewById(R.id.activity_form_et_description);
@@ -90,11 +97,14 @@ public class FormActivity extends CustomerMainActivity {
         addressLine2 = findViewById(R.id.activity_form_et_address2);
         landmark = findViewById(R.id.activity_form_et_landmark);
         city = findViewById(R.id.activity_form_et_city);
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
         submit = findViewById(R.id.activity_form_btn_submit);
         amount = findViewById(R.id.activity_form_et_amount);
+
+        navigationView.setNavigationItemSelectedListener(this);
+        services.setSkill(getIntent().getExtras().getString("skill"));
+        customer = (Customer) getIntent().getExtras().get("customer");
+
+
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,8 +154,8 @@ public class FormActivity extends CustomerMainActivity {
         } else {
             services.setServiceID(firebaseAuth.getUid()+"+"+String.valueOf(System.currentTimeMillis()));
             services.setSkill(getIntent().getExtras().getString("skill"));
-            services.setA1(address_line_1_string);
-            services.setA2(address_line_2_string);
+            services.setAddressLine1(address_line_1_string);
+            services.setAddressLine2(address_line_2_string);
             services.setDescription(problem_description);
             services.setCity(city_string);
             services.setLandmark(landmark_string);
@@ -158,7 +168,20 @@ public class FormActivity extends CustomerMainActivity {
     private void sendToFirebase() {
 
         final ArrayList<String> uris = new ArrayList<>();
-        HashMap<String, Object> map = new HashMap<>();
+        final HashMap<String, Object> map = new HashMap<>();
+
+        map.put("labourUID","");
+        map.put("customerUID",firebaseAuth.getUid());
+        map.put("customerAmount",services.getCustomerAmount());
+        map.put("description",services.getDescription());
+        map.put("feedback","");
+        map.put("skill",services.getSkill());
+        //map.put("images", pictures);
+        map.put("labourResponses", new HashMap<>());
+        map.put("addressLine1",services.getAddressLine1());
+        map.put("addressLine2",services.getAddressLine2());
+        map.put("city",services.getCity());
+        map.put("landmark",services.getLandmark());
 
         if(pictures.size()>0){
             for(final Uri uri : pictures){
@@ -202,6 +225,47 @@ public class FormActivity extends CustomerMainActivity {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
                                                             Log.d("done",uris.toString());
+                                                            ///////////
+                                                            firebaseFirestore.collection("services").document(services.getServiceID()).set(map,SetOptions.merge())
+                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
+
+                                                                            HashMap<String , String> m = new HashMap<>();
+                                                                            m.put("currentService",services.getServiceID());
+                                                                            firebaseFirestore.collection("customer").document(firebaseAuth.getUid()).set(m,SetOptions.merge())
+                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onSuccess(Void aVoid) {
+                                                                                            Log.d("success","!");
+
+                                                                                            //TODO: directly go to DashboardActivity
+                                                                                            Intent intent = new Intent(FormActivity.this,CustomerMainActivity.class);
+                                                                                            intent.putExtra("currentService",services.getServiceID());
+                                                                                            intent.putExtra("services",services);
+                                                                                            intent.putExtra("customer",customer);
+                                                                                            startActivity(intent);
+                                                                                            finish();
+                                                                                        }
+                                                                                    })
+                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                        @Override
+                                                                                        public void onFailure(@NonNull Exception e) {
+                                                                                            Log.d("error",e.toString());
+                                                                                        }
+                                                                                    });
+
+
+
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Log.d(TAG,"error : "+e.toString());
+                                                                        }
+                                                                    });
+
                                                         }
                                                     })
                                                     .addOnFailureListener(new OnFailureListener() {
@@ -235,61 +299,10 @@ public class FormActivity extends CustomerMainActivity {
 
             }
 
-
         }else {
             map.put("images", new ArrayList<String>());
         }
 
-
-        map.put("labourUID","");
-        map.put("customerUID",firebaseAuth.getUid());
-        map.put("customerAmount",services.getCustomerAmount());
-        map.put("description",services.getDescription());
-        map.put("feedback","");
-        map.put("skill",services.getSkill());
-        //map.put("images", pictures);
-        map.put("labourResponses", new HashMap<>());
-        map.put("a1",services.getA1());
-        map.put("a2",services.getA2());
-        map.put("city",services.getCity());
-        map.put("landmark",services.getLandmark());
-
-        firebaseFirestore.collection("services").document(services.getServiceID()).set(map,SetOptions.merge())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                        HashMap<String , String> m = new HashMap<>();
-                        m.put("currentService",services.getServiceID());
-                        firebaseFirestore.collection("customer").document(firebaseAuth.getUid()).set(m,SetOptions.merge())
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("success","!");
-                                        Intent intent = new Intent(FormActivity.this,CustomerMainActivity.class);
-                                        intent.putExtra("currentService",services.getServiceID());
-                                        intent.putExtra("customer",customer);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d("error",e.toString());
-                                    }
-                                });
-
-
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,"error : "+e.toString());
-                    }
-                });
 
     }
 
@@ -312,11 +325,18 @@ public class FormActivity extends CustomerMainActivity {
                 BringImagePicker();
 
             }
-
         } else {
 
             BringImagePicker();
 
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 1){
+            BringImagePicker();
         }
     }
 
@@ -355,4 +375,59 @@ public class FormActivity extends CustomerMainActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.form2, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }

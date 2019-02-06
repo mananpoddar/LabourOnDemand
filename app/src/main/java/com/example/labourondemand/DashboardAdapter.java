@@ -2,33 +2,30 @@ package com.example.labourondemand;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-class LabourerDashboardAdapter extends RecyclerView.Adapter<LabourerDashboardAdapter.MyViewHolder> {
+class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolder> {
     private Context context;
-    private ArrayList<Services> services;
+    private ArrayList<Services> servicesArrayList;
     private ArrayList<Labourer> labourers;
     private LabourerMainActivity labourerMainActivity;
     private CustomerMainActivity customerMainActivity;
     private Integer type;
+    private Services service;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, tags, landmark, distance;
@@ -49,38 +46,36 @@ class LabourerDashboardAdapter extends RecyclerView.Adapter<LabourerDashboardAda
     }
 
 
-    public LabourerDashboardAdapter(Context context, ArrayList<Services> services, Integer type) {
+    public DashboardAdapter(Context context, ArrayList<Services> servicesArrayList, Integer type) {
         this.context = context;
-        this.services = services;
-        //this.labourerMainActivity = (LabourerMainActivity)context;
+        this.servicesArrayList = servicesArrayList;
         this.type = type;
     }
 
-    public LabourerDashboardAdapter(Context context, Integer type, ArrayList<Labourer> labourers){
+    public DashboardAdapter(Context context, Integer type, ArrayList<Labourer> labourers, Services service){
         this.context = context;
         this.type = type;
         this.labourers = labourers;
-        //this.customerMainActivity = (CustomerMainActivity) context;
+        this.service = service;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view;
         LayoutInflater inflater = LayoutInflater.from(context);
         view = inflater.inflate(R.layout.item_service, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
-
     }
 
     @Override
-    public void onBindViewHolder(final LabourerDashboardAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final DashboardAdapter.MyViewHolder holder, final int position) {
 
         if(type == 0) {
+
             holder.accept.setVisibility(View.GONE);
-            final Services service = services.get(position);
+            final Services service = servicesArrayList.get(position);
             holder.name.setText(service.getCustomer().getName());
             holder.landmark.setText(service.getLandmark());
             Glide.with(context).load(service.getCustomer().getImage()).into(holder.photo);
@@ -101,13 +96,14 @@ class LabourerDashboardAdapter extends RecyclerView.Adapter<LabourerDashboardAda
             holder.name.setText(labourer.getName());
             holder.tags.setText("Price : "+ labourer.getCurrentServicePrice());
 
-            holder.landmark.setVisibility(View.GONE);
+            holder.landmark.setText("average Rating");
             holder.accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // go to Review Activity
-
                     Intent intent = new Intent(context,ReviewActivity.class);
+                    intent.putExtra("service",service);
+                    context.startActivity(intent);
                 }
             });
         }
@@ -116,16 +112,16 @@ class LabourerDashboardAdapter extends RecyclerView.Adapter<LabourerDashboardAda
     @Override
     public int getItemCount() {
         if(type == 0) {
-            return services.size();
+            return servicesArrayList.size();
         }else{
             return labourers.size();
         }
     }
 
     public void added(Services c){
-        Log.d("added @ adapter", services.size()+"s");
-        services.add(c);
-        notifyItemInserted(services.indexOf(c));
+        Log.d("added @ adapter", servicesArrayList.size()+"s");
+        servicesArrayList.add(c);
+        notifyItemInserted(servicesArrayList.indexOf(c));
     }
 
     public void addedFromCustomer(Labourer labourer){

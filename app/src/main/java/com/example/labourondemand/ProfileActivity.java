@@ -1,79 +1,132 @@
 package com.example.labourondemand;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends LabourerMainActivity implements PersonalDetailsFragment.OnFragmentInteractionListener,
-        WorkDetailsFragment.OnFragmentInteractionListener,AddressDetailsFragment.OnFragmentInteractionListener{
+public class ProfileActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, PersonalDetailsFragment.OnFragmentInteractionListener,
+        WorkDetailsFragment.OnFragmentInteractionListener,AddressDetailsFragment.OnFragmentInteractionListener {
 
-    private Boolean isLabourer = false, isEditting;
-    private Labourer labourer = new Labourer();
-    private Customer customer = new Customer();
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
+    private Services services = new Services();
+    private EditText description, addressLine1, addressLine2, landmark, city;
+    private Button submitButton;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
+    private Uri filePath;
+    private FloatingActionButton floatingActionButton;
+    private FirebaseStorage storage;
+    private Uri mainImageURI;
+    private ArrayList<Uri> pictures = new ArrayList<>();
+    private Customer customer;
+    private FirebaseFirestore firebaseFirestore;
+    private StorageReference storageReference;
+    private FirebaseAuth firebaseAuth;
+    private Slide slide;
+    private Bitmap compressedImageFile;
+    private EditText amount;
+    private Button submit;
     private String TAG = ProfileActivity.class.getName();
+    private Boolean isLabourer = false, isEditting;
+    private Labourer labourer = new Labourer();
     private TextView name;
     private CircleImageView photo;
     private ProgressBar progressBar;
     private String type;
 
+
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.fragment_profile, null, false);
-        drawerLayout.addView(view, 0);
+        setContentView(R.layout.activity_profile);
 
-        name = view.findViewById(R.id.profile_et_name);
-        photo = view.findViewById(R.id.profile_civ_photo);
-        progressBar = view.findViewById(R.id.profile_pb);
+        toolbar = findViewById(R.id.profile_tb);
+        drawerLayout =  findViewById(R.id.profile_dl);
+        navigationView = findViewById(R.id.profile_nav);
+        setSupportActionBar(toolbar);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setCheckedItem(2);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        name =findViewById(R.id.profile_et_name);
+        photo = findViewById(R.id.profile_civ_photo);
+        progressBar = findViewById(R.id.profile_pb);
         progressBar.setVisibility(View.VISIBLE);
 
-        /*Bundle bundle = getIntent().getExtras().getBundle("labourer");*//*
-        labourer = bundle.getParcelable("labourer");*/
         type = (String) getIntent().getExtras().get("type");
+        Bundle bundle = new Bundle();
+
         if(type.equals("labourer")){
             isLabourer = true;
             labourer = (Labourer) getIntent().getParcelableExtra("user");
+            bundle.putParcelable("labourer", labourer);
+            bundle.putString("type","labourer");
+            name.setText(labourer.getName());
+            Glide.with(getApplicationContext())
+                    .load(labourer.getImage())
+                    .into(photo);
         }else{
             //
             customer = (Customer) getIntent().getParcelableExtra("user");
+            bundle.putParcelable("customer", customer);
+            bundle.putString("type","customer");
+            name.setText(customer.getName());
+            Glide.with(getApplicationContext())
+                    .load(customer.getImage())
+                    .into(photo);
         }
 
         Log.d(TAG,"labourer"+ labourer.getAddressLine1());
         Toast.makeText(getApplicationContext(),"Hurray",Toast.LENGTH_LONG).show();
 
-        TabLayout tabLayout = view.findViewById(R.id.tablayout);
-        ImageView editButton = view.findViewById(R.id.profile_iv_edit);
+        TabLayout tabLayout = findViewById(R.id.profile_tl);
+        ImageView editButton = findViewById(R.id.profile_iv_edit);
 
 
-        name.setText(labourer.getName());
-        Glide.with(getApplicationContext())
-                .load(labourer.getImage())
-                .into(photo);
-        //tabLayout.addTab(tabLayout.newTab().setText("Personal"));
-        //tabLayout.addTab(tabLayout.newTab().setText("Address"));
-        //if(isLabourer) tabLayout.addTab(tabLayout.newTab().setText("Work"));
-        //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("labourer", labourer);
 
-        viewPager = view.findViewById(R.id.viewpager);
+
+
+        viewPager = findViewById(R.id.profile_vp);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         PersonalDetailsFragment personalDetailsFragment = new PersonalDetailsFragment();
         AddressDetailsFragment addressDetailsFragment = new AddressDetailsFragment();
@@ -92,27 +145,7 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
         }
 
         viewPager.setAdapter(viewPagerAdapter);
-        viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
-        /*viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });*/
-
         isEditting = false;
 
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -223,5 +256,71 @@ public class ProfileActivity extends LabourerMainActivity implements PersonalDet
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.profile_activity2, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_dashboard) {
+            Intent intent;
+            if(type.equals("customer")){
+                 intent = new Intent(this,CustomerMainActivity.class);
+                intent.putExtra("customer",customer);
+            }else{
+                intent = new Intent(this,LabourerMainActivity.class);
+                intent.putExtra("labourer",labourer);
+            }
+            startActivity(intent);
+
+        } else if (id == R.id.nav_history) {
+            Intent intent = new Intent(this, PreviousActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_person) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

@@ -89,7 +89,7 @@
         android:backgroundTint="@color/orange"
         android:paddingBottom="20dp"
         android:paddingTop="20dp"
-        android:text="Dont have a account?"
+        android:text="Don't have an account?"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="18sp"

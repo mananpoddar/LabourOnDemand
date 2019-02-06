@@ -100,46 +100,54 @@ public class ServiceAmountFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                HashMap<String, HashMap<String,Long>> map = new HashMap<>();
-                HashMap<String, Long> m = new HashMap<>();
-                m.put(firebaseAuth.getUid(),Long.valueOf(labourerAmount.getText().toString()));
-                map.put("labourResponses", m);
-                services.setCustomerAmount(Long.valueOf(labourerAmount.getText().toString()));
-                final String sid = services.getServiceID();
-                services.setLabourerResponses(m);
+                if(labourerAmount.getText().toString() != null) {
 
-                firebaseFirestore.collection("services").document(sid).set(map, SetOptions.merge())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                HashMap<String, String> lab = new HashMap<>();
-                                lab.put("currentService",sid );
+                    HashMap<String, HashMap<String, Long>> map = new HashMap<>();
+                    HashMap<String, Long> m = new HashMap<>();
+                    m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
 
-                                firebaseFirestore.collection("labourer").document(firebaseAuth.getUid())
-                                        .set(lab,SetOptions.merge())
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Intent intent = new Intent(view.getContext(),LabourerMainActivity.class);
-                                                intent.putExtra("currentService", sid);
-                                                startActivity(intent);
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
+                    //TODO: updating labourResponse ;
+                    map.put("labourResponses", m);
+                    services.setCustomerAmount(Long.valueOf(labourerAmount.getText().toString()));
+                    final String sid = services.getServiceID();
+                    services.setLabourerResponses(m);
 
-                                            }
-                                        });
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
+                    firebaseFirestore.collection("services").document(sid).set(map, SetOptions.merge())
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    HashMap<String, String> lab = new HashMap<>();
+                                    lab.put("currentService", sid);
 
-                            }
-                        });
+                                    firebaseFirestore.collection("labourer").document(firebaseAuth.getUid())
+                                            .set(lab, SetOptions.merge())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Intent intent = new Intent(view.getContext(), LabourerMainActivity.class);
+                                                    intent.putExtra("currentService", sid);
+                                                    startActivity(intent);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
 
+                                                }
+                                            });
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+                }else{
+
+                    labourerAmount.setError("Give an amount and then submit");
+
+                }
             }
         });
 

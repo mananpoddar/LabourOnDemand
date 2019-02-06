@@ -36,15 +36,20 @@ public class CustomerMainActivity extends AppCompatActivity
     private Intent intent;
     private String current;
     protected  FrameLayout frameLayout;
+    private Toolbar toolbar;
+    private FloatingActionButton fab;
+    private NavigationView navigationView;
+    private Services services;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        frameLayout = findViewById(R.id.content_main_fl);
+
+        //frameLayout = findViewById(R.id.content_main_fl);
         carpenter = findViewById(R.id.dashboard_ib_carpenter);
         plumber = findViewById(R.id.dashboard_ib_plumber);
         painter = findViewById(R.id.dashboard_ib_painter);
@@ -59,23 +64,26 @@ public class CustomerMainActivity extends AppCompatActivity
         if(getIntent().getExtras() != null) {
             customer = (Customer) getIntent().getExtras().get("customer");
             current = getIntent().getExtras().getString("currentService");
+            services = (Services) getIntent().getExtras().get("services");
         }
+
         if(customer == null) {
             fetchFromFirebase();
         }else if(current != null){
             Intent intent = new Intent(CustomerMainActivity.this,CustomerDashboard2Activity.class);
+            intent.putExtra("services",services);
             intent.putExtra("customer",customer);
             startActivity(intent);
             finish();
-        }else{
-            intent.putExtra("customer",customer);
         }
+        intent.putExtra("customer",customer);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab = findViewById(R.id.customer_main_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Yet to be develpoed", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -86,10 +94,8 @@ public class CustomerMainActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
 
         carpenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,13 +229,23 @@ public class CustomerMainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_dashboard) {
-            // Handle the camera action
+
         } else if (id == R.id.nav_history) {
-
+            Intent intent = new Intent(this, PreviousActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_person) {
-
+            Intent intent = new Intent(this, ProfileActivity.class);
+            /*Bundle bundle = new Bundle();
+            bundle.putParcelable("labourer",labourer);*/
+            intent.putExtra("user", customer);
+            intent.putExtra("type","customer");
+            //Log.d(tag, "labourer : " + labourer.getAddressLine1());
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
-
+            Intent intent = new Intent(this,ProfileActivity.class);
+            intent.putExtra("type","customer");
+            intent.putExtra("user",customer);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

@@ -15,93 +15,13 @@ public class Services implements Parcelable {
     private long customerAmount;
     private ArrayList<String> images;
     private GeoPoint from, to;
-    private String a1, a2, landmark, city, serviceID;
+    private String addressLine1, addressLine2, landmark, city, serviceID;
     private HashMap<String, Long> labourerResponses;
     private Customer customer;
     private Labourer labourer;
 
-    protected Services(Parcel in) {
-        skill = in.readString();
-        customerUID = in.readString();
-        description = in.readString();
-        feedback = in.readString();
-        labourUID = in.readString();
-        customerAmount = in.readLong();
-        images = in.createStringArrayList();
-        a1 = in.readString();
-        a2 = in.readString();
-        landmark = in.readString();
-        city = in.readString();
-        serviceID = in.readString();
-        customer = in.readParcelable(Customer.class.getClassLoader());
-        labourer = in.readParcelable(Labourer.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(skill);
-        dest.writeString(customerUID);
-        dest.writeString(description);
-        dest.writeString(feedback);
-        dest.writeString(labourUID);
-        dest.writeLong(customerAmount);
-        dest.writeStringList(images);
-        dest.writeString(a1);
-        dest.writeString(a2);
-        dest.writeString(landmark);
-        dest.writeString(city);
-        dest.writeString(serviceID);
-        dest.writeParcelable(customer, flags);
-        dest.writeParcelable(labourer, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Services> CREATOR = new Creator<Services>() {
-        @Override
-        public Services createFromParcel(Parcel in) {
-            return new Services(in);
-        }
-
-        @Override
-        public Services[] newArray(int size) {
-            return new Services[size];
-        }
-    };
-
-    public Labourer getLabourer() {
-        return labourer;
-    }
-
-    public void setLabourer(Labourer labourer) {
-        this.labourer = labourer;
-    }
-
-    public Services(String skill, String customerUID, String description, String feedback, String labourUID, long customerAmount, ArrayList<String> images, GeoPoint from, GeoPoint to, String a1, String a2, String landmark, String city, String serviceID, HashMap<String, Long> labourerResponses, Customer customer) {
-        this.skill = skill;
-        this.customerUID = customerUID;
-        this.description = description;
-        this.feedback = feedback;
-        this.labourUID = labourUID;
-        this.customerAmount = customerAmount;
-        this.images = images;
-        this.from = from;
-        this.to = to;
-        this.a1 = a1;
-        this.a2 = a2;
-        this.landmark = landmark;
-        this.city = city;
-        this.serviceID = serviceID;
-        this.labourerResponses = labourerResponses;
-        this.customer = customer;
-    }
-
     public Services() {
     }
-
 
     public String getSkill() {
         return skill;
@@ -175,20 +95,20 @@ public class Services implements Parcelable {
         this.to = to;
     }
 
-    public String getA1() {
-        return a1;
+    public String getAddressLine1() {
+        return addressLine1;
     }
 
-    public void setA1(String a1) {
-        this.a1 = a1;
+    public void setAddressLine1(String addressLine1) {
+        this.addressLine1 = addressLine1;
     }
 
-    public String getA2() {
-        return a2;
+    public String getAddressLine2() {
+        return addressLine2;
     }
 
-    public void setA2(String a2) {
-        this.a2 = a2;
+    public void setAddressLine2(String addressLine2) {
+        this.addressLine2 = addressLine2;
     }
 
     public String getLandmark() {
@@ -230,4 +150,64 @@ public class Services implements Parcelable {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+
+    public Labourer getLabourer() {
+        return labourer;
+    }
+
+    public void setLabourer(Labourer labourer) {
+        this.labourer = labourer;
+    }
+
+    protected Services(Parcel in) {
+        skill = in.readString();
+        customerUID = in.readString();
+        description = in.readString();
+        feedback = in.readString();
+        labourUID = in.readString();
+        customerAmount = in.readLong();
+        images = in.createStringArrayList();
+        addressLine1 = in.readString();
+        addressLine2 = in.readString();
+        landmark = in.readString();
+        city = in.readString();
+        serviceID = in.readString();
+        customer = in.readParcelable(Customer.class.getClassLoader());
+        labourer = in.readParcelable(Labourer.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(skill);
+        dest.writeString(customerUID);
+        dest.writeString(description);
+        dest.writeString(feedback);
+        dest.writeString(labourUID);
+        dest.writeLong(customerAmount);
+        dest.writeStringList(images);
+        dest.writeString(addressLine1);
+        dest.writeString(addressLine2);
+        dest.writeString(landmark);
+        dest.writeString(city);
+        dest.writeString(serviceID);
+        dest.writeParcelable(customer, flags);
+        dest.writeParcelable(labourer, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Services> CREATOR = new Creator<Services>() {
+        @Override
+        public Services createFromParcel(Parcel in) {
+            return new Services(in);
+        }
+
+        @Override
+        public Services[] newArray(int size) {
+            return new Services[size];
+        }
+    };
 }

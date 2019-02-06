@@ -9,56 +9,14 @@ import java.util.ArrayList;
 
 public class Customer implements Parcelable {
 
-    private String name, image, dob, city, state, currentService, addressLine1, addressLine2, addressLine3, phone;
+    private String name, image, dob, city, state, currentService, addressLine1, addressLine2, addressLine3;
     private GeoPoint currentLocation;
+    private Long phone,currentServicePrice;
     private ArrayList<String> servicesId;
     private ArrayList<Services> services;
 
     public Customer() {
     }
-
-    public Customer(String name, String image, String dob, String city, String state, String currentService, String addressLine1, String addressLine2, String addressLine3, String phone, GeoPoint currentLocation, ArrayList<String> servicesId, ArrayList<Services> services) {
-        this.name = name;
-        this.image = image;
-        this.dob = dob;
-        this.city = city;
-        this.state = state;
-        this.currentService = currentService;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.addressLine3 = addressLine3;
-        this.phone = phone;
-        this.currentLocation = currentLocation;
-        this.servicesId = servicesId;
-        this.services = services;
-    }
-
-    protected Customer(Parcel in) {
-        name = in.readString();
-        image = in.readString();
-        dob = in.readString();
-        city = in.readString();
-        state = in.readString();
-        currentService = in.readString();
-        addressLine1 = in.readString();
-        addressLine2 = in.readString();
-        addressLine3 = in.readString();
-        phone = in.readString();
-        servicesId = in.createStringArrayList();
-        services = in.createTypedArrayList(Services.CREATOR);
-    }
-
-    public static final Creator<Customer> CREATOR = new Creator<Customer>() {
-        @Override
-        public Customer createFromParcel(Parcel in) {
-            return new Customer(in);
-        }
-
-        @Override
-        public Customer[] newArray(int size) {
-            return new Customer[size];
-        }
-    };
 
     public String getName() {
         return name;
@@ -132,20 +90,28 @@ public class Customer implements Parcelable {
         this.addressLine3 = addressLine3;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public GeoPoint getCurrentLocation() {
         return currentLocation;
     }
 
     public void setCurrentLocation(GeoPoint currentLocation) {
         this.currentLocation = currentLocation;
+    }
+
+    public Long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Long phone) {
+        this.phone = phone;
+    }
+
+    public Long getCurrentServicePrice() {
+        return currentServicePrice;
+    }
+
+    public void setCurrentServicePrice(Long currentServicePrice) {
+        this.currentServicePrice = currentServicePrice;
     }
 
     public ArrayList<String> getServicesId() {
@@ -164,6 +130,42 @@ public class Customer implements Parcelable {
         this.services = services;
     }
 
+    protected Customer(Parcel in) {
+        name = in.readString();
+        image = in.readString();
+        dob = in.readString();
+        city = in.readString();
+        state = in.readString();
+        currentService = in.readString();
+        addressLine1 = in.readString();
+        addressLine2 = in.readString();
+        addressLine3 = in.readString();
+        if (in.readByte() == 0) {
+            phone = null;
+        } else {
+            phone = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            currentServicePrice = null;
+        } else {
+            currentServicePrice = in.readLong();
+        }
+        servicesId = in.createStringArrayList();
+        services = in.createTypedArrayList(Services.CREATOR);
+    }
+
+    public static final Creator<Customer> CREATOR = new Creator<Customer>() {
+        @Override
+        public Customer createFromParcel(Parcel in) {
+            return new Customer(in);
+        }
+
+        @Override
+        public Customer[] newArray(int size) {
+            return new Customer[size];
+        }
+    };
+
     @Override
     public int describeContents() {
         return 0;
@@ -180,7 +182,18 @@ public class Customer implements Parcelable {
         dest.writeString(addressLine1);
         dest.writeString(addressLine2);
         dest.writeString(addressLine3);
-        dest.writeString(phone);
+        if (phone == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(phone);
+        }
+        if (currentServicePrice == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(currentServicePrice);
+        }
         dest.writeStringList(servicesId);
         dest.writeTypedList(services);
     }

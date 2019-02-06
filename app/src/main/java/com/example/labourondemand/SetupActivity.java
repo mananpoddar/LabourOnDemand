@@ -78,7 +78,6 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup2);
 
-        Toast.makeText(getApplicationContext(),"cscd",Toast.LENGTH_LONG).show();
         type = getIntent().getExtras().getString("type");
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -86,6 +85,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         firebaseFirestore = FirebaseFirestore.getInstance();
         /*viewPager = findViewById(R.id.setup_vp);
         tabs = findViewById(R.id.setup_tl);*/
+
         submit = findViewById(R.id.setup2_btn_submit);
         photo = findViewById(R.id.setup_iv_photo);
         name = findViewById(R.id.setup_details_et_name);
@@ -205,26 +205,23 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
                     }
 
                 } else {
-
                     BringImagePicker();
-
                 }
-
             }
         });
+    }
 
-        //Defines the number of tabs by setting appropriate fragment and tab name
-        /*setupViewPager(viewPager);
-
-        // Assigns the ViewPager to TabLayout
-        tabs.setupWithViewPager(viewPager);*/
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 1){
+            BringImagePicker();
+        }
     }
 
     private void sendToFirebase() {
 
         progressBar.setVisibility(View.VISIBLE);
-
         if (isChanged) {
 
             userId = firebaseAuth.getCurrentUser().getUid();
@@ -281,40 +278,27 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         }else {
             storeFirestore(null);
         }
-        /*else {
-                        //GeoPoint location = loc
-                        storeFirestore(null, user_name,phone, lo);
-
-                    }*/
 
     }
 
     private void storeFirestore(Uri uri) {
 
         Uri download_uri = uri;
-        /*if(task != null) {
-
-            download_uri = task.getResult().g
-
-        } else {
-
-            download_uri = mainImageURI;
-
-        }*/
 
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("name", name.getText().toString());
         userMap.put("image", download_uri.toString());
-        userMap.put("phone", phone.getText().toString());
+        userMap.put("phone", Long.valueOf(phone.getText().toString()));
         userMap.put("city", city.getText().toString());
         userMap.put("state", state.getText().toString());
         userMap.put("addressLine1", a1.getText().toString());
         userMap.put("addressLine2", a2.getText().toString());
         userMap.put("addressLine3", a3.getText().toString());
         userMap.put("dob", dob.getText().toString());
+
         if(type.equals("labourer")) {
             userMap.put("skill", skill.getText().toString());
-            userMap.put("workexperience", workExperience.getText().toString());
+            userMap.put("workExperience", Long.valueOf(workExperience.getText().toString()));
         }
         ArrayList<String> h = new ArrayList<>();
         HashMap<String,Integer> m = new HashMap<>();
