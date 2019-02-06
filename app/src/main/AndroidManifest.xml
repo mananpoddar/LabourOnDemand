@@ -16,7 +16,6 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".SettingsActivity"></activity>
         <activity android:name=".ForgotPasswordActivity" />
         <activity
             android:name=".CustomerDashboard2Activity"

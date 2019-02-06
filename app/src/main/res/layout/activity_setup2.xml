@@ -100,6 +100,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
                     android:hint="Skill"
+                    android:focusableInTouchMode="false"
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorPrimary" />
 
