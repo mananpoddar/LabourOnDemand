@@ -1,43 +1,102 @@
 package com.example.labourondemand;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class CustomerDashboard2Activity extends CustomerMainActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
 
+public class CustomerDashboard2Activity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
+    private android.support.design.widget.NavigationView navigationView;
+    private EditText description, addressLine1, addressLine2, landmark, city;
+    private Button submitButton;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
+    private Uri filePath;
+    private FloatingActionButton floatingActionButton;
+    private FirebaseStorage storage;
+    private Uri mainImageURI;
+    private ArrayList<Uri> pictures = new ArrayList<>();
+    private StorageReference storageReference;
+    private Slide slide;
+    private Bitmap compressedImageFile;
+    private EditText amount;
+    private Button submit;
+    private String TAG = ProfileActivity.class.getName();
+    private Boolean isLabourer = false, isEditting;
+    private Labourer labourer = new Labourer();
+    private TextView name;
+    private CircleImageView photo;
+    private ProgressBar progressBar;
+    private String type;
     private Customer customer;
     private RecyclerView recyclerView;
-    private LabourerDashboardAdapter customerDashboardAdapter;
+    private DashboardAdapter customerDashboardAdapter;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private Services services;
+    private Services services = new Services();
+    private TextView noResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.activity_customer_dashboard2, null, false);
-        drawerLayout.addView(view, 0);
+        setContentView(R.layout.activity_customer_dashboard2);
 
+        toolbar = findViewById(R.id.customer_dashboard2_tb);
+        drawerLayout =  findViewById(R.id.customer_dashboard2_dl);
+
+        setSupportActionBar(toolbar);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = findViewById(R.id.customer_dashboard2_nav);
+        navigationView.setNavigationItemSelectedListener(this);
+        noResponse = findViewById(R.id.customer_dashboard2_tv_no_response);
+        services = (Services) getIntent().getExtras().get("services");
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         customer = (Customer) getIntent().getExtras().get("customer");
-        recyclerView = view.findViewById(R.id.customer_dashboard2_rv);
-        customerDashboardAdapter = new LabourerDashboardAdapter(getApplicationContext(),1,new ArrayList<Labourer>());
+
+        recyclerView = findViewById(R.id.customer_dashboard2_rv);
+        customerDashboardAdapter = new DashboardAdapter(getApplicationContext(),1,new ArrayList<Labourer>(), services);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(customerDashboardAdapter);
         recyclerView.setHasFixedSize(false);
@@ -54,7 +113,6 @@ public class CustomerDashboard2Activity extends CustomerMainActivity {
                         if(services.getLabourerResponses() != null) {
 
                             for (final String s : services.getLabourerResponses().keySet()) {
-
                                 firebaseFirestore.collection("labourer").document(s)
                                         .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
@@ -63,18 +121,17 @@ public class CustomerDashboard2Activity extends CustomerMainActivity {
                                         labourer.setCurrentServicePrice(services.getLabourerResponses().get(s));
                                         labourer = documentSnapshot.toObject(Labourer.class);
                                         customerDashboardAdapter.addedFromCustomer(labourer);
-
                                     }
-                                })
-                                        .addOnFailureListener(new OnFailureListener() {
+                                }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
 
                                             }
                                         });
                             }
-                        }else{
 
+                        }else{
+                            noResponse.setText("No Response from any Labourers");
                         }
                     }
                 })
@@ -85,4 +142,67 @@ public class CustomerDashboard2Activity extends CustomerMainActivity {
                     }
                 });
     }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.profile_activity2, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_dashboard) {
+            // Handle the camera action
+        } else if (id == R.id.nav_history) {
+            Intent intent = new Intent(this, PreviousActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_person) {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            /*Bundle bundle = new Bundle();
+            bundle.putParcelable("labourer",labourer);*/
+            intent.putExtra("user", customer);
+            intent.putExtra("type","customer");
+            //Log.d(tag, "labourer : " + labourer.getAddressLine1());
+            startActivity(intent);
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 }

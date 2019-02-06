@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,11 +10,12 @@
         android:id="@+id/register_tv_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="64dp"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="@color/colorPrimary"
         android:text="LOD"
+        android:backgroundTint="@color/colorPrimary"
+
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary"
         android:textSize="64sp"
@@ -108,9 +108,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/orange"
-        android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:text="Dont have a account?"
+        android:paddingTop="20dp"
+        android:text="Don't have an account?"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="18sp"

@@ -9,8 +9,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/setup2_btn_submit">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,38 +29,38 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:layout_marginTop="@dimen/margin_larger">
+                android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
+                    android:hint="Name"
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:hint="Name" />
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:layout_marginTop="@dimen/margin_larger">
+                android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
+                    android:hint="Phone"
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:hint="Phone" />
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -67,20 +68,20 @@
                 android:id="@+id/setup_details_til_dob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:layout_marginTop="@dimen/margin_larger">
+                android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_dob"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
                     android:focusableInTouchMode="false"
-                    android:hint="Date Of Birth" />
+                    android:hint="Date Of Birth"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -88,19 +89,19 @@
                 android:id="@+id/setup_tip_skill"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:layout_marginTop="@dimen/margin_larger">
+                android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_skill"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
+                    android:hint="Skill"
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:hint="Skill" />
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -108,96 +109,96 @@
                 android:id="@+id/setup_tip_work"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:layout_marginTop="@dimen/margin_larger">
+                android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_details_et_work_experience"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Work Experience (years)"
                     android:backgroundTint="@color/colorPrimary"
+                    android:hint="Work Experience (years)"
+                    android:inputType="number"
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:inputType="number" />
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:layout_marginTop="@dimen/margin_larger">
+                android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_address_et_address_line_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
+                    android:hint="Address Line 1"
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:hint="Address Line 1" />
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:layout_marginTop="@dimen/margin_larger">
+                android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_address_et_address_line_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
+                    android:hint="Address Line 2"
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:hint="Address Line 2" />
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:layout_marginTop="@dimen/margin_larger">
+                android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_address_et_address_line_3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
+                    android:hint="Address Line 3"
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:hint="Address Line 3" />
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:layout_marginTop="@dimen/margin_larger">
+                android:textColorHint="@color/colorPrimary">
 
                 <EditText
                     android:id="@+id/setup_address_et_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
+                    android:hint="City"
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:hint="City" />
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -214,29 +215,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
+                    android:hint="State"
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
-                    android:hint="State" />
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/setup2_btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/orange"
+                android:text="Submit"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
     </ScrollView>
-
-    <Button
-        android:id="@+id/setup2_btn_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/orange"
-        android:text="Submit"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
         android:id="@+id/setup_pb"

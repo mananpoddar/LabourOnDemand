@@ -9,74 +9,16 @@ import java.util.ArrayList;
 
 public class Labourer implements Parcelable {
 
-    private String name, image, skill, dob, workExperience, city, state, currentService, addressLine1, addressLine2, addressLine3;
-    private Long currentServicePrice;
-    private String phone;
+    private String name, image, skill, dob, city, state, currentService, addressLine1, addressLine2, addressLine3;
+    private Long currentServicePrice, phone;
     private Double averageRating;
     private GeoPoint currentLocation;
-    private Boolean isBusy, isLabourer;
+    private Boolean isBusy;
     private ArrayList<String> servicesId;
     private ArrayList<Services> services;
 
     public Labourer() {
     }
-
-    public Labourer(String name, String image, String skill, String dob, String workExperience, String city, String state, String currentService, String addressLine1, String addressLine2, String addressLine3, String phone, Double averageRating, GeoPoint currentLocation, Boolean isBusy, Boolean isLabourer, ArrayList<String> services) {
-        this.name = name;
-        this.image = image;
-        this.skill = skill;
-        this.dob = dob;
-        this.workExperience = workExperience;
-        this.city = city;
-        this.state = state;
-        this.currentService = currentService;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.addressLine3 = addressLine3;
-        this.phone = phone;
-        this.averageRating = averageRating;
-        this.currentLocation = currentLocation;
-        this.isBusy = isBusy;
-        this.isLabourer = isLabourer;
-        this.servicesId = services;
-    }
-
-    protected Labourer(Parcel in) {
-        name = in.readString();
-        image = in.readString();
-        skill = in.readString();
-        dob = in.readString();
-        workExperience = in.readString();
-        city = in.readString();
-        state = in.readString();
-        currentService = in.readString();
-        addressLine1 = in.readString();
-        addressLine2 = in.readString();
-        addressLine3 = in.readString();
-        phone = in.readString();
-        if (in.readByte() == 0) {
-            averageRating = null;
-        } else {
-            averageRating = in.readDouble();
-        }
-        byte tmpIsBusy = in.readByte();
-        isBusy = tmpIsBusy == 0 ? null : tmpIsBusy == 1;
-        byte tmpIsLabourer = in.readByte();
-        isLabourer = tmpIsLabourer == 0 ? null : tmpIsLabourer == 1;
-        servicesId = in.createStringArrayList();
-    }
-
-    public static final Creator<Labourer> CREATOR = new Creator<Labourer>() {
-        @Override
-        public Labourer createFromParcel(Parcel in) {
-            return new Labourer(in);
-        }
-
-        @Override
-        public Labourer[] newArray(int size) {
-            return new Labourer[size];
-        }
-    };
 
     public String getName() {
         return name;
@@ -108,14 +50,6 @@ public class Labourer implements Parcelable {
 
     public void setDob(String dob) {
         this.dob = dob;
-    }
-
-    public String getWorkExperience() {
-        return workExperience;
-    }
-
-    public void setWorkExperience(String workExperience) {
-        this.workExperience = workExperience;
     }
 
     public String getCity() {
@@ -166,11 +100,19 @@ public class Labourer implements Parcelable {
         this.addressLine3 = addressLine3;
     }
 
-    public String getPhone() {
+    public Long getCurrentServicePrice() {
+        return currentServicePrice;
+    }
+
+    public void setCurrentServicePrice(Long currentServicePrice) {
+        this.currentServicePrice = currentServicePrice;
+    }
+
+    public Long getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public void setPhone(Long phone) {
         this.phone = phone;
     }
 
@@ -198,26 +140,6 @@ public class Labourer implements Parcelable {
         isBusy = busy;
     }
 
-    public Boolean getLabourer() {
-        return isLabourer;
-    }
-
-    public void setLabourer(Boolean labourer) {
-        isLabourer = labourer;
-    }
-
-    public ArrayList<String> getServices() {
-        return servicesId;
-    }
-
-    public Long getCurrentServicePrice() {
-        return currentServicePrice;
-    }
-
-    public void setCurrentServicePrice(Long currentServicePrice) {
-        this.currentServicePrice = currentServicePrice;
-    }
-
     public ArrayList<String> getServicesId() {
         return servicesId;
     }
@@ -226,9 +148,57 @@ public class Labourer implements Parcelable {
         this.servicesId = servicesId;
     }
 
+    public ArrayList<Services> getServices() {
+        return services;
+    }
+
     public void setServices(ArrayList<Services> services) {
         this.services = services;
     }
+
+    protected Labourer(Parcel in) {
+        name = in.readString();
+        image = in.readString();
+        skill = in.readString();
+        dob = in.readString();
+        city = in.readString();
+        state = in.readString();
+        currentService = in.readString();
+        addressLine1 = in.readString();
+        addressLine2 = in.readString();
+        addressLine3 = in.readString();
+        if (in.readByte() == 0) {
+            currentServicePrice = null;
+        } else {
+            currentServicePrice = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            phone = null;
+        } else {
+            phone = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            averageRating = null;
+        } else {
+            averageRating = in.readDouble();
+        }
+        byte tmpIsBusy = in.readByte();
+        isBusy = tmpIsBusy == 0 ? null : tmpIsBusy == 1;
+        servicesId = in.createStringArrayList();
+        services = in.createTypedArrayList(Services.CREATOR);
+    }
+
+    public static final Creator<Labourer> CREATOR = new Creator<Labourer>() {
+        @Override
+        public Labourer createFromParcel(Parcel in) {
+            return new Labourer(in);
+        }
+
+        @Override
+        public Labourer[] newArray(int size) {
+            return new Labourer[size];
+        }
+    };
 
     @Override
     public int describeContents() {
@@ -241,14 +211,24 @@ public class Labourer implements Parcelable {
         dest.writeString(image);
         dest.writeString(skill);
         dest.writeString(dob);
-        dest.writeString(workExperience);
         dest.writeString(city);
         dest.writeString(state);
         dest.writeString(currentService);
         dest.writeString(addressLine1);
         dest.writeString(addressLine2);
         dest.writeString(addressLine3);
-        dest.writeString(phone);
+        if (currentServicePrice == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(currentServicePrice);
+        }
+        if (phone == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(phone);
+        }
         if (averageRating == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -256,7 +236,7 @@ public class Labourer implements Parcelable {
             dest.writeDouble(averageRating);
         }
         dest.writeByte((byte) (isBusy == null ? 0 : isBusy ? 1 : 2));
-        dest.writeByte((byte) (isLabourer == null ? 0 : isLabourer ? 1 : 2));
         dest.writeStringList(servicesId);
+        dest.writeTypedList(services);
     }
 }

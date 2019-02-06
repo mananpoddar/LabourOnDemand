@@ -77,9 +77,9 @@ public class WorkDetailsFragment extends Fragment {
        skill = view.findViewById(R.id.work_et_skill);
        ratingBar = view.findViewById(R.id.work_rb);
 
-       //skill.setText(labourer.getSkill());
+       skill.setText(labourer.getSkill());
 
-       //ratingBar.setRating(Float.parseFloat(labourer.getAverageRating().toString()));
+       ratingBar.setRating(Float.parseFloat(labourer.getAverageRating().toString()));
 
        return view;
     }

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -63,11 +64,22 @@ public class ServiceAddressFragment extends Fragment {
     }
 
     private Services services;
+    private TextView a1, a2, landmark, city;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_service_address, container, false);
+
+        a1 = view.findViewById(R.id.service_address_tv_line1);
+        a2 = view.findViewById(R.id.service_address_tv_line2);
+        landmark = view.findViewById(R.id.service_address_tv_landmark);
+        city = view.findViewById(R.id.service_address_tv_city);
+
+        city.setText(services.getCity());
+        landmark.setText(services.getLandmark());
+        a1.setText(services.getAddressLine1());
+        a2.setText(services.getAddressLine2());
 
         return view;
     }

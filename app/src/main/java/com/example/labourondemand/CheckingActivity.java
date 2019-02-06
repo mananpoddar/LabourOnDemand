@@ -18,7 +18,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CheckingActivity extends AppCompatActivity {
 
-
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth mAuth;
     private String current_user_id;

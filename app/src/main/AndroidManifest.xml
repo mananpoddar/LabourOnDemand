@@ -15,23 +15,44 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity android:name=".SettingsActivity"></activity>
         <activity android:name=".ForgotPasswordActivity" />
         <activity
-            android:name=".Form2Activity"
+            android:name=".CustomerDashboard2Activity"
+            android:label="@string/title_activity_customer_dashboard22"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"/>
+
+        <activity
+            android:name=".ReviewActivity"
+            android:label="@string/title_activity_review2"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+
+        <activity
+            android:name=".DetailServiceActivity"
+            android:label="@string/title_activity_detail_service2"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile2"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+
+        <activity
+            android:name=".FormActivity"
             android:label="@string/title_activity_form2"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
-        <activity android:name=".CustomerDashboard2Activity" />
-        <activity android:name=".DetailServiceActivity" />
-        <activity android:name=".FormActivity" />
-        <activity android:name=".ProfileActivity" />
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+
         <activity android:name=".SetupActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
+        <activity android:name=".PreviousActivity"/>
+
         <activity
             android:name=".LabourerMainActivity"
             android:label="@string/title_activity_labourer_main"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".CheckingActivity"
             android:label="@string/app_name"
@@ -43,9 +64,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".CustomerMainActivity" />
+
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
+
     </application>
 
 </manifest>

@@ -14,7 +14,7 @@
         android:paddingBottom="@dimen/padding_normal">
 
         <TextView
-            android:id="@+id/service_addres_line1"
+            android:id="@+id/service_address_line1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_larger"
@@ -23,13 +23,13 @@
             android:textSize="@dimen/text_size_small" />
 
         <TextView
-            android:id="@+id/service_addres_tv_line1"
+            android:id="@+id/service_address_tv_line1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_normal" />
 
         <TextView
-            android:id="@+id/service_addres_tv_line2_label"
+            android:id="@+id/service_address_tv_line2_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_larger"
@@ -38,7 +38,7 @@
             android:textSize="@dimen/text_size_small" />
 
         <TextView
-            android:id="@+id/service_addres_tv_line2"
+            android:id="@+id/service_address_tv_line2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_normal" />

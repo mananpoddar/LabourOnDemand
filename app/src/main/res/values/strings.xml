@@ -13,11 +13,17 @@
         <item>plumber</item>
         <item>electrician</item>
         <item>painter</item>
+        <item>constructor</item>
+        <item>housemaid</item>
 
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_form2">Form2Activity</string>
+    <string name="title_activity_profile2">ProfileActivity2</string>
+    <string name="title_activity_detail_service2">DetailServiceActivity2</string>
+    <string name="title_activity_review2">ReviewActivity2</string>
+    <string name="title_activity_customer_dashboard22">CustomerDashboardActivity22</string>
 
 </resources>

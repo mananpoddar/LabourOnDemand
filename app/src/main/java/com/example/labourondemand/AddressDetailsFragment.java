@@ -59,12 +59,20 @@ public class AddressDetailsFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            labourer = bundle.getParcelable("labourer");
+            type = bundle.getString("type");
+
+            if(type.equals("customer")){
+                customer = bundle.getParcelable("customer");
+            }else{
+                labourer = bundle.getParcelable("labourer");
+            }
         }
     }
 
     private Labourer labourer = new Labourer();
-    private EditText a1,a2,a3,city;
+    private Customer customer = new Customer();
+    private String type;
+    private EditText a1,a2,a3,city,state;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,7 +84,21 @@ public class AddressDetailsFragment extends Fragment {
         a2 = view.findViewById(R.id.address_details_et_a2);
         a3 = view.findViewById(R.id.address_details_et_a3);
         city = view.findViewById(R.id.address_details_et_city);
+        state = view.findViewById(R.id.address_details_et_state);
 
+        if(type.equals("labourer")){
+            a1.setText(labourer.getAddressLine1());
+            a2.setText(labourer.getAddressLine2());
+            a3.setText(labourer.getAddressLine3());
+            city.setText(labourer.getCity());
+            state.setText(labourer.getState());
+        }else{
+            a1.setText(customer.getAddressLine1());
+            a2.setText(customer.getAddressLine2());
+            a3.setText(customer.getAddressLine3());
+            city.setText(customer.getCity());
+            state.setText(customer.getState());
+        }
 
         return view;
     }
