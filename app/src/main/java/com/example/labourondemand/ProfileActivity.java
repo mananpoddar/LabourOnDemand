@@ -108,7 +108,6 @@ public class ProfileActivity extends AppCompatActivity
         submit.setVisibility(View.GONE);
         tabLayout = findViewById(R.id.profile_tl);
         edit = findViewById(R.id.profile_iv_edit);
-        progressBar.setVisibility(View.GONE);
         submit.setClickable(false);
         type = (String) getIntent().getExtras().get("type");
         Bundle bundle = new Bundle();
@@ -134,7 +133,7 @@ public class ProfileActivity extends AppCompatActivity
         }
 
         Log.d(TAG, "labourer" + labourer.getAddressLine1());
-        Toast.makeText(getApplicationContext(), "Hurray", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "Hurray", Toast.LENGTH_LONG).show();
 
         viewPager = findViewById(R.id.profile_vp);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -168,6 +167,167 @@ public class ProfileActivity extends AppCompatActivity
             }
         });
 
+        progressBar.setVisibility(View.GONE);
+    }
+
+
+    public void editfunction(View v) {
+
+        name = findViewById(R.id.profile_et_name);
+        emailid = findViewById(R.id.personal_et_email);
+        phone = findViewById(R.id.personal_et_phone);
+        dob = findViewById(R.id.personal_et_dob);
+        address1 = findViewById(R.id.address_details_et_a1);
+        address2 = findViewById(R.id.address_details_et_a2);
+        address3 = findViewById(R.id.address_details_et_a3);
+        city = findViewById(R.id.address_details_et_city);
+        state = findViewById(R.id.address_details_et_state);
+        skill = findViewById(R.id.work_et_skill);
+        //skill = null;
+        if (isEditable) {
+
+            name.setFocusableInTouchMode(true);
+            emailid.setFocusableInTouchMode(true);
+            phone.setFocusableInTouchMode(true);
+            address1.setFocusableInTouchMode(true);
+            address2.setFocusableInTouchMode(true);
+            address3.setFocusableInTouchMode(true);
+            city.setFocusableInTouchMode(true);
+            state.setFocusableInTouchMode(true);
+            /*if (isLabourer) skill.setFocusableInTouchMode(true);*/
+
+            photo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                        if (ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                            //Toast.makeText(SetupActivity.this, "Permission Denied", Toast.LENGTH_LONG).show();
+                            ActivityCompat.requestPermissions(ProfileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+                        } else {
+
+                            BringImagePicker();
+
+                        }
+
+                    } else {
+                        BringImagePicker();
+                    }
+                }
+            });
+
+            dob.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectDate(v);
+                }
+            });
+
+            if (isLabourer) {
+                skill.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectSkill(v);
+                    }
+                });
+            }
+
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    boolean isInputRight = true;
+
+                    if (!isValidEmail(emailid.getText().toString().trim())) {
+                        emailid.setError("Invalid email id");
+                        Toast.makeText(getApplicationContext(), "Error in PERSONAL!", Toast.LENGTH_SHORT).show();
+                        isInputRight = false;
+                    }
+                    if (!isValidPhone(phone.getText().toString().trim())) {
+                        phone.setError("Invalid phone number");
+                        Toast.makeText(getApplicationContext(), "Error in PERSONAL!", Toast.LENGTH_SHORT).show();
+                        isInputRight = false;
+                    }
+                    if(!isNotEmpty(name.getText().toString().trim()))  {
+                        name.setError("Name cannot be empty");
+                        Toast.makeText(getApplicationContext(), "Error in Name!", Toast.LENGTH_SHORT).show();
+                        isInputRight = false;
+                    }
+                    if(!isNotEmpty(address1.getText().toString().trim()))  {
+                        address1.setError("Address Line 1 cannot be empty");
+                        Toast.makeText(getApplicationContext(), "Error in ADDRESS!", Toast.LENGTH_SHORT).show();
+                        isInputRight = false;
+                    }
+                    if(!isNotEmpty(address2.getText().toString().trim()))  {
+                        address2.setError("Address Line 2 cannot be empty");
+                        Toast.makeText(getApplicationContext(), "Error in ADDRESS!", Toast.LENGTH_SHORT).show();
+                        isInputRight = false;
+                    }
+                    if(!isNotEmpty(address3.getText().toString().trim()))  {
+                        address3.setError("Address Line 3 cannot be empty");
+                        Toast.makeText(getApplicationContext(), "Error in ADDRESS!", Toast.LENGTH_SHORT).show();
+                        isInputRight = false;
+                    }
+                    if(!isNotEmpty(city.getText().toString().trim()))  {
+                        city.setError("City cannot be empty");
+                        Toast.makeText(getApplicationContext(), "Error in ADDRESS!", Toast.LENGTH_SHORT).show();
+                        isInputRight = false;
+                    }
+                    if(!isNotEmpty(state.getText().toString().trim()))  {
+                        state.setError("State cannot be empty");
+                        Toast.makeText(getApplicationContext(), "Error in ADDRESS!", Toast.LENGTH_SHORT).show();
+                        isInputRight = false;
+                    }
+
+
+
+                    if (isInputRight) {
+                        name.setFocusableInTouchMode(false);
+                        name.setFocusable(false);
+                        emailid.setFocusableInTouchMode(false);
+                        emailid.setFocusable(false);
+                        phone.setFocusableInTouchMode(false);
+                        phone.setFocusable(false);
+                        dob.setFocusableInTouchMode(false);
+                        dob.setFocusable(false);
+                        address1.setFocusableInTouchMode(false);
+                        address1.setFocusable(false);
+                        address2.setFocusableInTouchMode(false);
+                        address2.setFocusable(false);
+                        address3.setFocusableInTouchMode(false);
+                        address3.setFocusable(false);
+                        city.setFocusableInTouchMode(false);
+                        city.setFocusable(false);
+                        state.setFocusableInTouchMode(false);
+                        state.setFocusable(false);
+                        if (isLabourer) skill.setFocusableInTouchMode(false);
+                        if (isLabourer) skill.setFocusable(false);
+                        submit.setVisibility(View.GONE);
+                        edit.setVisibility(View.VISIBLE);
+                        isEditable = false;
+                    }
+                }
+            });
+        }
+    }
+
+    public boolean isValidEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        return (email.matches(emailPattern) && (email.length() > 0));
+    }
+
+    public boolean isValidPhone(String phone) {
+        String phonePattern = "[0-9]{10}";
+        return phone.matches(phonePattern);
+    }
+
+    public boolean isNotEmpty(String name) {
+        if(name.length() == 0)
+            return false;
+        return true;
     }
 
     public void selectDate(View view) {
@@ -239,131 +399,6 @@ public class ProfileActivity extends AppCompatActivity
 
     }
 
-    public void editfunction(View v) {
-
-        name = findViewById(R.id.profile_et_name);
-        emailid = findViewById(R.id.personal_et_email);
-        phone = findViewById(R.id.personal_et_phone);
-        dob = findViewById(R.id.personal_et_dob);
-        address1 = findViewById(R.id.address_details_et_a1);
-        address2 = findViewById(R.id.address_details_et_a2);
-        address3 = findViewById(R.id.address_details_et_a3);
-        city = findViewById(R.id.address_details_et_city);
-        state = findViewById(R.id.address_details_et_state);
-        skill = findViewById(R.id.work_et_skill);
-        //skill = null;
-        if (isEditable) {
-            name.setFocusableInTouchMode(true);
-            emailid.setFocusableInTouchMode(true);
-            phone.setFocusableInTouchMode(true);
-            dob.setFocusableInTouchMode(true);
-            address1.setFocusableInTouchMode(true);
-            address2.setFocusableInTouchMode(true);
-            address3.setFocusableInTouchMode(true);
-            city.setFocusableInTouchMode(true);
-            state.setFocusableInTouchMode(true);
-            /*if (isLabourer) skill.setFocusableInTouchMode(true);*/
-
-            submit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!isValidEmail(emailid.getText().toString().trim())) {
-                        emailid.setError("Invalid email id");
-                        //isEditable = true;
-                        Toast.makeText(getApplicationContext(), "Error in Personal!", Toast.LENGTH_SHORT).show();
-                    } else if (!isValidPhone(phone.getText().toString().trim())) {
-                        phone.setError("Invalid phone number");
-                        //isEditable = true;
-                        Toast.makeText(getApplicationContext(), "Error in Personal!", Toast.LENGTH_SHORT).show();
-                    } else if (!isValidDate(dob.getText().toString().trim())) {
-                        dob.setError("Invalid date");
-                        //isEditable = true;
-                        Toast.makeText(getApplicationContext(), "Error in Personal!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        name.setFocusableInTouchMode(false);
-                        name.setFocusable(false);
-                        emailid.setFocusableInTouchMode(false);
-                        emailid.setFocusable(false);
-                        phone.setFocusableInTouchMode(false);
-                        phone.setFocusable(false);
-                        dob.setFocusableInTouchMode(false);
-                        dob.setFocusable(false);
-                        address1.setFocusableInTouchMode(false);
-                        address1.setFocusable(false);
-                        address2.setFocusableInTouchMode(false);
-                        address2.setFocusable(false);
-                        address3.setFocusableInTouchMode(false);
-                        address3.setFocusable(false);
-                        city.setFocusableInTouchMode(false);
-                        city.setFocusable(false);
-                        state.setFocusableInTouchMode(false);
-                        dob.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                selectDate(v);
-                            }
-                        });
-                        if (isLabourer) {
-                            skill.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    selectSkill(v);
-                                }
-                            });
-                        }
-                        photo.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                                    if (ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-                                        //Toast.makeText(SetupActivity.this, "Permission Denied", Toast.LENGTH_LONG).show();
-                                        ActivityCompat.requestPermissions(ProfileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-
-                                    } else {
-
-                                        BringImagePicker();
-
-                                    }
-
-                                } else {
-                                    BringImagePicker();
-                                }
-                            }
-                        });
-                        //*state.setFocusable(false);
-                        if (isLabourer) skill.setFocusableInTouchMode(false);
-                        if (isLabourer) skill.setFocusable(false);
-                        submit.setVisibility(View.GONE);
-                        edit.setVisibility(View.VISIBLE);
-                        isEditable = false;
-                    }
-                }
-            });
-        }
-    }
-
-    public boolean isValidEmail(String email) {
-        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-        return email.matches(emailPattern);
-    }
-
-    public boolean isValidPhone(String phone) {
-        String phonePattern = "[0-9]{10}";
-        return phone.matches(phonePattern);
-    }
-
-    public boolean isValidDate(String date) {
-        String datePattern = "^([0-2][0-9]||3[0-1])/(0[0-9]||1[0-2])/([0-9][0-9])?[0-9][0-9]";
-        return date.matches(datePattern);
-    }
-
-    public boolean isValidPincode(String pincode) {
-        String pincodePattern = "[0-9]{6}";
-        return pincode.matches(pincodePattern);
-    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
