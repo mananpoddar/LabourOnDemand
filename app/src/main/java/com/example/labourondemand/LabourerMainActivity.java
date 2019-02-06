@@ -227,6 +227,8 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
             Log.d(tag, "labourer : " + labourer.getAddressLine1());
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
+            Intent settings = new Intent(LabourerMainActivity.this,SettingsActivity.class);
+            startActivity(settings);
 
         } else if (id == R.id.nav_share) {
 

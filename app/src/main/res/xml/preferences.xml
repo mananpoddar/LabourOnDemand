@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="account"
+        app:title="Account Management">
+
+        <Preference
+            app:key="change_password"
+            app:title="Change Password" />
+
+        <Preference
+            app:key="delete_acc"
+            app:summary="All the details will be deleted"
+            app:title="Delete Account" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="help"
+        app:title="Help"
+        >
+
+        <Preference
+            app:key="faq"
+            app:title="FAQ"
+            app:summary="Find answers to commonly based questions"/>
+
+        <Preference
+            app:key="feedback"
+            app:summary="Report technical issues or suggest new features"
+            app:title="Feedback"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

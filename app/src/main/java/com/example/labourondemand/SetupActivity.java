@@ -278,12 +278,27 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         }else {
             storeFirestore(null);
         }
+        /*else {
+                        //GeoPoint location = loc
+                        storeFirestore(null, user_name,phone, lo);
+
+                    }*/
 
     }
 
     private void storeFirestore(Uri uri) {
 
         Uri download_uri = uri;
+        /*if(task != null) {
+
+            download_uri = task.getResult().g
+
+        } else {
+
+            download_uri = mainImageURI;
+
+        }*/
+
 
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("name", name.getText().toString());

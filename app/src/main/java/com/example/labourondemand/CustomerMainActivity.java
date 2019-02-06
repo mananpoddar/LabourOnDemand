@@ -242,6 +242,8 @@ public class CustomerMainActivity extends AppCompatActivity
             //Log.d(tag, "labourer : " + labourer.getAddressLine1());
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
+            Intent settings = new Intent(CustomerMainActivity.this,SettingsActivity.class);
+            startActivity(settings);
             Intent intent = new Intent(this,ProfileActivity.class);
             intent.putExtra("type","customer");
             intent.putExtra("user",customer);
