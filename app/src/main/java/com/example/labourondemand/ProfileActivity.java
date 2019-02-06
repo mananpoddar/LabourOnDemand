@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -35,17 +36,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PersonalDetailsFragment.OnFragmentInteractionListener,
@@ -82,11 +94,18 @@ public class ProfileActivity extends AppCompatActivity
     private ImageView edit;
     private TabLayout tabLayout;
 
+    private String userId;
+    private Boolean server = true, isChanged = false;
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         toolbar = findViewById(R.id.profile_tb);
         drawerLayout = findViewById(R.id.profile_dl);
@@ -200,21 +219,23 @@ public class ProfileActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (isEditable) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                        if (ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            if (ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-                            //Toast.makeText(SetupActivity.this, "Permission Denied", Toast.LENGTH_LONG).show();
-                            ActivityCompat.requestPermissions(ProfileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                                //Toast.makeText(SetupActivity.this, "Permission Denied", Toast.LENGTH_LONG).show();
+                                ActivityCompat.requestPermissions(ProfileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+                            } else {
+
+                                BringImagePicker();
+
+                            }
 
                         } else {
-
                             BringImagePicker();
-
                         }
-
-                    } else {
-                        BringImagePicker();
                     }
                 }
             });
@@ -222,7 +243,9 @@ public class ProfileActivity extends AppCompatActivity
             dob.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectDate(v);
+                    if(isEditable) {
+                        selectDate(v);
+                    }
                 }
             });
 
@@ -230,7 +253,8 @@ public class ProfileActivity extends AppCompatActivity
                 skill.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        selectSkill(v);
+                        if(isEditable)
+                            selectSkill(v);
                     }
                 });
             }
@@ -308,6 +332,8 @@ public class ProfileActivity extends AppCompatActivity
                         submit.setVisibility(View.GONE);
                         edit.setVisibility(View.VISIBLE);
                         isEditable = false;
+
+                        sendToFirebase();
                     }
                 }
             });
@@ -388,7 +414,7 @@ public class ProfileActivity extends AppCompatActivity
 
                 mainImageURI = result.getUri();
                 photo.setImageURI(mainImageURI);
-
+                isChanged = true;
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
@@ -397,6 +423,137 @@ public class ProfileActivity extends AppCompatActivity
             }
         }
 
+    }
+
+    private void sendToFirebase() {
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        if (isChanged) {
+
+            userId = firebaseAuth.getCurrentUser().getUid();
+
+            File newImageFile = new File(mainImageURI.getPath());
+            try {
+
+                compressedImageFile = new Compressor(ProfileActivity.this)
+                        .setMaxHeight(160)
+                        .setMaxWidth(120)
+                        .setQuality(50)
+                        .compressToBitmap(newImageFile);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] thumbData = baos.toByteArray();
+
+            final UploadTask image_path = storageReference.child("profile_images").child(userId + ".jpg").putBytes(thumbData);
+
+            image_path.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                    if (task.isSuccessful()) {
+
+                        storageReference.child("profile_images").child(userId+".jpg").getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        storeFirestore(uri);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(ProfileActivity.this, "(IMAGE Error uri) : " + e.toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                    } else {
+
+                        String error = task.getException().getMessage();
+                        Toast.makeText(ProfileActivity.this, "(IMAGE Error) : " + error, Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.INVISIBLE);
+
+                    }
+                }
+            });
+
+        }else {
+            storeFirestore(null);
+        }
+        /*else {
+                        //GeoPoint location = loc
+                        storeFirestore(null, user_name,phone, lo);
+
+                    }*/
+
+    }
+
+    private void storeFirestore(Uri uri) {
+
+        isChanged = false;
+
+        Uri download_uri = uri;
+        /*if(task != null) {
+
+            download_uri = task.getResult().g
+
+        } else {
+
+            download_uri = mainImageURI;
+
+        }*/
+
+
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("name", name.getText().toString());
+        if(uri != null) userMap.put("image", download_uri.toString());
+        userMap.put("phone", Long.valueOf(phone.getText().toString()));
+        userMap.put("city", city.getText().toString());
+        userMap.put("state", state.getText().toString());
+        userMap.put("addressLine1", address1.getText().toString());
+        userMap.put("addressLine2", address2.getText().toString());
+        userMap.put("addressLine3", address3.getText().toString());
+        userMap.put("dob", dob.getText().toString());
+
+        if(type.equals("labourer")) {
+            userMap.put("skill", skill.getText().toString());
+            //userMap.put("workExperience", Long.valueOf(workExperience.getText().toString()));
+        }
+        ArrayList<String> h = new ArrayList<>();
+        HashMap<String,Integer> m = new HashMap<>();
+
+        userMap.put("services",h);
+
+        firebaseFirestore.collection(type).document(userId).set(userMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(ProfileActivity.this, "The user Settings are updated.", Toast.LENGTH_LONG).show();
+                        //startActivity(new Intent(SetupActivity.this, CheckingActivity.class));
+                        //finish();
+//                        if(type.equals("customer")){
+//                            Intent intent = new Intent(ProfileActivity.this, CustomerMainActivity.class);
+//                            startActivity(intent);
+//                        }else{
+//                            Intent intent = new Intent(ProfileActivity.this, LabourerMainActivity.class);
+//                            startActivity(intent);
+//                        }
+//                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //String error = task.getException().getMessage();
+                        Toast.makeText(ProfileActivity.this, "(FIRESTORE Error) : " + e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
