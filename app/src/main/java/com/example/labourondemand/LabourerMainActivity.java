@@ -235,6 +235,12 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
         } else if (id == R.id.nav_send) {
 
+        }else if(id == R.id.nav_logout){
+
+            firebaseAuth.signOut();
+            Intent intent = new Intent(LabourerMainActivity.this,LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
 
