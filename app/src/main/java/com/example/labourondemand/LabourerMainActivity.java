@@ -145,7 +145,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                             Log.d("tag",labourer.getSkill()+"!"+documentSnapshot.get("skill")+"!"+documentSnapshot.getData().toString());
                             if(documentSnapshot.getString("skill").equals(labourer.getSkill())){
                                 services = documentSnapshot.toObject(Services.class);
-
+                                services.setServiceID(documentSnapshot.getId());
                                 final Services finalServices = services;
                                 firebaseFirestore.collection("customer").document(services.getCustomerUID()).get()
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

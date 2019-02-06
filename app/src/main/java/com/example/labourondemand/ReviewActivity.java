@@ -58,7 +58,7 @@ public class ReviewActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.review_nav);
         navigationView.setNavigationItemSelectedListener(this);
         services = (Services) getIntent().getExtras().get("service");
         ratingBar = findViewById(R.id.review_rb);

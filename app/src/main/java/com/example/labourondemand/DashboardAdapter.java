@@ -83,6 +83,7 @@ class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolde
             holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d("dashboard labour", service.getServiceID()+"!");
                     Intent intent = new Intent(context, DetailServiceActivity.class);
                     intent.putExtra("service", service);
                     context.startActivity(intent);
