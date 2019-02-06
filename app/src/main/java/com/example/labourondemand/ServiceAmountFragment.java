@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +113,7 @@ public class ServiceAmountFragment extends Fragment {
                     final String sid = services.getServiceID();
                     services.setLabourerResponses(m);
 
-                    firebaseFirestore.collection("services").document(sid).set(map, SetOptions.merge())
+                    firebaseFirestore.collection("services").document(sid).update("labourResponses",m)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -126,23 +127,22 @@ public class ServiceAmountFragment extends Fragment {
                                                 public void onSuccess(Void aVoid) {
                                                     Intent intent = new Intent(view.getContext(), LabourerMainActivity.class);
                                                     intent.putExtra("currentService", sid);
-                                                    startActivity(intent);
+                                                    //startActivity(intent);
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-
+                                                    Log.d("tag",e.toString());
                                                 }
                                             });
                                 }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
 
-                                }
-                            });
+                        }
+                    });
                 }else{
 
                     labourerAmount.setError("Give an amount and then submit");

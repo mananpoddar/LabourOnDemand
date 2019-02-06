@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class Slide extends PagerAdapter {
 
-    private ArrayList<String> pictures;
+    private ArrayList<String> pictures ;
     private ArrayList<Integer> IMAGES;
     private LayoutInflater inflater;
     private Context context;
@@ -35,7 +35,11 @@ public class Slide extends PagerAdapter {
     @Override
     public int getCount() {
 
-        return pictures.size();
+        if(pictures == null){
+            return 0;
+        }else {
+            return pictures.size();
+        }
     }
 
     @Override
