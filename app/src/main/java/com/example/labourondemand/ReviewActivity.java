@@ -2,6 +2,9 @@ package com.example.labourondemand;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
@@ -15,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +46,7 @@ public class ReviewActivity extends AppCompatActivity
     private Button submitButton;
     private TextView ratingTextView;
     private String TAG = ReviewActivity.class.getName();
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +70,10 @@ public class ReviewActivity extends AppCompatActivity
         submitButton = findViewById(R.id.review_btn_submit);
         ratingTextView = findViewById(R.id.rating_text_view);
         feedback = findViewById(R.id.feedback);
-
+        progressBar = findViewById(R.id.progress_bar);
         firebaseFirestore = FirebaseFirestore.getInstance();
-
+        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.parseColor("#ff5722"), PorterDuff.Mode.SRC_ATOP);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -104,7 +110,15 @@ public class ReviewActivity extends AppCompatActivity
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(getApplicationContext(),"COMPLETED PROCESS",Toast.LENGTH_LONG).show();
+                            Log.d(TAG, "SUCCESS");
+
+                            progressBar.setVisibility(View.GONE);
+                            submitButton.setText("Thank You!");
+                            submitButton.setVisibility(View.VISIBLE);
+                            submitButton.setEnabled(false);
+                            submitButton.setTextColor(getResources().getColor(R.color.black));
+                            submitButton.setBackgroundColor(
+                                    getResources().getColor(android.R.color.transparent));
                             //startActivity(new Intent(ReviewActivity.this,CustomerMainActivity.class));
                         }
                     })
@@ -112,6 +126,9 @@ public class ReviewActivity extends AppCompatActivity
                         @Override
                         public void onFailure(@android.support.annotation.NonNull Exception e) {
                             Log.d(TAG, e.toString());
+                            Log.d(TAG, e.toString());
+                            progressBar.setVisibility(View.GONE);
+                            submitButton.setVisibility(View.VISIBLE);
                         }
                     });
         }
