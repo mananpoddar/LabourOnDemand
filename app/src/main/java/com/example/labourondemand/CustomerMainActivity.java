@@ -150,7 +150,7 @@ public class CustomerMainActivity extends AppCompatActivity
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         //labourer = new Labourer();
                         customer = documentSnapshot.toObject(Customer.class);
-                        Log.d(Tags, documentSnapshot.getData().toString() + "!"+customer.getCurrentService());
+                        Log.d("fetchfromfirebase", documentSnapshot.getData().toString() + "!"+customer.getCurrentService());
                         intent.putExtra("customer",customer);
                         if(customer.getCurrentService() != null && customer.getCurrentService().length() > 0){
                             // go todifferent activity

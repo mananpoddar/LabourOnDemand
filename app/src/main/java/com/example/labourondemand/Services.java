@@ -8,6 +8,7 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Services implements Parcelable {
 
@@ -21,6 +22,23 @@ public class Services implements Parcelable {
     private Labourer labourer;
 
     public Services() {
+    }
+
+    protected Services(Parcel in) {
+        skill = in.readString();
+        customerUID = in.readString();
+        description = in.readString();
+        feedback = in.readString();
+        labourUID = in.readString();
+        customerAmount = in.readLong();
+        images = in.createStringArrayList();
+        addressLine1 = in.readString();
+        addressLine2 = in.readString();
+        landmark = in.readString();
+        city = in.readString();
+        serviceID = in.readString();
+        customer = in.readParcelable(Customer.class.getClassLoader());
+        labourer = in.readParcelable(Labourer.class.getClassLoader());
     }
 
     public String getSkill() {
@@ -159,21 +177,21 @@ public class Services implements Parcelable {
         this.labourer = labourer;
     }
 
-    protected Services(Parcel in) {
-        skill = in.readString();
-        customerUID = in.readString();
-        description = in.readString();
-        feedback = in.readString();
-        labourUID = in.readString();
-        customerAmount = in.readLong();
-        images = in.createStringArrayList();
-        addressLine1 = in.readString();
-        addressLine2 = in.readString();
-        landmark = in.readString();
-        city = in.readString();
-        serviceID = in.readString();
-        customer = in.readParcelable(Customer.class.getClassLoader());
-        labourer = in.readParcelable(Labourer.class.getClassLoader());
+    public static final Creator<Services> CREATOR = new Creator<Services>() {
+        @Override
+        public Services createFromParcel(Parcel in) {
+            return new Services(in);
+        }
+
+        @Override
+        public Services[] newArray(int size) {
+            return new Services[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
@@ -193,21 +211,4 @@ public class Services implements Parcelable {
         dest.writeParcelable(customer, flags);
         dest.writeParcelable(labourer, flags);
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Services> CREATOR = new Creator<Services>() {
-        @Override
-        public Services createFromParcel(Parcel in) {
-            return new Services(in);
-        }
-
-        @Override
-        public Services[] newArray(int size) {
-            return new Services[size];
-        }
-    };
 }

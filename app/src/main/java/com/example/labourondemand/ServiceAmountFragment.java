@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -99,7 +100,7 @@ public class ServiceAmountFragment extends Fragment {
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 
                 if(labourerAmount.getText().toString() != null) {
 
@@ -111,9 +112,9 @@ public class ServiceAmountFragment extends Fragment {
                     map.put("labourResponses", m);
                     services.setCustomerAmount(Long.valueOf(labourerAmount.getText().toString()));
                     final String sid = services.getServiceID();
-                    services.setLabourerResponses(m);
-
-                    firebaseFirestore.collection("services").document(sid).update("labourResponses",m)
+                    //TODO:services.setLabourerResponses(m);
+                    Log.d("tag",sid+"!"+m.toString());
+                    firebaseFirestore.collection("services").document(sid).update("labourerResponses",m)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -127,6 +128,7 @@ public class ServiceAmountFragment extends Fragment {
                                                 public void onSuccess(Void aVoid) {
                                                     Intent intent = new Intent(view.getContext(), LabourerMainActivity.class);
                                                     intent.putExtra("currentService", sid);
+                                                    Toast.makeText(v.getContext(),"Update",Toast.LENGTH_LONG).show();
                                                     //startActivity(intent);
                                                 }
                                             })

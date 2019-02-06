@@ -64,7 +64,7 @@ class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolde
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = inflater.inflate(R.layout.item_service, parent, false);
+        view = inflater.inflate(R.layout.item_labourer, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
     }
@@ -74,15 +74,15 @@ class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolde
 
         if(type == 0) {
 
-            holder.accept.setVisibility(View.GONE);
+            holder.accept.setText("Next");
             final Services service = servicesArrayList.get(position);
             holder.name.setText(service.getCustomer().getName());
-            holder.landmark.setText(service.getLandmark());
+            holder.landmark.setText("234");
             Glide.with(context).load(service.getCustomer().getImage()).into(holder.photo);
-
             holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d("dashboard labour", service.getServiceID()+"!");
                     Intent intent = new Intent(context, DetailServiceActivity.class);
                     intent.putExtra("service", service);
                     context.startActivity(intent);
@@ -94,7 +94,7 @@ class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolde
             final Labourer labourer = labourers.get(position);
             Glide.with(context).load(labourer.getImage()).into(holder.photo);
             holder.name.setText(labourer.getName());
-            holder.tags.setText("Price : "+ labourer.getCurrentServicePrice());
+            holder.tags.setText( String.valueOf(labourer.getCurrentServicePrice()));
 
             holder.landmark.setText(String.valueOf(labourer.getAverageRating()));
             holder.accept.setOnClickListener(new View.OnClickListener() {
