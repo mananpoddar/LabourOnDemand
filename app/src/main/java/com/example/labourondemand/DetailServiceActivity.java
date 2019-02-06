@@ -68,7 +68,7 @@ public class DetailServiceActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_service);
 
-        toolbar = findViewById(R.id.detail_service_tl);
+        toolbar = findViewById(R.id.detail_service_tb);
         drawerLayout =  findViewById(R.id.detail_service_dl);
 
         setSupportActionBar(toolbar);
@@ -81,7 +81,7 @@ public class DetailServiceActivity extends AppCompatActivity
         navigationView = findViewById(R.id.detail_service_nav);
         navigationView.setNavigationItemSelectedListener(this);
 
-        services = getIntent().getParcelableExtra("service");
+        services = (Services) getIntent().getExtras().get("service");
         viewPagerImages = findViewById(R.id.detail_service_vp_images);
         viewPagerData = findViewById(R.id.detail_service_vp_data);
         tabs = findViewById(R.id.detail_service_tl);
@@ -104,8 +104,9 @@ public class DetailServiceActivity extends AppCompatActivity
         viewPagerAdapter.addFragment(serviceDescriptionFragment,"Description");
         viewPagerAdapter.addFragment(serviceAddressFragment,"Location");
         viewPagerAdapter.addFragment(serviceAmountFragment,"Amount");
+
         viewPagerData.setAdapter(viewPagerAdapter);
-        viewPagerData.setOffscreenPageLimit(3);
+        //viewPagerData.setOffscreenPageLimit(3);
         tabs.setupWithViewPager(viewPagerData);
 
     }

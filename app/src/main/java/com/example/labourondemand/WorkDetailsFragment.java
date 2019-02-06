@@ -79,7 +79,7 @@ public class WorkDetailsFragment extends Fragment {
 
        skill.setText(labourer.getSkill());
 
-       ratingBar.setRating(Float.parseFloat(labourer.getAverageRating().toString()));
+       //ratingBar.setRating(Float.parseFloat(String.valueOf(labourer.getAverageRating())));
 
        return view;
     }

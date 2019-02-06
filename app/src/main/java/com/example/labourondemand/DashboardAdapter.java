@@ -96,13 +96,14 @@ class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolde
             holder.name.setText(labourer.getName());
             holder.tags.setText("Price : "+ labourer.getCurrentServicePrice());
 
-            holder.landmark.setText("average Rating");
+            holder.landmark.setText(String.valueOf(labourer.getAverageRating()));
             holder.accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // go to Review Activity
                     Intent intent = new Intent(context,ReviewActivity.class);
                     intent.putExtra("service",service);
+                    Log.d("customer dashboard", service.getCustomer()+"!");
                     context.startActivity(intent);
                 }
             });
