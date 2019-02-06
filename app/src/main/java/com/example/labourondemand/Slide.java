@@ -47,11 +47,8 @@ public class Slide extends PagerAdapter {
                 .findViewById(R.id.custom_layout_iv_pictures);
 
         Glide.with(context).load(pictures.get(position)).into(picture);
-
         //imageView.setImageResource(IMAGES.get(position));
-
         view.addView(imageLayout, 0);
-
         return imageLayout;
     }
 

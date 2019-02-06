@@ -30,7 +30,7 @@ public class CustomerMainActivity extends AppCompatActivity
     private ImageButton carpenter, plumber, electrician, housemaid, constructionWorker, painter;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private Customer customer ;
+    private Customer customer = new Customer();
     private String Tags = CustomerMainActivity.class.getName();
     protected DrawerLayout drawerLayout;
     private Intent intent;
@@ -67,7 +67,7 @@ public class CustomerMainActivity extends AppCompatActivity
             services = (Services) getIntent().getExtras().get("services");
         }
 
-        if(customer == null) {
+        if(customer.getName() == null) {
             fetchFromFirebase();
         }else if(current != null){
             Intent intent = new Intent(CustomerMainActivity.this,CustomerDashboard2Activity.class);

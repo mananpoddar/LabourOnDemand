@@ -176,9 +176,9 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.customer_main_dl);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -236,8 +236,8 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.customer_main_dl);
-        drawer.closeDrawer(GravityCompat.START);
+
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 }
