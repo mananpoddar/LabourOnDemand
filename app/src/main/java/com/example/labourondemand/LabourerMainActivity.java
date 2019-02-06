@@ -37,7 +37,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
     private FloatingActionButton fab;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private Labourer labourer ;
+    private Labourer labourer = new Labourer();
     private String tag = LabourerMainActivity.class.getName();
     private RecyclerView recyclerView;
     private DashboardAdapter dashboardAdapter;
@@ -71,7 +71,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
         if( currentService == null ){
 
-            if(labourer == null) {
+            if(labourer.getName() == null) {
                 fetchFromFirebase();
             }else{
                 fetchServices();
@@ -116,6 +116,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                             Log.d(tag, documentSnapshot.getData().toString() + "!");
 
                             if (labourer.getCurrentService() == null) {
+                                Log.d("tagggg",labourer.getSkill()+"!");
                                 fetchServices();
                             }else{
 
@@ -141,7 +142,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                            Services services ;
+                            Services services = new Services() ;
                             Log.d("tag",labourer.getSkill()+"!"+documentSnapshot.get("skill")+"!"+documentSnapshot.getData().toString());
                             if(documentSnapshot.getString("skill").equals(labourer.getSkill())){
                                 services = documentSnapshot.toObject(Services.class);

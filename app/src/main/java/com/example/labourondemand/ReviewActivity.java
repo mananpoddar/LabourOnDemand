@@ -89,9 +89,16 @@ public class ReviewActivity extends AppCompatActivity
                     else {
                         feedback.setError(null);
                         ratingTextView.setText("Ratings : " + ratingBar.getRating());
-                        submitButton.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.VISIBLE);
-                        submitReview();
+                        //submitButton.setVisibility(View.GONE);
+                        //progressBar.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                        submitButton.setVisibility(View.VISIBLE);
+                        submitButton.setText("Thank You!");
+                        submitButton.setEnabled(false);
+                        submitButton.setTextColor(getResources().getColor(R.color.black));
+                        submitButton.setBackgroundColor(
+                                getResources().getColor(android.R.color.transparent));
+                       // submitReview();
                     }
                 }
             }
