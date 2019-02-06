@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +32,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ReviewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,6 +51,8 @@ public class ReviewActivity extends AppCompatActivity
     private TextView ratingTextView;
     private String TAG = ReviewActivity.class.getName();
     private ProgressBar progressBar;
+    private CircleImageView photo;
+    private Customer customer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +72,18 @@ public class ReviewActivity extends AppCompatActivity
         navigationView = findViewById(R.id.review_nav);
         navigationView.setNavigationItemSelectedListener(this);
         services = (Services) getIntent().getExtras().get("service");
+        labourer = (Labourer) getIntent().getExtras().get("labourer");
+        customer = (Customer) getIntent().getExtras().get("customer");
         ratingBar = findViewById(R.id.review_rb);
         submitButton = findViewById(R.id.review_btn_submit);
         ratingTextView = findViewById(R.id.rating_text_view);
         feedback = findViewById(R.id.feedback);
+        photo = findViewById(R.id.review_civ_image);
         progressBar = findViewById(R.id.progress_bar);
         firebaseFirestore = FirebaseFirestore.getInstance();
         LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.parseColor("#ff5722"), PorterDuff.Mode.SRC_ATOP);
-
+        Glide.with(getApplicationContext()).load(labourer.getImage()).into(photo);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -89,16 +98,9 @@ public class ReviewActivity extends AppCompatActivity
                     else {
                         feedback.setError(null);
                         ratingTextView.setText("Ratings : " + ratingBar.getRating());
-                        //submitButton.setVisibility(View.GONE);
-                        //progressBar.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.GONE);
-                        submitButton.setVisibility(View.VISIBLE);
-                        submitButton.setText("Thank You!");
-                        submitButton.setEnabled(false);
-                        submitButton.setTextColor(getResources().getColor(R.color.black));
-                        submitButton.setBackgroundColor(
-                                getResources().getColor(android.R.color.transparent));
-                       // submitReview();
+                        submitButton.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.VISIBLE);
+                        submitReview();
                     }
                 }
             }
@@ -122,6 +124,13 @@ public class ReviewActivity extends AppCompatActivity
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "SUCCESS");
 
+                            /*Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    // yourMethod();
+                                }
+                            }, 5000);*/
+
                             progressBar.setVisibility(View.GONE);
                             submitButton.setText("Thank You!");
                             submitButton.setVisibility(View.VISIBLE);
@@ -129,7 +138,17 @@ public class ReviewActivity extends AppCompatActivity
                             submitButton.setTextColor(getResources().getColor(R.color.black));
                             submitButton.setBackgroundColor(
                                     getResources().getColor(android.R.color.transparent));
-                            //startActivity(new Intent(ReviewActivity.this,CustomerMainActivity.class));
+                            Intent intent = new Intent(ReviewActivity.this,CustomerMainActivity.class);
+                            customer.setCurrentService(null);
+                            customer.setCurrentServicePrice(null);
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            intent.putExtra("customer",customer);
+                            startActivity(intent);
+                            finish();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

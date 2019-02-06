@@ -26,6 +26,7 @@ class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolde
     private CustomerMainActivity customerMainActivity;
     private Integer type;
     private Services service;
+    private Customer customer;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, tags, landmark, distance;
@@ -90,19 +91,24 @@ class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolde
             });
 
         }else{
-
             final Labourer labourer = labourers.get(position);
             Glide.with(context).load(labourer.getImage()).into(holder.photo);
             holder.name.setText(labourer.getName());
-            holder.tags.setText( String.valueOf(labourer.getCurrentServicePrice()));
-
-            holder.landmark.setText(String.valueOf(labourer.getAverageRating()));
+            holder.landmark.setText( String.valueOf(labourer.getCurrentServicePrice()));
+            holder.accept.setText("Accept");
+            if(labourer.getAverageRating() == null){
+                holder.tags.setText("No Rating");
+            }else {
+                holder.tags.setText(String.valueOf(labourer.getAverageRating()));
+            }
             holder.accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // go to Review Activity
                     Intent intent = new Intent(context,ReviewActivity.class);
                     intent.putExtra("service",service);
+                    intent.putExtra("customer",customer);
+                    intent.putExtra("labourer",labourer);
                     Log.d("customer dashboard", service.getCustomer()+"!");
                     context.startActivity(intent);
                 }
@@ -129,5 +135,10 @@ class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolde
         Log.d("addedFromCustomer ", labourers.size()+"s");
         labourers.add(labourer);
         notifyItemInserted(labourers.indexOf(labourer));
+    }
+
+    public void setServiceAndCustomer(Services service, Customer customer){
+        this.service = service;
+        this.customer = customer;
     }
 }
