@@ -74,6 +74,7 @@ public class ReviewActivity extends AppCompatActivity
         firebaseFirestore = FirebaseFirestore.getInstance();
         LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.parseColor("#ff5722"), PorterDuff.Mode.SRC_ATOP);
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -83,11 +84,13 @@ public class ReviewActivity extends AppCompatActivity
                 else {
                     if (feedback.getEditText().getText().toString().compareTo("") == 0)
                         feedback.setError("Please enter text");
-                    else if (feedback.getEditText().getText().toString().length() > 14)
-                        feedback.setError("Length exceeding 14");
+                    else if (feedback.getEditText().getText().toString().length() > 100)
+                        feedback.setError("Length exceeding 100");
                     else {
                         feedback.setError(null);
                         ratingTextView.setText("Ratings : " + ratingBar.getRating());
+                        submitButton.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.VISIBLE);
                         submitReview();
                     }
                 }
@@ -125,7 +128,7 @@ public class ReviewActivity extends AppCompatActivity
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@android.support.annotation.NonNull Exception e) {
-                            Log.d(TAG, e.toString());
+                            //Log.d(TAG, e.toString());
                             Log.d(TAG, e.toString());
                             progressBar.setVisibility(View.GONE);
                             submitButton.setVisibility(View.VISIBLE);
