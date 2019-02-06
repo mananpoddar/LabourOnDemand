@@ -2,6 +2,8 @@ package com.example.labourondemand;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,6 +23,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
@@ -47,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         reg_email_field = findViewById(R.id.register_et_email);
-        reg_pass_field = findViewById(R.id.register_et_password);
+        reg_pass_field =  findViewById(R.id.register_et_password);
         reg_confirm_pass_field = findViewById(R.id.register_et_confirm_password);
         reg_btn = findViewById(R.id.register_btn_register);
         reg_login_btn = findViewById(R.id.register_btn_login);

@@ -2,6 +2,7 @@ package com.example.labourondemand;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText loginPassText;
     private Button loginBtn;
     private Button loginRegBtn;
-
+    private Button forgotPassword;
     private FirebaseAuth mAuth;
 
     private ProgressBar loginProgress;
@@ -40,6 +41,16 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn = findViewById(R.id.login_btn);
         loginRegBtn = findViewById(R.id.login_reg_btn);
         loginProgress = findViewById(R.id.login_progress);
+        forgotPassword =findViewById(R.id.login_forgot_password_btn);
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent forgotPassword = new Intent(LoginActivity.this,ForgotPasswordActivity.class);
+                startActivity(forgotPassword);
+                finish();
+            }
+        });
 
         loginRegBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+
 
 
     }

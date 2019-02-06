@@ -229,7 +229,8 @@ public class CustomerMainActivity extends AppCompatActivity
         } else if (id == R.id.nav_person) {
 
         } else if (id == R.id.nav_manage) {
-
+            Intent settings = new Intent(CustomerMainActivity.this,SettingsActivity.class);
+            startActivity(settings);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
