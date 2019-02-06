@@ -37,7 +37,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
     private FloatingActionButton fab;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private Labourer labourer = new Labourer();
+    private Labourer labourer ;
     private String tag = LabourerMainActivity.class.getName();
     private RecyclerView recyclerView;
     private DashboardAdapter dashboardAdapter;
@@ -140,9 +140,9 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
                         for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
                             Services services ;
+                            Log.d("tag",labourer.getSkill()+"!"+documentSnapshot.get("skill")+"!"+documentSnapshot.getData().toString());
                             if(documentSnapshot.getString("skill").equals(labourer.getSkill())){
                                 services = documentSnapshot.toObject(Services.class);
 
@@ -227,8 +227,8 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
             Log.d(tag, "labourer : " + labourer.getAddressLine1());
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
-            Intent settings = new Intent(LabourerMainActivity.this,SettingsActivity.class);
-            startActivity(settings);
+            //Intent settings = new Intent(LabourerMainActivity.this,SettingsActivity.class);
+            //startActivity(settings);
 
         } else if (id == R.id.nav_share) {
 
