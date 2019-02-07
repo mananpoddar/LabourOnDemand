@@ -200,21 +200,23 @@ public class ProfileActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if(isEditable) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                        if (ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            if (ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-                            //Toast.makeText(SetupActivity.this, "Permission Denied", Toast.LENGTH_LONG).show();
-                            ActivityCompat.requestPermissions(ProfileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                                //Toast.makeText(SetupActivity.this, "Permission Denied", Toast.LENGTH_LONG).show();
+                                ActivityCompat.requestPermissions(ProfileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+                            } else {
+
+                                BringImagePicker();
+
+                            }
 
                         } else {
-
                             BringImagePicker();
-
                         }
-
-                    } else {
-                        BringImagePicker();
                     }
                 }
             });
@@ -222,7 +224,9 @@ public class ProfileActivity extends AppCompatActivity
             dob.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectDate(v);
+                    if(isEditable) {
+                        selectDate(v);
+                    }
                 }
             });
 
@@ -230,7 +234,9 @@ public class ProfileActivity extends AppCompatActivity
                 skill.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        selectSkill(v);
+                        if(isEditable) {
+                            selectSkill(v);
+                        }
                     }
                 });
             }
