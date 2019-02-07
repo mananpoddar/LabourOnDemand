@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.View;
@@ -122,33 +123,43 @@ public class ReviewActivity extends AppCompatActivity
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+
                             Log.d(TAG, "SUCCESS");
+                            String customeUID = services.getServiceID().substring(0,services.getServiceID().indexOf('+',0));
+                            Log.d("cuid",customeUID+"!");
+                            firebaseFirestore.collection("customer").document(customeUID).update("currentService",null)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
 
-                            /*Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                public void run() {
-                                    // yourMethod();
-                                }
-                            }, 5000);*/
+                                            progressBar.setVisibility(View.GONE);
+                                            submitButton.setText("Thank You!");
+                                            submitButton.setVisibility(View.VISIBLE);
+                                            submitButton.setEnabled(false);
+                                            submitButton.setTextColor(getResources().getColor(R.color.black));
+                                            submitButton.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                                            Intent intent = new Intent(ReviewActivity.this,CustomerMainActivity.class);
+                                            customer.setCurrentService(null);
+                                            customer.setCurrentServicePrice(null);
+                                            try {
+                                                Thread.sleep(3000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                            intent.putExtra("customer",customer);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d("2nd failure", e.toString());
+                                            progressBar.setVisibility(View.GONE);
+                                            submitButton.setVisibility(View.VISIBLE);
+                                        }
+                                    });
 
-                            progressBar.setVisibility(View.GONE);
-                            submitButton.setText("Thank You!");
-                            submitButton.setVisibility(View.VISIBLE);
-                            submitButton.setEnabled(false);
-                            submitButton.setTextColor(getResources().getColor(R.color.black));
-                            submitButton.setBackgroundColor(
-                                    getResources().getColor(android.R.color.transparent));
-                            Intent intent = new Intent(ReviewActivity.this,CustomerMainActivity.class);
-                            customer.setCurrentService(null);
-                            customer.setCurrentServicePrice(null);
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            intent.putExtra("customer",customer);
-                            startActivity(intent);
-                            finish();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

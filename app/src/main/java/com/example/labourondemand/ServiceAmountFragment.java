@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -109,19 +110,19 @@ public class ServiceAmountFragment extends Fragment {
                     m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
 
                     //TODO: updating labourResponse ;
-                    map.put("labourResponses", m);
+                    map.put("labourerResponses", m);
                     services.setCustomerAmount(Long.valueOf(labourerAmount.getText().toString()));
                     final String sid = services.getServiceID();
                     //TODO:services.setLabourerResponses(m);
                     Log.d("tag",sid+"!"+m.toString());
-                    firebaseFirestore.collection("services").document(sid).update("labourerResponses",m)
+                    firebaseFirestore.collection("services").document(sid).set(map,SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     HashMap<String, String> lab = new HashMap<>();
                                     lab.put("currentService", sid);
 
-                                    firebaseFirestore.collection("labourer").document(firebaseAuth.getUid())
+                                    /*firebaseFirestore.collection("labourer").document(firebaseAuth.getUid())
                                             .set(lab, SetOptions.merge())
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -137,7 +138,7 @@ public class ServiceAmountFragment extends Fragment {
                                                 public void onFailure(@NonNull Exception e) {
                                                     Log.d("tag",e.toString());
                                                 }
-                                            });
+                                            });*/
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
