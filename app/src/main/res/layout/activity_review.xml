@@ -94,14 +94,17 @@
                 app:counterMaxLength="100"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/review_rb">
+                app:layout_constraintTop_toBottomOf="@+id/review_rb"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColorHint="@color/colorPrimary"
+                android:hint=" Feedback ">
 
                 <EditText
                     android:id="@+id/review_et_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/orange"
-                    android:hint=" Feedback " />
+                    android:autofillHints=" Email "
+                    android:backgroundTint="@color/colorPrimary"/>
 
             </android.support.design.widget.TextInputLayout>
 
