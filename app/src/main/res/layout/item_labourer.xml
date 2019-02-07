@@ -19,30 +19,28 @@
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/item_service_civ_photo"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:padding="@dimen/padding_normal"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="@dimen/margin_small"
             android:src="@drawable/ic_person_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/item_service_civ_photo"
-            app:layout_constraintRight_toLeftOf="@id/item_service_btn_accept"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/item_service_tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_normal"
                 android:text="Srivatsan"
+                android:layout_marginLeft="4dp"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/text_size_larger"
                 android:textStyle="bold"
@@ -56,11 +54,11 @@
                 android:drawableLeft="@drawable/ic_star"
                 android:drawablePadding="@dimen/padding_small"
                 android:text="Rating"
-                android:textSize="@dimen/text_size_normal"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_normal" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
                 android:orientation="horizontal"
@@ -73,8 +71,8 @@
                     android:drawableLeft="@drawable/ic_rupee"
                     android:drawablePadding="@dimen/padding_small"
                     android:text="300"
-                    android:textSize="@dimen/text_size_normal"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_normal" />
 
                 <TextView
                     android:id="@+id/item_service_tv_distance"
@@ -84,9 +82,8 @@
                     android:drawableLeft="@drawable/ic_location"
                     android:drawablePadding="@dimen/padding_small"
                     android:text="3.5 km"
-                    android:textSize="@dimen/text_size_normal"
-                    android:layout_marginLeft="@dimen/margin_larger"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_normal" />
 
             </LinearLayout>
 
@@ -96,14 +93,14 @@
             android:id="@+id/item_service_btn_accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_larger"
-            android:layout_marginEnd="@dimen/margin_larger"
-            android:text="Accept"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@color/orange"
-            android:textColor="@color/white"/>
+            android:text="Accept"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

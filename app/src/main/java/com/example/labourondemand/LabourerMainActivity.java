@@ -86,7 +86,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Yet to be developed", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -235,6 +235,12 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
         } else if (id == R.id.nav_send) {
 
+        }else if(id == R.id.nav_logout){
+
+            firebaseAuth.signOut();
+            Intent intent = new Intent(LabourerMainActivity.this,LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
 

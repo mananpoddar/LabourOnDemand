@@ -1,5 +1,6 @@
 package com.example.labourondemand;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -166,6 +167,12 @@ public class DetailServiceActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        }else if(id == R.id.nav_logout){
+
+            firebaseAuth.signOut();
+            Intent intent = new Intent(DetailServiceActivity.this,LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

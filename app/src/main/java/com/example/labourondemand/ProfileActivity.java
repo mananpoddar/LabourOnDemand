@@ -465,6 +465,12 @@ public class ProfileActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        }else if(id == R.id.nav_logout){
+
+            firebaseAuth.signOut();
+            Intent intent = new Intent(ProfileActivity.this,LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

@@ -29,6 +29,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -116,7 +117,8 @@ public class CustomerDashboard2Activity extends AppCompatActivity
                         services.setServiceID(customer.getCurrentService());
                         Log.d("service in dashboard22", services.getAddressLine1()+"!");
                         if(services.getLabourerResponses() != null) {
-
+                            noResponse.setVisibility(View.GONE);
+                             customerDashboardAdapter.setServiceAndCustomer(services, customer);
                             Log.d("customerboardAdapter",services.getLabourerResponses().toString());
                             for (final String s : services.getLabourerResponses().keySet()) {
                                 firebaseFirestore.collection("labourer").document(s)
@@ -205,6 +207,12 @@ public class CustomerDashboard2Activity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        }else if(id == R.id.nav_logout){
+
+            firebaseAuth.signOut();
+            Intent intent = new Intent(CustomerDashboard2Activity.this,LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
