@@ -46,7 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
-        holder.image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_launcher_foreground));
+        holder.image.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.electrician));
 
         holder.name.setText(mNames.get(position));
         holder.location_from.setText(mFroms.get(position));

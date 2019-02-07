@@ -8,11 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -98,7 +100,7 @@ public class ServiceAmountFragment extends Fragment {
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 
                 if(labourerAmount.getText().toString() != null) {
 
@@ -110,9 +112,9 @@ public class ServiceAmountFragment extends Fragment {
                     map.put("labourResponses", m);
                     services.setCustomerAmount(Long.valueOf(labourerAmount.getText().toString()));
                     final String sid = services.getServiceID();
-                    services.setLabourerResponses(m);
-
-                    firebaseFirestore.collection("services").document(sid).set(map, SetOptions.merge())
+                    //TODO:services.setLabourerResponses(m);
+                    Log.d("tag",sid+"!"+m.toString());
+                    firebaseFirestore.collection("services").document(sid).update("labourerResponses",m)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -126,23 +128,23 @@ public class ServiceAmountFragment extends Fragment {
                                                 public void onSuccess(Void aVoid) {
                                                     Intent intent = new Intent(view.getContext(), LabourerMainActivity.class);
                                                     intent.putExtra("currentService", sid);
-                                                    startActivity(intent);
+                                                    Toast.makeText(v.getContext(),"Update",Toast.LENGTH_LONG).show();
+                                                    //startActivity(intent);
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-
+                                                    Log.d("tag",e.toString());
                                                 }
                                             });
                                 }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
 
-                                }
-                            });
+                        }
+                    });
                 }else{
 
                     labourerAmount.setError("Give an amount and then submit");

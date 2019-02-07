@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class Slide extends PagerAdapter {
 
-    private ArrayList<String> pictures;
+    private ArrayList<String> pictures ;
     private ArrayList<Integer> IMAGES;
     private LayoutInflater inflater;
     private Context context;
@@ -35,7 +35,11 @@ public class Slide extends PagerAdapter {
     @Override
     public int getCount() {
 
-        return pictures.size();
+        if(pictures == null){
+            return 0;
+        }else {
+            return pictures.size();
+        }
     }
 
     @Override
@@ -47,11 +51,8 @@ public class Slide extends PagerAdapter {
                 .findViewById(R.id.custom_layout_iv_pictures);
 
         Glide.with(context).load(pictures.get(position)).into(picture);
-
         //imageView.setImageResource(IMAGES.get(position));
-
         view.addView(imageLayout, 0);
-
         return imageLayout;
     }
 

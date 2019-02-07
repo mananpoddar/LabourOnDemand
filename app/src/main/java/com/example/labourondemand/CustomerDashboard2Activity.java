@@ -26,6 +26,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -90,10 +91,10 @@ public class CustomerDashboard2Activity extends AppCompatActivity
         navigationView = findViewById(R.id.customer_dashboard2_nav);
         navigationView.setNavigationItemSelectedListener(this);
         noResponse = findViewById(R.id.customer_dashboard2_tv_no_response);
-        services = (Services) getIntent().getExtras().get("services");
+        customer = (Customer) getIntent().getExtras().get("customer");
+        //services = (Services) getIntent().getExtras().get("services");
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        customer = (Customer) getIntent().getExtras().get("customer");
 
         recyclerView = findViewById(R.id.customer_dashboard2_rv);
         customerDashboardAdapter = new DashboardAdapter(getApplicationContext(),1,new ArrayList<Labourer>(), services);
@@ -109,17 +110,22 @@ public class CustomerDashboard2Activity extends AppCompatActivity
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        Log.d("service in dashboard22", customer.getCurrentService());
                         services = documentSnapshot.toObject(Services.class);
+                        services.setServiceID(customer.getCurrentService());
+                        Log.d("service in dashboard22", services.getAddressLine1()+"!");
                         if(services.getLabourerResponses() != null) {
 
+                            Log.d("customerboardAdapter",services.getLabourerResponses().toString());
                             for (final String s : services.getLabourerResponses().keySet()) {
                                 firebaseFirestore.collection("labourer").document(s)
                                         .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         Labourer labourer = new Labourer();
-                                        labourer.setCurrentServicePrice(services.getLabourerResponses().get(s));
                                         labourer = documentSnapshot.toObject(Labourer.class);
+                                        labourer.setCurrentServicePrice(services.getLabourerResponses().get(s));
                                         customerDashboardAdapter.addedFromCustomer(labourer);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {

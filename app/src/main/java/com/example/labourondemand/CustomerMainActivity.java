@@ -30,7 +30,7 @@ public class CustomerMainActivity extends AppCompatActivity
     private ImageButton carpenter, plumber, electrician, housemaid, constructionWorker, painter;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private Customer customer ;
+    private Customer customer = new Customer();
     private String Tags = CustomerMainActivity.class.getName();
     protected DrawerLayout drawerLayout;
     private Intent intent;
@@ -67,7 +67,7 @@ public class CustomerMainActivity extends AppCompatActivity
             services = (Services) getIntent().getExtras().get("services");
         }
 
-        if(customer == null) {
+        if(customer.getName() == null) {
             fetchFromFirebase();
         }else if(current != null){
             Intent intent = new Intent(CustomerMainActivity.this,CustomerDashboard2Activity.class);
@@ -150,7 +150,7 @@ public class CustomerMainActivity extends AppCompatActivity
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         //labourer = new Labourer();
                         customer = documentSnapshot.toObject(Customer.class);
-                        Log.d(Tags, documentSnapshot.getData().toString() + "!"+customer.getCurrentService());
+                        Log.d("fetchfromfirebase", documentSnapshot.getData().toString() + "!"+customer.getCurrentService());
                         intent.putExtra("customer",customer);
                         if(customer.getCurrentService() != null && customer.getCurrentService().length() > 0){
                             // go todifferent activity
@@ -242,8 +242,8 @@ public class CustomerMainActivity extends AppCompatActivity
             //Log.d(tag, "labourer : " + labourer.getAddressLine1());
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
-            Intent settings = new Intent(CustomerMainActivity.this,SettingsActivity.class);
-            startActivity(settings);
+            //Intent settings = new Intent(CustomerMainActivity.this,SettingsActivity.class);
+            //startActivity(settings);
             Intent intent = new Intent(this,ProfileActivity.class);
             intent.putExtra("type","customer");
             intent.putExtra("user",customer);

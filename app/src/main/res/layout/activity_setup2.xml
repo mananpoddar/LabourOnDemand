@@ -92,8 +92,11 @@
                     android:id="@+id/setup_details_et_skill"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="20"
-                    android:backgroundTint="@color/colorPrimary" />
+                    android:backgroundTint="@color/colorPrimary"
+                    android:hint="Skill"
+                    android:focusableInTouchMode="false"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary" />
 
             </android.support.design.widget.TextInputLayout>
 

@@ -71,7 +71,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
         if( currentService == null ){
 
-            if(labourer == null) {
+            if(labourer.getName() == null) {
                 fetchFromFirebase();
             }else{
                 fetchServices();
@@ -116,6 +116,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                             Log.d(tag, documentSnapshot.getData().toString() + "!");
 
                             if (labourer.getCurrentService() == null) {
+                                Log.d("tagggg",labourer.getSkill()+"!");
                                 fetchServices();
                             }else{
 
@@ -140,12 +141,12 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
                         for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                            Services services ;
+                            Services services = new Services() ;
+                            Log.d("tag",labourer.getSkill()+"!"+documentSnapshot.get("skill")+"!"+documentSnapshot.getData().toString());
                             if(documentSnapshot.getString("skill").equals(labourer.getSkill())){
                                 services = documentSnapshot.toObject(Services.class);
-
+                                services.setServiceID(documentSnapshot.getId());
                                 final Services finalServices = services;
                                 firebaseFirestore.collection("customer").document(services.getCustomerUID()).get()
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -176,9 +177,9 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.customer_main_dl);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -227,8 +228,8 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
             Log.d(tag, "labourer : " + labourer.getAddressLine1());
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
-            Intent settings = new Intent(LabourerMainActivity.this,SettingsActivity.class);
-            startActivity(settings);
+            //Intent settings = new Intent(LabourerMainActivity.this,SettingsActivity.class);
+            //startActivity(settings);
 
         } else if (id == R.id.nav_share) {
 
@@ -236,8 +237,8 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.customer_main_dl);
-        drawer.closeDrawer(GravityCompat.START);
+
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 }

@@ -177,7 +177,7 @@ public class FormActivity extends AppCompatActivity implements NavigationView.On
         map.put("feedback","");
         map.put("skill",services.getSkill());
         //map.put("images", pictures);
-        map.put("labourResponses", new HashMap<>());
+        map.put("labourResponses", new HashMap<String,Long>());
         map.put("addressLine1",services.getAddressLine1());
         map.put("addressLine2",services.getAddressLine2());
         map.put("city",services.getCity());
