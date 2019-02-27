@@ -24,7 +24,7 @@
                 android:layout_height="160dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_launcher_background" />
+                android:src="@drawable/ic_person_black_24dp" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -141,6 +141,8 @@
                 android:layout_marginTop="@dimen/margin_larger"
                 android:hint="Address Line 2"
                 android:backgroundTint="@color/colorPrimary"
+                app:boxStrokeColor="@color/orange"
+                android:outlineSpotShadowColor="@color/black"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText

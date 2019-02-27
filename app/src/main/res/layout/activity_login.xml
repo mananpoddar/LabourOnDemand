@@ -12,11 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:gravity="center"
-        android:text="Labours On Demand"
+        android:text="LOD"
         android:backgroundTint="@color/colorPrimary"
-
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary"
         android:textSize="64sp"
@@ -38,7 +37,6 @@
         android:textColorHint="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/login_et_password_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/register_tv_logo">
 
@@ -127,9 +125,8 @@
         android:background="@null"
         android:text="Forgot your password?"
         android:textAllCaps="false"
-        android:textColor="#36CF14"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_btn" />
 
@@ -143,4 +140,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

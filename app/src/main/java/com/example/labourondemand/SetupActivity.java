@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -346,6 +347,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
                 });
         progressBar.setVisibility(View.INVISIBLE);
     }
+
 
     public void selectDate(View view){
         Calendar calendar = Calendar.getInstance();
