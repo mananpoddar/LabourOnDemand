@@ -139,6 +139,7 @@ public class ProfileActivity extends AppCompatActivity
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         PersonalDetailsFragment personalDetailsFragment = new PersonalDetailsFragment();
         AddressDetailsFragment addressDetailsFragment = new AddressDetailsFragment();
+        WorkDetailsFragment workDetailsFragment = new WorkDetailsFragment();
 
         personalDetailsFragment.setArguments(bundle);
         addressDetailsFragment.setArguments(bundle);
@@ -146,7 +147,8 @@ public class ProfileActivity extends AppCompatActivity
         viewPagerAdapter.addFragment(personalDetailsFragment, "Personal");
         viewPagerAdapter.addFragment(addressDetailsFragment, "Address");
         if (isLabourer) {
-            viewPagerAdapter.addFragment(new WorkDetailsFragment(), "Work");
+            workDetailsFragment.setArguments(bundle);
+            viewPagerAdapter.addFragment(workDetailsFragment, "Work");
             viewPager.setOffscreenPageLimit(3);
         } else {
             viewPager.setOffscreenPageLimit(2);
@@ -187,7 +189,7 @@ public class ProfileActivity extends AppCompatActivity
         if (isEditable) {
 
             name.setFocusableInTouchMode(true);
-            emailid.setFocusableInTouchMode(true);
+            //emailid.setFocusableInTouchMode(true);
             phone.setFocusableInTouchMode(true);
             address1.setFocusableInTouchMode(true);
             address2.setFocusableInTouchMode(true);
@@ -247,11 +249,11 @@ public class ProfileActivity extends AppCompatActivity
 
                     boolean isInputRight = true;
 
-                    if (!isValidEmail(emailid.getText().toString().trim())) {
+                    /*if (!isValidEmail(emailid.getText().toString().trim())) {
                         emailid.setError("Invalid email id");
                         Toast.makeText(getApplicationContext(), "Error in PERSONAL!", Toast.LENGTH_SHORT).show();
                         isInputRight = false;
-                    }
+                    }*/
                     if (!isValidPhone(phone.getText().toString().trim())) {
                         phone.setError("Invalid phone number");
                         Toast.makeText(getApplicationContext(), "Error in PERSONAL!", Toast.LENGTH_SHORT).show();
@@ -293,8 +295,8 @@ public class ProfileActivity extends AppCompatActivity
                     if (isInputRight) {
                         name.setFocusableInTouchMode(false);
                         name.setFocusable(false);
-                        emailid.setFocusableInTouchMode(false);
-                        emailid.setFocusable(false);
+                        //emailid.setFocusableInTouchMode(false);
+                        //emailid.setFocusable(false);
                         phone.setFocusableInTouchMode(false);
                         phone.setFocusable(false);
                         dob.setFocusableInTouchMode(false);

@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,17 +89,14 @@ public class PersonalDetailsFragment extends Fragment {
         dob = view.findViewById(R.id.personal_et_dob);
 
         if(type.equals("labourer")){
-            email.setText("dummy email");
+            email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail()+"");
             phone.setText(String.valueOf(labourer.getPhone()));
             dob.setText(labourer.getDob());
         }else{
-            email.setText("dummy email");
+            email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail()+"");
             phone.setText(String.valueOf(customer.getPhone()));
             dob.setText(customer.getDob());
         }
-        //Log.d(TAG, labourer.getCity());
-
-
 
         return view;
     }
