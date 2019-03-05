@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class CheckingActivity extends AppCompatActivity {
+public class    CheckingActivity extends AppCompatActivity {
 
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth mAuth;

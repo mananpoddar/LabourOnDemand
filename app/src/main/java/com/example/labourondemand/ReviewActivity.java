@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
@@ -23,7 +22,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -188,7 +186,7 @@ public class ReviewActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.profile_activity2, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 
@@ -200,7 +198,7 @@ public class ReviewActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_notifications) {
             return true;
         }
 
@@ -210,16 +208,16 @@ public class ReviewActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle menu_bottom_navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        /*if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else*/ if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
 
