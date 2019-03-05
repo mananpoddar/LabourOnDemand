@@ -18,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -94,8 +93,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 /*
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.customer_main_dl);
 */
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setCheckedItem(0);
@@ -188,7 +186,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.labourer_main, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 
@@ -200,26 +198,27 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_notifications) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle menu_bottom_navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_dashboard) {
+        if (id == R.id.nav_home) {
 
         } else if (id == R.id.nav_history) {
             //Toast.makeText(this,"History yet to be Developed",)
             Intent intent = new Intent(this, PreviousActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_person) {
+        } else if (id == R.id.nav_jobs) {
+
+        } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfileActivity.class);
             /*Bundle bundle = new Bundle();
             bundle.putParcelable("labourer",labourer);*/

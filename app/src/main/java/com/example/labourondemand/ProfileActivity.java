@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -426,7 +425,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.profile_activity2, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 
@@ -438,7 +437,7 @@ public class ProfileActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_notifications) {
             return true;
         }
 
@@ -448,10 +447,10 @@ public class ProfileActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle menu_bottom_navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_dashboard) {
+        if (id == R.id.nav_home) {
             Intent intent;
             if (type.equals("customer")) {
                 intent = new Intent(this, CustomerMainActivity.class);
@@ -465,7 +464,7 @@ public class ProfileActivity extends AppCompatActivity
         } else if (id == R.id.nav_history) {
             Intent intent = new Intent(this, PreviousActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_person) {
+        } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_manage) {
 
