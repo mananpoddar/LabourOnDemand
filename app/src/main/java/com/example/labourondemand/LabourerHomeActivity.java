@@ -116,6 +116,9 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
             Intent intent = new Intent(LabourerHomeActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.nav_wallet) {
+            /*Intent intent = new Intent(CustomerHistoryActivity.this, NAME.class);
+            startActivity(intent);*/
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
