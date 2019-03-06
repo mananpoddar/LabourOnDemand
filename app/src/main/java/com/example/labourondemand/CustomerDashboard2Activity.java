@@ -213,6 +213,11 @@ public class CustomerDashboard2Activity extends AppCompatActivity
             Intent intent = new Intent(CustomerDashboard2Activity.this,LoginActivity.class);
             startActivity(intent);
             finish();
+        } else if(id == R.id.nav_jobs) {
+            Intent intent = new Intent(this, CustomerJobsActivity.class);
+            intent.putExtra("user", customer);
+            intent.putExtra("type","customer");
+            startActivity(intent);
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
