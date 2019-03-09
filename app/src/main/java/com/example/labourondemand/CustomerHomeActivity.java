@@ -527,8 +527,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
             customer = session.getCustomer(customer.getId());
             /*Log.d("cus",customer.toString());*/
             Log.d("NOTnull","horiazontal"+(Boolean)(horizontalScrollViewAdapter.getMap() ==  null));
-
-
+            
         }
 
         recyclerView.setAdapter(horizontalScrollViewAdapter);
