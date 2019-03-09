@@ -62,7 +62,7 @@ public class DetailServiceActivity extends AppCompatActivity
     private ProgressBar progressBar;
     private String type;
     private ViewPager viewPagerImages, viewPagerData;
-    private TabLayout tabs;
+    private TabLayout tabs, tabsImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,8 @@ public class DetailServiceActivity extends AppCompatActivity
         viewPagerImages = findViewById(R.id.detail_service_vp_images);
         viewPagerData = findViewById(R.id.detail_service_vp_data);
         tabs = findViewById(R.id.detail_service_tl);
+        tabsImages = findViewById(R.id.detail_service_tl_images);
+        tabsImages.setupWithViewPager(viewPagerImages,true);
 
         slide = new Slide(this, services.getImages());
         viewPagerImages.setAdapter(slide);

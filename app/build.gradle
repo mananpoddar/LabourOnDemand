@@ -10,6 +10,7 @@ android {
         applicationId "com.example.labourondemand"
         minSdkVersion 21
         targetSdkVersion 28
+        vectorDrawables.useSupportLibrary = true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
