@@ -10,8 +10,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
+
+import com.google.gson.Gson;
 
 public class SessionManager {
+
+    Gson gson;
+
     // Shared Preferences
     SharedPreferences pref;
 
@@ -41,6 +47,49 @@ public class SessionManager {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+        gson = new Gson();
+    }
+
+    public void saveServices(ServicesFinal servicesFinal){
+
+        String json = gson.toJson(servicesFinal); // myObject - instance of MyObject
+        editor.putString(servicesFinal.getServiceId(),json);
+        editor.commit();
+
+    }
+
+    public ServicesFinal getService(String serviceId){
+        String json = pref.getString(serviceId, "");
+        ServicesFinal servicesFinal = gson.fromJson(json, ServicesFinal.class);
+        return servicesFinal;
+    }
+
+    public void saveLabourer(LabourerFinal labourerFinal){
+
+        String json = gson.toJson(labourerFinal); // myObject - instance of MyObject
+        //editor.putString(labourerFinal.(),json);
+        editor.commit();
+    }
+
+    public LabourerFinal getLabourer(String labourerUID){
+        String json = pref.getString(labourerUID, "");
+        LabourerFinal labourerFinal = gson.fromJson(json, LabourerFinal.class);
+        return labourerFinal;
+    }
+
+    public void saveCustomer(CustomerFinal customerFinal){
+
+        String json = gson.toJson(customerFinal); // myObject - instance of MyObject
+        Log.d("json",json+"!");
+        editor.putString(customerFinal.getId(),json);
+        editor.commit();
+    }
+
+    public CustomerFinal getCustomer(String customerUID){
+        String json = pref.getString(customerUID, "");
+        Log.d("json",json+"!");
+        CustomerFinal customerFinal = gson.fromJson(json, CustomerFinal.class);
+        return customerFinal;
     }
 
     /**
@@ -68,10 +117,10 @@ public class SessionManager {
         editor.commit();
     }
 
-    public Boolean isSetup(){
+    public Boolean isSetup(String s){
 
-        String name = pref.getString("name",null);
-
+        String name = pref.getString(s,null);
+        Log.d("name",name+"!");
         if(name == null){
             return false;
         }
@@ -116,6 +165,8 @@ public class SessionManager {
         editor.commit();
 
     }
+
+//    public void addServiceId()
 
     public Customer getCustomer(){
         Customer customer = new Customer();

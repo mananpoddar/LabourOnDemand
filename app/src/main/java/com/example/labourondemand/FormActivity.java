@@ -70,6 +70,7 @@ public class FormActivity extends AppCompatActivity implements NavigationView.On
     private Button submit;
     private String TAG = FormActivity.class.getName();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
