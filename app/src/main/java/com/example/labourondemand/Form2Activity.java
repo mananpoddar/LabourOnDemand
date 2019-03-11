@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -81,7 +82,7 @@ public class Form2Activity extends AppCompatActivity {
     private String st = "";
     private SessionManager session;
     private TabLayout tabsImages;
-
+    private ImageView choose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,13 +97,7 @@ public class Form2Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                /*//onBackPressed();
-                Intent intent = new Intent(Form2Activity.this, CustomerHomeActivity.class);
-                //intent.putExtra("currentService", services.getServiceID());
-                //intent.putExtra("services", services);
-                intent.putExtra("customer", customer);
-                startActivity(intent);
-                finish();*/
+
             }
         });
 
@@ -111,6 +106,7 @@ public class Form2Activity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         session = new SessionManager(getApplicationContext());
 
+        choose = findViewById(R.id.form2_choose_iv);
         viewPager = findViewById(R.id.activity_form2_vp);
         floatingActionButton = findViewById(R.id.activity_form2_fab);
         description = findViewById(R.id.activity_form2_et_description);
@@ -198,6 +194,7 @@ public class Form2Activity extends AppCompatActivity {
                 mainImageURI = result.getUri();
                 pictures.add(mainImageURI);
                 slide.added(mainImageURI.toString());
+                choose.setVisibility(View.GONE);
                 viewPager.setCurrentItem(pictures.size() - 1);
                 //viewPager.setAdapter(new Slide(getApplicationContext(), pictures));
                 //photo.setImageURI(mainImageURI);
