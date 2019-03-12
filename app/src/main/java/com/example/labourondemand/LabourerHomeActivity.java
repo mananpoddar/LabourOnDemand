@@ -26,6 +26,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
     private FirebaseAuth firebaseAuth;
     private String tag = LabourerHomeActivity.class.getName();
     private BottomNavigationView navigation;
+    private LabourerFinal labourerFinal;
 
 
     @SuppressLint("ResourceType")
@@ -48,6 +49,8 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         navigationView.setCheckedItem(2);
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        labourerFinal = (LabourerFinal) getIntent().getExtras().getSerializable("labourer");
 
     }
 

@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
+
 public class CheckingActivity extends AppCompatActivity {
 
     private FirebaseFirestore firebaseFirestore;
@@ -115,7 +117,7 @@ public class CheckingActivity extends AppCompatActivity {
                                 Log.d(TAG, "labourer");
                                 if (session.isSetup(current_user_id)) {
                                     Intent labourer = new Intent(CheckingActivity.this, LabourerMainActivity.class);
-                                    labourer.putExtra("labourer", session.getCustomer());
+                                    labourer.putExtra("labourer", (Serializable) session.getLabourer(current_user_id));
                                     startActivity(labourer);
                                     finish();
                                 } else {
