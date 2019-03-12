@@ -20,7 +20,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -53,7 +57,7 @@ import java.util.Map;
 
 import id.zelory.compressor.Compressor;
 
-public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFragment.OnFragmentInteractionListener*/{
+public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFragment.OnFragmentInteractionListener*/ {
 
     private ViewPager viewPager;
     private TabLayout tabs;
@@ -73,6 +77,12 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
     private FirebaseFirestore firebaseFirestore;
     private String userId, type;
     private TextInputLayout skillTil, workTil;
+    private Toolbar toolbar;
+    private SessionManager session;
+    private CustomerFinal customerFinal;
+    private LabourerFinal labourerFinal;
+
+    ArrayList<String> selectedStrings = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +90,12 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         setContentView(R.layout.activity_setup2);
 
         type = getIntent().getExtras().getString("type");
+
+        toolbar = findViewById(R.id.setup_tb);
+        toolbar.setTitle("Profile Details");
+        setSupportActionBar(toolbar);
+
+        session = new SessionManager(getApplicationContext());
 
         firebaseAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -107,7 +123,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
 
         progressBar.setVisibility(View.GONE);
 
-        if(type.equals("customer")){
+        if (type.equals("customer")) {
             skillTil.setVisibility(View.GONE);
             workTil.setVisibility(View.GONE);
             skill.setVisibility(View.GONE);
@@ -137,54 +153,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                server = true;
-                if(TextUtils.isEmpty(a1.getText())){
-                    a1.setError("error");
-                    server = false;
-                }
-                if(TextUtils.isEmpty(a2.getText())){
-                    a2.setError("error");
-                    server = false;
-                }
-                if(TextUtils.isEmpty(a3.getText())){
-                    a3.setError("error");
-                    server = false;
-                }
-                if(TextUtils.isEmpty(city.getText())){
-                    city.setError("error");
-                    server = false;
-                }
-                if(TextUtils.isEmpty(state.getText())){
-                    state.setError("error");
-                    server = false;
-                }
-                if(TextUtils.isEmpty(name.getText())){
-                    name.setError("error");
-                    server = false;
-                }
-                if(TextUtils.isEmpty(phone.getText())){
-                    phone.setError("error");
-                    server = false;
-                }
-                if(TextUtils.isEmpty(dob.getText())){
-                    dob.setError("error");
-                    server = false;
-                }
-                if(type.equals("labourer")) {
-                    if (TextUtils.isEmpty(skill.getText())) {
-                        a1.setError("error");
-                        server = false;
-                    }
-                    if (TextUtils.isEmpty(workExperience.getText())) {
-                        a1.setError("error");
-                        server = false;
-                    }
-                }
-                if(server){
-                    sendToFirebase();
-                }else{
-                    Toast.makeText(getApplicationContext(),"Fill",Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
 
@@ -192,9 +161,9 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
             @Override
             public void onClick(View v) {
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                    if(ContextCompat.checkSelfPermission(SetupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                    if (ContextCompat.checkSelfPermission(SetupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
                         //Toast.makeText(SetupActivity.this, "Permission Denied", Toast.LENGTH_LONG).show();
                         ActivityCompat.requestPermissions(SetupActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
@@ -213,9 +182,81 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_setup, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_setup) {
+
+            server = true;
+            if (TextUtils.isEmpty(a1.getText())) {
+                a1.setError("error");
+                server = false;
+            }
+            if (TextUtils.isEmpty(a2.getText())) {
+                a2.setError("error");
+                server = false;
+            }
+            if (TextUtils.isEmpty(a3.getText())) {
+                a3.setError("error");
+                server = false;
+            }
+            if (TextUtils.isEmpty(city.getText())) {
+                city.setError("error");
+                server = false;
+            }
+            if (TextUtils.isEmpty(state.getText())) {
+                state.setError("error");
+                server = false;
+            }
+            if (TextUtils.isEmpty(name.getText())) {
+                name.setError("error");
+                server = false;
+            }
+            if (TextUtils.isEmpty(phone.getText())) {
+                phone.setError("error");
+                server = false;
+            }
+            if (TextUtils.isEmpty(dob.getText())) {
+                dob.setError("error");
+                server = false;
+            }
+            if (type.equals("labourer")) {
+                if (TextUtils.isEmpty(skill.getText())) {
+                    a1.setError("error");
+                    server = false;
+                }
+                if (TextUtils.isEmpty(workExperience.getText())) {
+                    a1.setError("error");
+                    server = false;
+                }
+            }
+            if (server) {
+                sendToFirebase();
+            } else {
+                Toast.makeText(getApplicationContext(), "Fill", Toast.LENGTH_SHORT).show();
+            }
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 1){
+        if (requestCode == 1) {
             BringImagePicker();
         }
     }
@@ -252,7 +293,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
 
                     if (task.isSuccessful()) {
 
-                        storageReference.child("profile_images").child(userId+".jpg").getDownloadUrl()
+                        storageReference.child("profile_images").child(userId + ".jpg").getDownloadUrl()
                                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
@@ -276,34 +317,23 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
                 }
             });
 
-        }else {
+        } else {
             storeFirestore(null);
         }
-        /*else {
-                        //GeoPoint location = loc
-                        storeFirestore(null, user_name,phone, lo);
-
-                    }*/
-
     }
 
     private void storeFirestore(Uri uri) {
 
-        Uri download_uri = uri;
-        /*if(task != null) {
-
-            download_uri = task.getResult().g
-
-        } else {
-
-            download_uri = mainImageURI;
-
-        }*/
-
-
         Map<String, Object> userMap = new HashMap<>();
+        String image = "null";
+        userMap.put("image", "null");
+
+        if (uri != null) {
+            userMap.put("image", uri.toString());
+            image = uri.toString();
+        }
+
         userMap.put("name", name.getText().toString());
-        userMap.put("image", download_uri.toString());
         userMap.put("phone", Long.valueOf(phone.getText().toString()));
         userMap.put("city", city.getText().toString());
         userMap.put("state", state.getText().toString());
@@ -311,28 +341,41 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         userMap.put("addressLine2", a2.getText().toString());
         userMap.put("addressLine3", a3.getText().toString());
         userMap.put("dob", dob.getText().toString());
+        userMap.put("wallet", 0L);
 
-        if(type.equals("labourer")) {
-            userMap.put("skill", skill.getText().toString());
+        if (type.equals("labourer")) {
+            userMap.put("skill", selectedStrings);
             userMap.put("workExperience", Long.valueOf(workExperience.getText().toString()));
+            /*session.createProfileLabourer(name.getText().toString(),"null",dob.getText().toString(),city.getText().toString(),state.getText().toString(),
+                    Long.valueOf(phone.getText().toString()),a1.getText().toString(),a2.getText().toString(),a3.getText().toString(),selectedStrings
+            ,Long.valueOf(workExperience.getText().toString()));*/
+        } else {
+            customerFinal = new CustomerFinal(userId, name.getText().toString(), image, dob.getText().toString(), city.getText().toString(),
+                    state.getText().toString(), a1.getText().toString(), a2.getText().toString(), a3.getText().toString(),
+                    Long.valueOf(phone.getText().toString()), 0L, new ArrayList<String>());
+            /*session.createProfileCustomer(name.getText().toString(),"null",dob.getText().toString(),city.getText().toString(),state.getText().toString(),
+                    Long.valueOf(phone.getText().toString()),a1.getText().toString(),a2.getText().toString(),a3.getText().toString());*/
         }
         ArrayList<String> h = new ArrayList<>();
-        HashMap<String,Integer> m = new HashMap<>();
 
-        userMap.put("services",h);
+        userMap.put("services", h);
 
         firebaseFirestore.collection(type).document(userId).set(userMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(SetupActivity.this, "The user Settings are updated.", Toast.LENGTH_LONG).show();
-                        //startActivity(new Intent(SetupActivity.this, CheckingActivity.class));
-                        //finish();
-                        if(type.equals("customer")){
-                            Intent intent = new Intent(SetupActivity.this, CustomerMainActivity.class);
+
+                        if (type.equals("customer")) {
+                            session.saveCustomer(customerFinal);
+                            Intent intent = new Intent(SetupActivity.this, CustomerHomeActivity.class);
+
+                            intent.putExtra("customer", customerFinal);
                             startActivity(intent);
-                        }else{
-                            Intent intent = new Intent(SetupActivity.this, LabourerMainActivity.class);
+                        } else {
+                            session.saveLabourer(labourerFinal);
+                            Intent intent = new Intent(SetupActivity.this, LabourerHomeActivity.class);
+                            //intent.putExtra("labourer",labourerFinal);
                             startActivity(intent);
                         }
                         finish();
@@ -349,7 +392,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
     }
 
 
-    public void selectDate(View view){
+    public void selectDate(View view) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -358,6 +401,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        dob.setError(null);
                         dob.setText(day + "/" + (month + 1) + "/" + year);
                     }
                 }, year, month, dayOfMonth);
@@ -365,25 +409,53 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         datePickerDialog.show();
     }
 
-    public void selectSkill(View view){
+    public void selectSkill(View view) {
+
+        final ArrayList<Integer> selectedList = new ArrayList<>();
 
         final String[] mSkill = new String[1];
         final String list[] = getResources().getStringArray(R.array.arrays_skill);
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle("Choose Your Skill");
 
-        builder.setSingleChoiceItems(list, 0,
-                new DialogInterface.OnClickListener() {
+        boolean[] checked = new boolean[list.length];
+        for (int j = 0; j < list.length; j++) {
+            if (selectedStrings.contains(list[j])) {
+                checked[j] = true;
+            } else {
+                checked[j] = false;
+            }
+        }
+
+        builder.setMultiChoiceItems(list, checked,
+                new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mSkill[0] = list[which];
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        // mSkill[0] = list[which];
+
+                        if (isChecked) {
+                            selectedList.add(which);
+                        } else if (selectedList.contains(which)) {
+                            selectedList.remove(which);
+                        }
                     }
                 });
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                skill.setText(mSkill[0]);
+
+                for (int j = 0; j < selectedList.size(); j++) {
+                    selectedStrings.add(list[selectedList.get(j)]);
+                    Log.d(" name", list[selectedList.get(j)]);
+                   /* for(Item item1 : mainActivity.frequentOrders.get(items[selectedList.get(j)]).getFrequentItemList()){
+                        Log.d("item", item1.getShopId() +" "+item.getShopId());
+                        if(item1.getShopId().equals(item.getShopId()) && item1.getItemName().equals(item.getItemName())){
+                            ctr = 1;
+                        }*/
+                }
+                skill.setText(selectedStrings.toString());
             }
+
         });
         builder.show();
     }

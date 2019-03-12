@@ -12,9 +12,10 @@ import java.util.Map;
 
 public class Services implements Parcelable {
 
-    private String skill, customerUID, description, feedback, labourUID;
+    private String skill, customerUID, description, feedback;
+    private Integer numOfLabourers;
     private long customerAmount;
-    private ArrayList<String> images;
+    private ArrayList<String> images,labourUID;
     private GeoPoint from, to;
     private String addressLine1, addressLine2, landmark, city, serviceID;
     private HashMap<String, Long> labourerResponses;
@@ -29,7 +30,7 @@ public class Services implements Parcelable {
         customerUID = in.readString();
         description = in.readString();
         feedback = in.readString();
-        labourUID = in.readString();
+        labourUID = in.createStringArrayList();
         customerAmount = in.readLong();
         images = in.createStringArrayList();
         addressLine1 = in.readString();
@@ -73,11 +74,11 @@ public class Services implements Parcelable {
         this.feedback = feedback;
     }
 
-    public String getLabourUID() {
+    public ArrayList<String> getLabourUID() {
         return labourUID;
     }
 
-    public void setLabourUID(String labourUID) {
+    public void setLabourUID(ArrayList<String> labourUID) {
         this.labourUID = labourUID;
     }
 
@@ -200,7 +201,7 @@ public class Services implements Parcelable {
         dest.writeString(customerUID);
         dest.writeString(description);
         dest.writeString(feedback);
-        dest.writeString(labourUID);
+        dest.writeStringList(labourUID);
         dest.writeLong(customerAmount);
         dest.writeStringList(images);
         dest.writeString(addressLine1);

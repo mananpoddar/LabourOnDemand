@@ -14,6 +14,23 @@ public class Customer implements Parcelable {
     private Long phone,currentServicePrice;
     private ArrayList<String> servicesId;
     private ArrayList<Services> services;
+    private ArrayList<Services> incomingServices, currentServices;
+
+    public ArrayList<Services> getIncomingServices() {
+        return incomingServices;
+    }
+
+    public void setIncomingServices(ArrayList<Services> incomingServices) {
+        this.incomingServices = incomingServices;
+    }
+
+    public ArrayList<Services> getCurrentServices() {
+        return currentServices;
+    }
+
+    public void setCurrentServices(ArrayList<Services> currentServices) {
+        this.currentServices = currentServices;
+    }
 
     public Customer() {
     }
