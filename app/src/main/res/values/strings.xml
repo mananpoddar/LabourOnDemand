@@ -8,19 +8,35 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_labourer_main">LabourerMainActivity</string>
 
+    <integer-array name="country_arrays">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </integer-array>
+
     <string-array name="arrays_skill">
-        <item>carpenter</item>
-        <item>plumber</item>
-        <item>electrician</item>
-        <item>painter</item>
-        <item>constructor</item>
-        <item>housemaid</item>
+        <item>Carpenter</item>
+        <item>Plumber</item>
+        <item>Electrician</item>
+        <item>Painter</item>
+        <item>Constructor</item>
+        <item>Chef</item>
 
     </string-array>
 
-    <integer-array name="pics">
-        <item>@drawable/dummy</item>
-    </integer-array>
+   <!-- <integer-array name="pics">
+        <item>@drawable/selector_carpenter</item>
+        <item>@drawable/selector_plumber</item>
+        <item>@drawable/selector_electrician</item>
+        <item>@drawable/selector_painter</item>
+        <item>@drawable/selector_constructer</item>
+        <item>@drawable/selector_chef</item>
+    </integer-array>-->
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

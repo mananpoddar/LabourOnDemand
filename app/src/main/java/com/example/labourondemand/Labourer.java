@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 public class Labourer implements Parcelable {
 
-    private String name, image, skill, dob, city, state, currentService, addressLine1, addressLine2, addressLine3;
+    private String name, image, dob, city, state, currentService, addressLine1, addressLine2, addressLine3;
     private Long currentServicePrice, phone;
     private Double averageRating;
     private GeoPoint currentLocation;
     private Boolean isBusy;
-    private ArrayList<String> servicesId;
+    private ArrayList<String> servicesId, skill;
     private ArrayList<Services> services;
 
     public Labourer() {
@@ -36,11 +36,11 @@ public class Labourer implements Parcelable {
         this.image = image;
     }
 
-    public String getSkill() {
+    public ArrayList<String> getSkill() {
         return skill;
     }
 
-    public void setSkill(String skill) {
+    public void setSkill(ArrayList skill) {
         this.skill = skill;
     }
 
@@ -159,7 +159,7 @@ public class Labourer implements Parcelable {
     protected Labourer(Parcel in) {
         name = in.readString();
         image = in.readString();
-        skill = in.readString();
+        skill = in.createStringArrayList();
         dob = in.readString();
         city = in.readString();
         state = in.readString();
@@ -209,7 +209,7 @@ public class Labourer implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(image);
-        dest.writeString(skill);
+        dest.writeStringList(skill);
         dest.writeString(dob);
         dest.writeString(city);
         dest.writeString(state);
