@@ -29,7 +29,7 @@
 
     </string-array>
 
-   <!-- <integer-array name="pics">
+    <!-- <integer-array name="pics">
         <item>@drawable/selector_carpenter</item>
         <item>@drawable/selector_plumber</item>
         <item>@drawable/selector_electrician</item>

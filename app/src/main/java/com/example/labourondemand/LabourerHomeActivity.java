@@ -2,10 +2,12 @@ package com.example.labourondemand;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +19,9 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class LabourerHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
+
+public class LabourerHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CardVIewJobs.OnFragmentInteractionListener {
 
     protected DrawerLayout drawerLayout;
     protected NavigationView navigationView;
@@ -48,6 +52,34 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         navigationView.setCheckedItem(2);
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        ViewPager viewPager = findViewById(R.id.labourer_home_vp);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        ArrayList<Bundle> bundles = new ArrayList<>();
+
+
+        for(int i = 0; i < 5; i++) {
+            bundles.add(new Bundle());
+            bundles.get(i).putString("key",  Integer.toString(i));
+        }
+
+        ArrayList<CardVIewJobs> cardViewJobs = new ArrayList<CardVIewJobs>();
+
+
+        for(int i = 0; i < 5; i++) {
+            cardViewJobs.add(new CardVIewJobs());
+            cardViewJobs.get(i).setArguments(bundles.get(i));
+        }
+
+
+        //viewPagerAdapter.addFragment(hello1, "Hello1");
+        for(int i = 0; i < 5; i++) {
+            viewPagerAdapter.addFragment(cardViewJobs.get(i), "hello" + i);
+        }
+        //viewPagerAdapter.addFragment(hello2, "Hello2");
+
+        viewPager.setAdapter(viewPagerAdapter);
 
     }
 
@@ -145,6 +177,11 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
 
