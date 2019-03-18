@@ -23,35 +23,35 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CustomerHistoryRVAdapter extends RecyclerView.Adapter<CustomerHistoryRVAdapter.ViewHolder> {
+public class LabourerHistoryRVAdapter extends RecyclerView.Adapter<LabourerHistoryRVAdapter.ViewHolder> {
 
-    private static final String TAG = "CustomerHistoryRVAdapter";
+    private static final String TAG = "LabourerHistoryRVAdapter";
 
     private Context context;
-    private List<Service> services;
-
-    public CustomerHistoryRVAdapter(Context context, List<Service> services) {
+    private ArrayList<ServicesFinal> services;
+//    private ServicesFinal services;
+    public LabourerHistoryRVAdapter(Context context, ArrayList<ServicesFinal> services) {
         this.services = services;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public CustomerHistoryRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LabourerHistoryRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.layout_labourer_history_item, parent, false);
-        CustomerHistoryRVAdapter.ViewHolder holder = new CustomerHistoryRVAdapter.ViewHolder(view);
+        LabourerHistoryRVAdapter.ViewHolder holder = new LabourerHistoryRVAdapter.ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomerHistoryRVAdapter.ViewHolder viewHolder, int position) {
-        Service service = services.get(viewHolder.getAdapterPosition());
+    public void onBindViewHolder(@NonNull LabourerHistoryRVAdapter.ViewHolder viewHolder, int position) {
+        ServicesFinal service = services.get(viewHolder.getAdapterPosition());
         viewHolder.jobcost.setText(String.valueOf(service.getCustomerAmount()));
         viewHolder.date.setText(service.getEndTime());
-        viewHolder.jobTitle.setText(service.getJobTitle());
+//        viewHolder.jobTitle.setText(service.getJobTitle());
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("customer");
+        DatabaseReference databaseReference = firebaseDatabase.getReference("labourer");
         Query query = databaseReference.child(service.getCustomerUID());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

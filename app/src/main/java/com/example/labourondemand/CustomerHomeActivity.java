@@ -351,7 +351,8 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
                     return true;
                 case R.id.bottom_navigation_history:
-
+                    Intent intent = new Intent(CustomerHomeActivity.this,CustomerHistoryActivity.class);
+                    startActivity(intent);
                     return true;
                 case R.id.bottom_navigation_jobs:
 
@@ -615,8 +616,8 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                 Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_show);
                 Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_hide);
 
-                navigation.startAnimation(slideDown);
-                navigation.setVisibility(View.GONE);
+//                navigation.startAnimation(slideDown);
+//                navigation.setVisibility(View.GONE);
 
                 //toolbar.startAnimation(slideUp);
                /* toolbar.animate()
