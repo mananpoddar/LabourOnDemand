@@ -1,6 +1,5 @@
 package com.example.labourondemand;
 
-
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
