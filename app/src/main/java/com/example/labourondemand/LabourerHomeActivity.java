@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -36,7 +37,11 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
     private String tag = LabourerHomeActivity.class.getName();
     private BottomNavigationView navigation;
     private LabourerFinal labourerFinal;
-
+    private ArrayList<Bundle> bundles = new ArrayList<>();
+    private ArrayList<CardVIewJobs> cardViewJobs = new ArrayList<CardVIewJobs>();
+    private ViewPagerAdapterLabourer viewPagerAdapterLabourer; //= new ViewPagerAdapter(getSupportFragmentManager());
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     @SuppressLint("ResourceType")
     @Override
@@ -59,36 +64,51 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        ViewPager viewPager = findViewById(R.id.labourer_home_vp);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        tabLayout = findViewById(R.id.labourer_home_tl);
+        viewPager = findViewById(R.id.labourer_home_vp);
+        viewPagerAdapterLabourer = new ViewPagerAdapterLabourer(getSupportFragmentManager());
+        CardVIewJobs c = new CardVIewJobs();
 
-        ArrayList<Bundle> bundles = new ArrayList<>();
-
-        Intent intent;
+        viewPagerAdapterLabourer.addFragment(c,"deddescs");
+        viewPagerAdapterLabourer.addFragment(new CardVIewJobs(),"cdc");
+        viewPager.setAdapter(viewPagerAdapterLabourer);
+        tabLayout.setupWithViewPager(viewPager);
 
         labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer");
+        Log.d("labourerHome",labourerFinal.toString());
+//
+//        if (labourerFinal.getCurrentService() == null) {
+//            Log.d("tagggg",labourerFinal.getSkill()+"!");
+//            fetchServices();
+//        }
 
-        for(int i = 0; i < 5; i++) {
+        fetchFromFirebase();
+//        if (labourerFinal.getName() == null) {
+//            fetchFromFirebase();
+//        } else {
+//            fetchServices();
+//        }
+
+/*
+        for (int i = 0; i < 5; i++) {
             bundles.add(new Bundle());
-            bundles.get(i).putString("key",  Integer.toString(i));
+            bundles.get(i).putString("key", Integer.toString(i));
         }
 
-        ArrayList<CardVIewJobs> cardViewJobs = new ArrayList<CardVIewJobs>();
 
-
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             cardViewJobs.add(new CardVIewJobs());
             cardViewJobs.get(i).setArguments(bundles.get(i));
         }
 
 
         //viewPagerAdapter.addFragment(hello1, "Hello1");
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             viewPagerAdapter.addFragment(cardViewJobs.get(i), "hello" + i);
         }
-        //viewPagerAdapter.addFragment(hello2, "Hello2");
+        //viewPagerAdapter.addFragment(hello2, "Hello2");*/
 
-        viewPager.setAdapter(viewPagerAdapter);
+        //viewPager.setAdapter(viewPagerAdapterLabourer);
 
     }
 
@@ -135,7 +155,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
             startActivity(intent);
         } else if (id == R.id.nav_jobs) {
 
-        }else if (id == R.id.nav_profile) {
+        } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfileActivity.class);
             /*Bundle bundle = new Bundle();
             bundle.putParcelable("labourer",labourer);*//*
@@ -193,21 +213,88 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
 
     }
 
+    private void fetchServices() {
+
+        for (String skill : labourerFinal.getSkill())
+            //add isApplyable later
+            firebaseFirestore.collection("services").whereEqualTo("skill", skill).whereEqualTo("status", "incoming").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+
+                                Log.d("tag", labourerFinal.getSkill() + "!" + documentSnapshot.get("skill") + "!" + documentSnapshot.getData().toString());
+                                Log.d("service fetched", documentSnapshot.getString("serviceId"));
+                                ServicesFinal servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
+                                //servicesFinal.setCustomerUID(documentSnapshot.getString("customerUID"));
+                                Log.d("I don't know", "+"+servicesFinal.getCustomerUID()+"!");
+                                //final ServicesFinal finalServices = servicesFinal;
+                                //ServicesFinal finalServicesFinal = servicesFinal;
+                                //firebaseFirestore.collection("customer").document(servicesFinal.getCustomerUID())
+                                firebaseFirestore.collection("customer").document(servicesFinal.getCustomerUID()).get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot1) {
+                                                Log.d("doc00",documentSnapshot1.getData()+"!00");
+                                                CustomerFinal customerFinal = documentSnapshot1.toObject(CustomerFinal.class);
+                                                Log.d("cus",customerFinal.toString()+"!");
+                                                servicesFinal.setCustomer(customerFinal);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putSerializable("service", servicesFinal);
+                                                CardVIewJobs cv = new CardVIewJobs();
+                                                cv.setArguments(bundle);
+                                                viewPagerAdapterLabourer.addFragment(cv, "cc");
+                                                viewPagerAdapterLabourer.notifyDataSetChanged();
+                                                //viewPager.setAdapter(viewPagerAdapterLabourer);
+
+                                                // To add code to add to viewPager
+                                               /* bundles.add(new Bundle());
+                                                bundles.get(j).putString("key", servicesFinal.getCustomerUID());
+                                                cardViewJobs.add(new CardVIewJobs());
+                                                cardViewJobs.get(j).setArguments(bundles.get(j);
+                                                viewPagerAdapter.addFragment(cardViewJobs.get(j), "hello" + j);
+                                                j = j +1;*/
+                                                //
+                                                //finalServices.setCustomer(documentSnapshot.toObject(Customer.class));
+                                                //dashboardAdapter.added(finalServices);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(tag, "error fetchService2 : " + e.toString());
+                                            }
+                                        });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(tag, "error fetchService1 : " + e.toString());
+                        }
+                    });
+    }
+
+    //Later to be deleted
+
     private void fetchFromFirebase() {
 
-        firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).get()
+        fetchServices();
+
+       /* firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         //labourer = new Labourer();
                         if (documentSnapshot.getData() != null) {
                             labourerFinal = documentSnapshot.toObject(LabourerFinal.class);
-                            Log.d(tag, documentSnapshot.getData().toString() + "!");
+                            Log.d("Labourer info fetched", firebaseAuth.getUid() + "!");
 
                             if (labourerFinal.getCurrentService() == null) {
-                                Log.d("tagggg",labourerFinal.getSkill()+"!");
+                                Log.d("tagggg", labourerFinal.getSkill() + "!");
                                 fetchServices();
-                            }else{
+                            } else {
 
                             }
 
@@ -221,50 +308,8 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
                     public void onFailure(@NonNull Exception e) {
 
                     }
-                });
+                });*/
     }
 
-    private void fetchServices() {
-
-        firebaseFirestore.collection("services").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                            Services services = new Services() ;
-                            Log.d("tag",labourerFinal.getSkill()+"!"+documentSnapshot.get("skill")+"!"+documentSnapshot.getData().toString());
-                            if(documentSnapshot.getString("skill").equals(labourerFinal.getSkill())){
-                                services = documentSnapshot.toObject(Services.class);
-                                services.setServiceID(documentSnapshot.getId());
-                                final Services finalServices = services;
-                                firebaseFirestore.collection("customer").document(services.getCustomerUID()).get()
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                // To add code to add to viewPager
-
-
-                                                //
-                                                //finalServices.setCustomer(documentSnapshot.toObject(Customer.class));
-                                                //dashboardAdapter.added(finalServices);
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.d(tag,"error fetchService2 : "+e.toString());
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(tag,"error fetchService1 : "+e.toString());
-                    }
-                });
-    }
 }
 
