@@ -14,6 +14,7 @@ public class ServicesFinal implements Serializable {
     private Double rating;
     private HashMap<String, Long> labourerResponses;
     private ArrayList<String> images, selectedLabourerUID;
+
     private CustomerFinal customer;
     private ArrayList<LabourerFinal> labourers;
     private GeoPoint destination;
