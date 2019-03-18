@@ -22,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+import static android.support.constraint.Constraints.TAG;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,14 +73,17 @@ public class CustomerJobsFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         if (bundle != null) {
-            customer = bundle.getParcelable("customer");
+            customer =  bundle.getParcelable("customer");
+            currentService = bundle.getParcelable("service");
+            Log.d(TAG, "onCreate: bundle recieved");
         }
     }
 
-    private Customer customer;
+    private CustomerFinal customer;
+    private ServicesFinal currentService;
     private RecyclerView recyclerView;
-    private DashboardAdapter customerDashboardAdapter;
-    private FirebaseFirestore firebaseFirestore;
+    private CustomerJobsAdapter customerJobsAdapter;
+    private FirebaseFirestore db;
     private FirebaseAuth firebaseAuth;
     private Services services = new Services();
     private TextView noResponse;
@@ -95,25 +100,26 @@ public class CustomerJobsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_customer_jobs, container, false);
 
         noResponse = view.findViewById(R.id.customer_dashboard2_tv_no_response);
-        customer = (Customer) mActivity.getIntent().getExtras().get("customer");
-        //services = (Services) getIntent().getExtras().get("services");
-        firebaseFirestore = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-//        recyclerView = view.findViewById(R.id.customer_jobs_rv);
-//        customerDashboardAdapter = new DashboardAdapter(getActivity() ,1,new ArrayList<Labourer>(), services);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        recyclerView.setAdapter(customerDashboardAdapter);
-//        recyclerView.setHasFixedSize(false);
+        recyclerView = view.findViewById(R.id.customer_jobs_rv);
+        customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(customerJobsAdapter);
+        recyclerView.setHasFixedSize(false);
+
+
+
         //fetchLabourResponses();
 
-        initText();
-
-        //dummy for presenting
-        RecyclerView recyclerView = view.findViewById(R.id.customer_jobs_rv);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), mNames, mFroms, mTos);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        initText();
+//
+//        //dummy for presenting
+//        RecyclerView recyclerView = view.findViewById(R.id.customer_jobs_rv);
+//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), mNames, mFroms, mTos);
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
     }
@@ -146,51 +152,51 @@ public class CustomerJobsFragment extends Fragment {
         }
     }
 
-    private void fetchLabourResponses() {
-
-        firebaseFirestore.collection("services").document(customer.getCurrentService()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                        Log.d("service in dashboard22", customer.getCurrentService());
-                        services = documentSnapshot.toObject(Services.class);
-                        services.setServiceID(customer.getCurrentService());
-                        Log.d("service in dashboard22", services.getAddressLine1()+"!");
-                        if(services.getLabourerResponses() != null) {
-                            noResponse.setVisibility(View.GONE);
-                            customerDashboardAdapter.setServiceAndCustomer(services, customer);
-                            Log.d("customerboardAdapter",services.getLabourerResponses().toString());
-                            for (final String s : services.getLabourerResponses().keySet()) {
-                                firebaseFirestore.collection("labourer").document(s)
-                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        Labourer labourer = new Labourer();
-                                        labourer = documentSnapshot.toObject(Labourer.class);
-                                        labourer.setCurrentServicePrice(services.getLabourerResponses().get(s));
-                                        customerDashboardAdapter.addedFromCustomer(labourer);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-
-                                    }
-                                });
-                            }
-
-                        }else{
-                            noResponse.setText("No Response from any Labourers");
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-    }
+//    private void fetchLabourResponses() {
+//
+//        firebaseFirestore.collection("services").document(customer.getCurrentService()).get()
+//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+//
+//                        Log.d("service in dashboard22", customer.getCurrentService());
+//                        services = documentSnapshot.toObject(Services.class);
+//                        services.setServiceID(customer.getCurrentService());
+//                        Log.d("service in dashboard22", services.getAddressLine1()+"!");
+//                        if(services.getLabourerResponses() != null) {
+//                            noResponse.setVisibility(View.GONE);
+//                            customerDashboardAdapter.setServiceAndCustomer(services, customer);
+//                            Log.d("customerboardAdapter",services.getLabourerResponses().toString());
+//                            for (final String s : services.getLabourerResponses().keySet()) {
+//                                firebaseFirestore.collection("labourer").document(s)
+//                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                                    @Override
+//                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                                        Labourer labourer = new Labourer();
+//                                        labourer = documentSnapshot.toObject(Labourer.class);
+//                                        labourer.setCurrentServicePrice(services.getLabourerResponses().get(s));
+//                                        customerDashboardAdapter.addedFromCustomer(labourer);
+//                                    }
+//                                }).addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//
+//                                    }
+//                                });
+//                            }
+//
+//                        }else{
+//                            noResponse.setText("No Response from any Labourers");
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//
+//                    }
+//                });
+//    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
