@@ -393,7 +393,7 @@ public class Form2Activity extends AppCompatActivity {
 
                                         if (uris.size() == pictures.size()) {
                                             HashMap<String, Object> images = new HashMap<>();
-                                            images.put("images", uris);
+                                            map.put("images", uris);
                                             servicesFinal.setImages(uris);
                                             Log.d("tag", "before uploading service to database");
                                             firebaseFirestore.collection("services").document(servicesFinal.getServiceId()).set(map)
@@ -416,6 +416,9 @@ public class Form2Activity extends AppCompatActivity {
                                                                         public void onSuccess(Void aVoid) {
 
                                                                             customer.getServices().add(servicesFinal.getServiceId());
+                                                                            if(customer.getIncomingServices() == null){
+                                                                                customer.setIncomingServices(new ArrayList<>());
+                                                                            }
                                                                             customer.getIncomingServices().add(servicesFinal);
                                                                             session.saveServices(servicesFinal);
                                                                             session.saveCustomer(customer);

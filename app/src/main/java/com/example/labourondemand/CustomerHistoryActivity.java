@@ -52,7 +52,6 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
     private RecyclerView recyclerView;
     private Context context;
     private static final String TAG = "CustomerHistoryActivity";
-    private CustomerFinal customer;
 
     @SuppressLint("ResourceType")
     @Override
