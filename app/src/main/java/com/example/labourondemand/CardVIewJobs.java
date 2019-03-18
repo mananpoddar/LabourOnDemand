@@ -60,7 +60,8 @@ public class CardVIewJobs extends Fragment {
 
         Bundle bundle = this.getArguments();
         if(bundle != null) {
-            display = bundle.getString("key", "Error");
+           // display = bundle.getString("key", "Error");
+            ServicesFinal servicesFinal = (ServicesFinal) bundle.getSerializable("services");
         }
 
     }
@@ -77,7 +78,7 @@ public class CardVIewJobs extends Fragment {
         }
 
         TextView textView = view.findViewById(R.id.fragment_card_view_jobs_tv_name);
-        textView.setText(display);
+        textView.setText("cscscdzsc");
 
         return view;
     }

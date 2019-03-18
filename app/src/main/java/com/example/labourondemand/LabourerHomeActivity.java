@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -35,10 +36,12 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
     private FirebaseAuth firebaseAuth;
     private String tag = LabourerHomeActivity.class.getName();
     private BottomNavigationView navigation;
-    private LabourerFinal labourerFinal = new LabourerFinal();
+    private LabourerFinal labourerFinal;
     private ArrayList<Bundle> bundles = new ArrayList<>();
     private ArrayList<CardVIewJobs> cardViewJobs = new ArrayList<CardVIewJobs>();
-    private ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+    private ViewPagerAdapterLabourer viewPagerAdapterLabourer; //= new ViewPagerAdapter(getSupportFragmentManager());
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     @SuppressLint("ResourceType")
     @Override
@@ -61,24 +64,32 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        ViewPager viewPager = findViewById(R.id.labourer_home_vp);
+        tabLayout = findViewById(R.id.labourer_home_tl);
+        viewPager = findViewById(R.id.labourer_home_vp);
+        viewPagerAdapterLabourer = new ViewPagerAdapterLabourer(getSupportFragmentManager());
+        CardVIewJobs c = new CardVIewJobs();
 
-        Intent intent;
+        viewPagerAdapterLabourer.addFragment(c,"deddescs");
+        viewPagerAdapterLabourer.addFragment(new CardVIewJobs(),"cdc");
+        viewPager.setAdapter(viewPagerAdapterLabourer);
+        tabLayout.setupWithViewPager(viewPager);
 
-//        labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer");
+        labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer");
+        Log.d("labourerHome",labourerFinal.toString());
 //
 //        if (labourerFinal.getCurrentService() == null) {
 //            Log.d("tagggg",labourerFinal.getSkill()+"!");
 //            fetchServices();
 //        }
 
-        if (labourerFinal.getName() == null) {
-            fetchFromFirebase();
-        } else {
-            fetchServices();
-        }
+        fetchFromFirebase();
+//        if (labourerFinal.getName() == null) {
+//            fetchFromFirebase();
+//        } else {
+//            fetchServices();
+//        }
 
-
+/*
         for (int i = 0; i < 5; i++) {
             bundles.add(new Bundle());
             bundles.get(i).putString("key", Integer.toString(i));
@@ -95,9 +106,9 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         for (int i = 0; i < 5; i++) {
             viewPagerAdapter.addFragment(cardViewJobs.get(i), "hello" + i);
         }
-        //viewPagerAdapter.addFragment(hello2, "Hello2");
+        //viewPagerAdapter.addFragment(hello2, "Hello2");*/
 
-        viewPager.setAdapter(viewPagerAdapter);
+        //viewPager.setAdapter(viewPagerAdapterLabourer);
 
     }
 
@@ -203,32 +214,46 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
     }
 
     private void fetchServices() {
-        for (int i = 0; i < labourerFinal.getSkill().size(); i++)
+
+        for (String skill : labourerFinal.getSkill())
             //add isApplyable later
-            firebaseFirestore.collection("services").whereEqualTo("skill", labourerFinal.getSkill().get(i)).whereEqualTo("status", "incoming").get()
+            firebaseFirestore.collection("services").whereEqualTo("skill", skill).whereEqualTo("status", "incoming").get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                ServicesFinal servicesFinal = new ServicesFinal();
+
                                 Log.d("tag", labourerFinal.getSkill() + "!" + documentSnapshot.get("skill") + "!" + documentSnapshot.getData().toString());
                                 Log.d("service fetched", documentSnapshot.getString("serviceId"));
-                                servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
-                                servicesFinal.setCustomerUID(documentSnapshot.getString("customerUID"));
-                                Log.d("I don't know", servicesFinal.getCustomerUID());
-                                final ServicesFinal finalServices = servicesFinal;
-                                ServicesFinal finalServicesFinal = servicesFinal;
+                                ServicesFinal servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
+                                //servicesFinal.setCustomerUID(documentSnapshot.getString("customerUID"));
+                                Log.d("I don't know", "+"+servicesFinal.getCustomerUID()+"!");
+                                //final ServicesFinal finalServices = servicesFinal;
+                                //ServicesFinal finalServicesFinal = servicesFinal;
+                                //firebaseFirestore.collection("customer").document(servicesFinal.getCustomerUID())
                                 firebaseFirestore.collection("customer").document(servicesFinal.getCustomerUID()).get()
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
                                             public void onSuccess(DocumentSnapshot documentSnapshot1) {
+                                                Log.d("doc00",documentSnapshot1.getData()+"!00");
+                                                CustomerFinal customerFinal = documentSnapshot1.toObject(CustomerFinal.class);
+                                                Log.d("cus",customerFinal.toString()+"!");
+                                                servicesFinal.setCustomer(customerFinal);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putSerializable("service", servicesFinal);
+                                                CardVIewJobs cv = new CardVIewJobs();
+                                                cv.setArguments(bundle);
+                                                viewPagerAdapterLabourer.addFragment(cv, "cc");
+                                                viewPagerAdapterLabourer.notifyDataSetChanged();
+                                                //viewPager.setAdapter(viewPagerAdapterLabourer);
+
                                                 // To add code to add to viewPager
-//                                                bundles.add(new Bundle());
-//                                                bundles.get(i[0]).putString("key", finalServicesFinal.getCustomerUID());
-//                                                cardViewJobs.add(new CardVIewJobs());
-//                                                cardViewJobs.get(i[0]).setArguments(bundles.get(i[0]));
-//                                                viewPagerAdapter.addFragment(cardViewJobs.get(i[0]), "hello" + i[0]);
-//                                                i[0] = i[0] +1;
+                                               /* bundles.add(new Bundle());
+                                                bundles.get(j).putString("key", servicesFinal.getCustomerUID());
+                                                cardViewJobs.add(new CardVIewJobs());
+                                                cardViewJobs.get(j).setArguments(bundles.get(j);
+                                                viewPagerAdapter.addFragment(cardViewJobs.get(j), "hello" + j);
+                                                j = j +1;*/
                                                 //
                                                 //finalServices.setCustomer(documentSnapshot.toObject(Customer.class));
                                                 //dashboardAdapter.added(finalServices);
@@ -255,7 +280,9 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
 
     private void fetchFromFirebase() {
 
-        firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).get()
+        fetchServices();
+
+       /* firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -281,7 +308,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
                     public void onFailure(@NonNull Exception e) {
 
                     }
-                });
+                });*/
     }
 
 }

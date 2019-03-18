@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class CustomerFinal extends User implements Serializable {
 
     private ArrayList<ServicesFinal> historyServices, currentServices, incomingServices;
+    private ArrayList<String> currentServicesId;
     private GeoPoint destination;
     private HashMap<String, Marker> labourersLocation;
 
@@ -25,6 +26,14 @@ public class CustomerFinal extends User implements Serializable {
                 ", destination=" + destination +
                 ", labourersLocation=" + labourersLocation +
                 '}';
+    }
+
+    public ArrayList<String> getCurrentServicesId() {
+        return currentServicesId;
+    }
+
+    public void setCurrentServicesId(ArrayList<String> currentServicesId) {
+        this.currentServicesId = currentServicesId;
     }
 
     public CustomerFinal() {
