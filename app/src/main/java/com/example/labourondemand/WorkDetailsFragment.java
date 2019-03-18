@@ -61,11 +61,11 @@ public class WorkDetailsFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            labourer = bundle.getParcelable("labourer");
+            labourer = (LabourerFinal) bundle.getSerializable("labourer");
         }
     }
 
-    private Labourer labourer = new Labourer();
+    private LabourerFinal labourer = new LabourerFinal();
     private EditText skill;
     private RatingBar ratingBar;
 
