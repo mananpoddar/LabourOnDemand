@@ -1,6 +1,7 @@
 package com.example.labourondemand;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,12 +11,25 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LabourerHistoryActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -26,6 +40,8 @@ public class LabourerHistoryActivity extends AppCompatActivity implements Naviga
     private FirebaseAuth firebaseAuth;
     private String tag = LabourerHomeActivity.class.getName();
     private BottomNavigationView navigation;
+    private RecyclerView recyclerView;
+    private Context context;
 
 
     @SuppressLint("ResourceType")
@@ -33,7 +49,7 @@ public class LabourerHistoryActivity extends AppCompatActivity implements Naviga
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_labourer_history);
-
+        context = this;
         toolbar = findViewById(R.id.labourer_history_tb);
         drawerLayout = findViewById(R.id.labourer_history_dl);
         navigationView = findViewById(R.id.labourer_history_nv);
@@ -49,6 +65,28 @@ public class LabourerHistoryActivity extends AppCompatActivity implements Naviga
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("services");
+//        Query query = databaseReference;
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    List<Service> services = new ArrayList<>();
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                        Service service = snapshot.getValue(Service.class);
+//                        services.add(service);
+//                    }
+//                    recyclerView.setAdapter(new LabourerHistoryRVAdapter(context,services));
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -61,7 +99,27 @@ public class LabourerHistoryActivity extends AppCompatActivity implements Naviga
 
                     return true;
                 case R.id.bottom_navigation_history:
-
+//                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("services");
+//                    Query query = databaseReference;
+//                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                            if (dataSnapshot.exists()) {
+//                                List<Service> services = new ArrayList<>();
+//                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                                    Service service = snapshot.getValue(Service.class);
+//                                    services.add(service);
+//                                }
+//                                recyclerView.setAdapter(new LabourerHistoryRVAdapter(context,services));
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//
+//                        }
+//                    });
                     return true;
                 case R.id.bottom_navigation_jobs:
 
@@ -90,11 +148,12 @@ public class LabourerHistoryActivity extends AppCompatActivity implements Naviga
 
         } else if (id == R.id.nav_history) {
             //Toast.makeText(this,"History yet to be Developed",)
-            Intent intent = new Intent(this, PreviousActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, PreviousActivity.class);
+//            startActivity(intent);
+
         } else if (id == R.id.nav_jobs) {
 
-        }else if (id == R.id.nav_profile) {
+        } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfileActivity.class);
             /*Bundle bundle = new Bundle();
             bundle.putParcelable("labourer",labourer);*//*

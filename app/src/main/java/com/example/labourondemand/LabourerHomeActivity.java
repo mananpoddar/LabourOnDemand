@@ -234,19 +234,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
                                 firebaseFirestore.collection("customer").document(servicesFinal.getCustomerUID()).get()
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
-                                            public void onSuccess(DocumentSnapshot documentSnapshot1) {
-                                                Log.d("doc00",documentSnapshot1.getData()+"!00");
-                                                CustomerFinal customerFinal = documentSnapshot1.toObject(CustomerFinal.class);
-                                                Log.d("cus",customerFinal.toString()+"!");
-                                                servicesFinal.setCustomer(customerFinal);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putSerializable("service", servicesFinal);
-                                                CardVIewJobs cv = new CardVIewJobs();
-                                                cv.setArguments(bundle);
-                                                viewPagerAdapterLabourer.addFragment(cv, "cc");
-                                                viewPagerAdapterLabourer.notifyDataSetChanged();
-                                                //viewPager.setAdapter(viewPagerAdapterLabourer);
-
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                 // To add code to add to viewPager
                                                /* bundles.add(new Bundle());
                                                 bundles.get(j).putString("key", servicesFinal.getCustomerUID());
