@@ -76,13 +76,14 @@ public class ReviewActivity extends AppCompatActivity
         ratingBar = findViewById(R.id.review_rb);
         submitButton = findViewById(R.id.review_btn_submit);
         ratingTextView = findViewById(R.id.rating_text_view);
-        feedback = findViewById(R.id.feedback);
+        feedback = findViewById(R.id.review_feedback_til);
         photo = findViewById(R.id.review_civ_image);
-        progressBar = findViewById(R.id.progress_bar);
+        progressBar = findViewById(R.id.review_pb);
         firebaseFirestore = FirebaseFirestore.getInstance();
         LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.parseColor("#ff5722"), PorterDuff.Mode.SRC_ATOP);
         Glide.with(getApplicationContext()).load(labourer.getImage()).into(photo);
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override

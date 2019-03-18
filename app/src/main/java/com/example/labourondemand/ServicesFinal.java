@@ -9,17 +9,42 @@ import java.util.HashMap;
 
 public class ServicesFinal implements Serializable {
 
-    private String skill, customerUID, description, feedback, serviceId, status;
+    private String skill, customerUID, description, feedback, serviceId, status, title;
     private Long numOfLabourers, customerAmount;
     private Double rating;
     private HashMap<String, Long> labourerResponses;
     private ArrayList<String> images, selectedLabourerUID;
     private Customer customer;
-    private ArrayList<Labourer> labourers;
+    private ArrayList<LabourerFinal> labourers;
     private GeoPoint destination;
     private String startTime, endTime;
+    private Boolean isPaid, isApplyable;
 
     public ServicesFinal() {
+    }
+
+    public Boolean getApplyable() {
+        return isApplyable;
+    }
+
+    public void setApplyable(Boolean applyable) {
+        isApplyable = applyable;
+    }
+
+    public Boolean getPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(Boolean paid) {
+        isPaid = paid;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getSkill() {
@@ -126,11 +151,11 @@ public class ServicesFinal implements Serializable {
         this.customer = customer;
     }
 
-    public ArrayList<Labourer> getLabourers() {
+    public ArrayList<LabourerFinal> getLabourers() {
         return labourers;
     }
 
-    public void setLabourers(ArrayList<Labourer> labourers) {
+    public void setLabourers(ArrayList<LabourerFinal> labourers) {
         this.labourers = labourers;
     }
 

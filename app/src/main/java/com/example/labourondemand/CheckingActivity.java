@@ -65,7 +65,7 @@ public class CheckingActivity extends AppCompatActivity {
                                 session.setType("customer");
                                 Log.d(TAG, "customer");
 
-                                if (session.isSetup(current_user_id)) {
+                                if (session.isSetupCustomer(current_user_id)) {
                                     Log.d("isSetup", "customer");
                                     Intent customer = new Intent(CheckingActivity.this, CustomerHomeActivity.class);
                                     customer.putExtra("customer", session.getCustomer(current_user_id));
@@ -78,11 +78,7 @@ public class CheckingActivity extends AppCompatActivity {
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     if (documentSnapshot.exists()) {
                                                         CustomerFinal customer = documentSnapshot.toObject(CustomerFinal.class);
-                                                        /*session.createProfileCustomer(customer.getName(),customer.getImage(),customer.getDob(),customer.getCity()
-                                                        ,customer.getState(),customer.getPhone(),customer.getAddressLine1(),customer.getAddressLine2()
-                                                                ,customer.getAddressLine3());*/
                                                         session.saveCustomer(customer);
-
                                                         Intent intent = new Intent(CheckingActivity.this, CustomerHomeActivity.class);
                                                         intent.putExtra("customer", customer);
                                                         startActivity(intent);
@@ -103,19 +99,12 @@ public class CheckingActivity extends AppCompatActivity {
                                             });
                                 }
 
-                                    /*{
-                                    Intent customer = new Intent(CheckingActivity.this, SetupActivity.class);
-                                    customer.putExtra("type","customer");
-                                    startActivity(customer);
-                                    finish();
-                                }*/
-
                             } else {
                                 session.setType("labourer");
                                 Log.d(TAG, "labourer");
-                                if (session.isSetup(current_user_id)) {
+                                if (session.isSetupLabourer(current_user_id)) {
                                     Intent labourer = new Intent(CheckingActivity.this, LabourerMainActivity.class);
-                                    labourer.putExtra("labourer", session.getCustomer());
+                                    labourer.putExtra("labourer", session.getLabourer(current_user_id));
                                     startActivity(labourer);
                                     finish();
                                 } else {
@@ -124,12 +113,14 @@ public class CheckingActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     if (documentSnapshot.exists()) {
-                                                        Labourer labourer = documentSnapshot.toObject(Labourer.class);
-                                                        session.createProfileLabourer(labourer.getName(), labourer.getImage(), labourer.getDob(), labourer.getCity()
+                                                        LabourerFinal labourer = documentSnapshot.toObject(LabourerFinal.class);
+                                                        session.saveLabourer(labourer);
+                                                        /*session.createProfileLabourer(labourer.getName(), labourer.getImage(), labourer.getDob(), labourer.getCity()
                                                                 , labourer.getState(), labourer.getPhone(), labourer.getAddressLine1(), labourer.getAddressLine2()
-                                                                , labourer.getAddressLine3(), labourer.getSkill(), 9L);
+                                                                , labourer.getAddressLine3(), labourer.getSkill(), 9L);*/
 
                                                         Intent intent = new Intent(CheckingActivity.this, LabourerHomeActivity.class);
+                                                        intent.putExtra("labourer",labourer);
                                                         startActivity(intent);
 
                                                     } else {

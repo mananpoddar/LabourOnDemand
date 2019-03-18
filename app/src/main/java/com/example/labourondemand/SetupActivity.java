@@ -349,6 +349,11 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
             /*session.createProfileLabourer(name.getText().toString(),"null",dob.getText().toString(),city.getText().toString(),state.getText().toString(),
                     Long.valueOf(phone.getText().toString()),a1.getText().toString(),a2.getText().toString(),a3.getText().toString(),selectedStrings
             ,Long.valueOf(workExperience.getText().toString()));*/
+            labourerFinal = new LabourerFinal(userId, name.getText().toString(), image, dob.getText().toString(), city.getText().toString(),
+                    state.getText().toString(), a1.getText().toString(), a2.getText().toString(), a3.getText().toString(),
+                    Long.valueOf(phone.getText().toString()), 0L, new ArrayList<String>(),false,selectedStrings,
+                    Long.valueOf(workExperience.getText().toString()));
+
         } else {
             customerFinal = new CustomerFinal(userId, name.getText().toString(), image, dob.getText().toString(), city.getText().toString(),
                     state.getText().toString(), a1.getText().toString(), a2.getText().toString(), a3.getText().toString(),
@@ -375,7 +380,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
                         } else {
                             session.saveLabourer(labourerFinal);
                             Intent intent = new Intent(SetupActivity.this, LabourerHomeActivity.class);
-                            //intent.putExtra("labourer",labourerFinal);
+                            intent.putExtra("labourer",labourerFinal);
                             startActivity(intent);
                         }
                         finish();
@@ -443,7 +448,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                selectedStrings.clear();
                 for (int j = 0; j < selectedList.size(); j++) {
                     selectedStrings.add(list[selectedList.get(j)]);
                     Log.d(" name", list[selectedList.get(j)]);

@@ -93,13 +93,13 @@ public class Form2Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
 
-            }
-        });
+                }
+            });
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -239,8 +239,8 @@ public class Form2Activity extends AppCompatActivity {
             services.setDescription(problem_description);
             services.setCustomerAmount(Long.valueOf(amonut_string));*/
 
-            //servicesFinal.setCustomerUID(firebaseAuth.getUid());
-            servicesFinal.setCustomerUID("1");
+            servicesFinal.setCustomerUID(firebaseAuth.getUid());
+            //servicesFinal.setCustomerUID("1");
             servicesFinal.setDescription(problem_description);
             servicesFinal.setNumOfLabourers(Long.valueOf(number_string));
             servicesFinal.setCustomerAmount(Long.valueOf(amonut_string));
