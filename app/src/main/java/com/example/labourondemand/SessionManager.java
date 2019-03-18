@@ -117,7 +117,28 @@ public class SessionManager {
         editor.commit();
     }
 
+    public Boolean isSetupCustomer(String s){
+        String json = pref.getString(s, "");
+        Log.d("json",json+"!");
+        CustomerFinal customerFinal = gson.fromJson(json, CustomerFinal.class);
+        if(customerFinal != null && customerFinal.getName()!=null){
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean isSetupLabourer(String s){
+        String json = pref.getString(s, "");
+        Log.d("json",json+"!");
+        LabourerFinal labourerFinal = gson.fromJson(json, LabourerFinal.class);
+        if(labourerFinal != null && labourerFinal.getName()!=null){
+            return true;
+        }
+        return false;
+    }
+
     public Boolean isSetup(String s){
+
 
         String name = pref.getString(s,null);
         Log.d("name",name+"!");
