@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view"
+    android:id="@+id/fragment_card_view_jobs_cv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="0dp"
@@ -14,14 +14,14 @@
     app:cardElevation="1dp">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/item_service_cl"
+        android:id="@+id/fragment_card_view_jobs_cl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/item_service_civ_photo"
+            android:id="@+id/fragment_card_view_jobs_civ_photo"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginLeft="@dimen/margin_small"
@@ -36,11 +36,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/item_service_civ_photo"
+            app:layout_constraintLeft_toRightOf="@id/fragment_card_view_jobs_civ_photo"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/item_service_tv_name"
+                android:id="@+id/fragment_card_view_jobs_tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Narayan G"
@@ -51,7 +51,7 @@
                 tools:ignore="RtlSymmetry" />
 
             <TextView
-                android:id="@+id/item_service_tv_tags"
+                android:id="@+id/fragment_card_view_jobs_tv_tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
@@ -69,7 +69,7 @@
                 android:padding="@dimen/padding_small">
 
                 <TextView
-                    android:id="@+id/item_service_tv_landmark"
+                    android:id="@+id/fragment_card_view_jobs_tv_landmark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_rupee"
@@ -79,7 +79,7 @@
                     android:textSize="@dimen/text_size_normal" />
 
                 <TextView
-                    android:id="@+id/item_service_tv_distance"
+                    android:id="@+id/fragment_card_view_jobs_tv_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_larger"
@@ -94,7 +94,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/item_service_btn_accept"
+            android:id="@+id/fragment_card_view_jobs_btn_accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
