@@ -16,17 +16,22 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
+
 public class CheckingActivity extends AppCompatActivity {
 
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth mAuth;
     private String current_user_id;
     private String TAG = CheckingActivity.class.getName();
+    private SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checking);
 
+        session = new SessionManager(getApplicationContext());
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
     }
@@ -43,35 +48,114 @@ public class CheckingActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
-            Log.d(TAG,"send to login : Checking");
+        if (currentUser == null) {
+            Log.d(TAG, "send to login : Checking");
             sendToLogin();
-        } else {
+        } /*else if (session.isLoggedIn()) {
+
+        } */else {
             current_user_id = mAuth.getCurrentUser().getUid();
-            Log.d(TAG,current_user_id);
+            Log.d(TAG, current_user_id);
 
             firebaseFirestore.collection("uid").document(current_user_id)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if(documentSnapshot.get("type").equals("customer")){
-                                Intent customer = new Intent(CheckingActivity.this, CustomerMainActivity.class);
-                                Log.d(TAG,"customer");
-                                startActivity(customer);
-                                finish();
-                            }else{
-                                Log.d(TAG,"labourer");
-                                Intent customer = new Intent(CheckingActivity.this, LabourerMainActivity.class);
-                                startActivity(customer);
-                                finish();
+
+                            if (documentSnapshot.get("type").equals("customer")) {
+                                session.setType("customer");
+                                Log.d(TAG, "customer");
+
+                                if (session.isSetup(current_user_id)) {
+                                    Log.d("isSetup", "customer");
+                                    Intent customer = new Intent(CheckingActivity.this, CustomerHomeActivity.class);
+                                    customer.putExtra("customer", session.getCustomer(current_user_id));
+                                    startActivity(customer);
+                                    finish();
+                                } else {
+                                    firebaseFirestore.collection("customer").document(current_user_id).get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    if (documentSnapshot.exists()) {
+                                                        CustomerFinal customer = documentSnapshot.toObject(CustomerFinal.class);
+                                                        /*session.createProfileCustomer(customer.getName(),customer.getImage(),customer.getDob(),customer.getCity()
+                                                        ,customer.getState(),customer.getPhone(),customer.getAddressLine1(),customer.getAddressLine2()
+                                                                ,customer.getAddressLine3());*/
+                                                        session.saveCustomer(customer);
+
+                                                        Intent intent = new Intent(CheckingActivity.this, CustomerHomeActivity.class);
+                                                        intent.putExtra("customer", customer);
+                                                        startActivity(intent);
+
+                                                    } else {
+                                                        Intent customer = new Intent(CheckingActivity.this, SetupActivity.class);
+                                                        customer.putExtra("type", "customer");
+                                                        startActivity(customer);
+                                                        finish();
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+
+                                                }
+                                            });
+                                }
+
+                                    /*{
+                                    Intent customer = new Intent(CheckingActivity.this, SetupActivity.class);
+                                    customer.putExtra("type","customer");
+                                    startActivity(customer);
+                                    finish();
+                                }*/
+
+                            } else {
+                                session.setType("labourer");
+                                Log.d(TAG, "labourer");
+                                if (session.isSetup(current_user_id)) {
+                                    Intent labourer = new Intent(CheckingActivity.this, LabourerMainActivity.class);
+                                    labourer.putExtra("labourer", (Serializable) session.getLabourer(current_user_id));
+                                    startActivity(labourer);
+                                    finish();
+                                } else {
+                                    firebaseFirestore.collection("labourer").document(current_user_id).get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    if (documentSnapshot.exists()) {
+                                                        Labourer labourer = documentSnapshot.toObject(Labourer.class);
+                                                        session.createProfileLabourer(labourer.getName(), labourer.getImage(), labourer.getDob(), labourer.getCity()
+                                                                , labourer.getState(), labourer.getPhone(), labourer.getAddressLine1(), labourer.getAddressLine2()
+                                                                , labourer.getAddressLine3(), labourer.getSkill(), 9L);
+
+                                                        Intent intent = new Intent(CheckingActivity.this, LabourerHomeActivity.class);
+                                                        startActivity(intent);
+
+                                                    } else {
+                                                        Intent labourer = new Intent(CheckingActivity.this, SetupActivity.class);
+                                                        labourer.putExtra("type", "labourer");
+                                                        startActivity(labourer);
+                                                        finish();
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+
+                                                }
+                                            });
+                                }
                             }
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG,"error : " + e.toString());
+                            Log.d(TAG, "error : " + e.toString());
                         }
                     });
         }

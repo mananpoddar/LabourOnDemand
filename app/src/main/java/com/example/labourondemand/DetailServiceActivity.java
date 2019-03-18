@@ -62,7 +62,7 @@ public class DetailServiceActivity extends AppCompatActivity
     private ProgressBar progressBar;
     private String type;
     private ViewPager viewPagerImages, viewPagerData;
-    private TabLayout tabs;
+    private TabLayout tabs, tabsImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,8 @@ public class DetailServiceActivity extends AppCompatActivity
         viewPagerImages = findViewById(R.id.detail_service_vp_images);
         viewPagerData = findViewById(R.id.detail_service_vp_data);
         tabs = findViewById(R.id.detail_service_tl);
+        tabsImages = findViewById(R.id.detail_service_tl_images);
+        tabsImages.setupWithViewPager(viewPagerImages,true);
 
         slide = new Slide(this, services.getImages());
         viewPagerImages.setAdapter(slide);
@@ -130,7 +132,7 @@ public class DetailServiceActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.profile_activity2, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 
@@ -142,7 +144,7 @@ public class DetailServiceActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_notifications) {
             return true;
         }
 
@@ -152,14 +154,14 @@ public class DetailServiceActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle menu_bottom_navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_dashboard) {
+        if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_history) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_manage) {
 

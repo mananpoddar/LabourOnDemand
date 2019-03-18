@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -139,6 +138,7 @@ public class ProfileActivity extends AppCompatActivity
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         PersonalDetailsFragment personalDetailsFragment = new PersonalDetailsFragment();
         AddressDetailsFragment addressDetailsFragment = new AddressDetailsFragment();
+        WorkDetailsFragment workDetailsFragment = new WorkDetailsFragment();
 
         personalDetailsFragment.setArguments(bundle);
         addressDetailsFragment.setArguments(bundle);
@@ -146,7 +146,8 @@ public class ProfileActivity extends AppCompatActivity
         viewPagerAdapter.addFragment(personalDetailsFragment, "Personal");
         viewPagerAdapter.addFragment(addressDetailsFragment, "Address");
         if (isLabourer) {
-            viewPagerAdapter.addFragment(new WorkDetailsFragment(), "Work");
+            workDetailsFragment.setArguments(bundle);
+            viewPagerAdapter.addFragment(workDetailsFragment, "Work");
             viewPager.setOffscreenPageLimit(3);
         } else {
             viewPager.setOffscreenPageLimit(2);
@@ -187,7 +188,7 @@ public class ProfileActivity extends AppCompatActivity
         if (isEditable) {
 
             name.setFocusableInTouchMode(true);
-            emailid.setFocusableInTouchMode(true);
+            //emailid.setFocusableInTouchMode(true);
             phone.setFocusableInTouchMode(true);
             address1.setFocusableInTouchMode(true);
             address2.setFocusableInTouchMode(true);
@@ -247,11 +248,11 @@ public class ProfileActivity extends AppCompatActivity
 
                     boolean isInputRight = true;
 
-                    if (!isValidEmail(emailid.getText().toString().trim())) {
+                    /*if (!isValidEmail(emailid.getText().toString().trim())) {
                         emailid.setError("Invalid email id");
                         Toast.makeText(getApplicationContext(), "Error in PERSONAL!", Toast.LENGTH_SHORT).show();
                         isInputRight = false;
-                    }
+                    }*/
                     if (!isValidPhone(phone.getText().toString().trim())) {
                         phone.setError("Invalid phone number");
                         Toast.makeText(getApplicationContext(), "Error in PERSONAL!", Toast.LENGTH_SHORT).show();
@@ -293,8 +294,8 @@ public class ProfileActivity extends AppCompatActivity
                     if (isInputRight) {
                         name.setFocusableInTouchMode(false);
                         name.setFocusable(false);
-                        emailid.setFocusableInTouchMode(false);
-                        emailid.setFocusable(false);
+                        //emailid.setFocusableInTouchMode(false);
+                        //emailid.setFocusable(false);
                         phone.setFocusableInTouchMode(false);
                         phone.setFocusable(false);
                         dob.setFocusableInTouchMode(false);
@@ -424,7 +425,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.profile_activity2, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 
@@ -436,7 +437,7 @@ public class ProfileActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_notifications) {
             return true;
         }
 
@@ -446,10 +447,10 @@ public class ProfileActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle menu_bottom_navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_dashboard) {
+        if (id == R.id.nav_home) {
             Intent intent;
             if (type.equals("customer")) {
                 intent = new Intent(this, CustomerMainActivity.class);
@@ -463,7 +464,7 @@ public class ProfileActivity extends AppCompatActivity
         } else if (id == R.id.nav_history) {
             Intent intent = new Intent(this, PreviousActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_person) {
+        } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_manage) {
 

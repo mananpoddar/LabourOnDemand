@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginRegBtn;
     private Button forgotPassword;
     private FirebaseAuth mAuth;
-
+    private SessionManager session;
     private ProgressBar loginProgress;
 
     @Override
@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        session = new SessionManager(getApplicationContext());
 
         loginEmailText = findViewById(R.id.login_et_email);
         loginPassText = findViewById(R.id.login_et_password);
@@ -79,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             if(task.isSuccessful()){
-
+                                session.createLoginSession(loginPass, loginEmail);
                                 sendToCheck();
 
                             } else {

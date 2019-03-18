@@ -47,6 +47,7 @@ public class WorkDetailsFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static WorkDetailsFragment newInstance(String param1, String param2) {
         WorkDetailsFragment fragment = new WorkDetailsFragment();
+
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -77,7 +78,8 @@ public class WorkDetailsFragment extends Fragment {
        skill = view.findViewById(R.id.work_et_skill);
        ratingBar = view.findViewById(R.id.work_rb);
 
-       skill.setText(labourer.getSkill());
+       skill.setText(labourer.getSkill().toString());
+
 
        //ratingBar.setRating(Float.parseFloat(String.valueOf(labourer.getAverageRating())));
 

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolder> {
+class   DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<Services> servicesArrayList;
     private ArrayList<Labourer> labourers;
