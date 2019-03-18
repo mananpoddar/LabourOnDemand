@@ -19,14 +19,12 @@
         android:layout_height="wrap_content"
         android:padding="4dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/fragment_card_view_jobs_civ_photo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginLeft="@dimen/margin_small"
             android:src="@drawable/ic_person_black_24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:civ_circle_background_color="@color/orange"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

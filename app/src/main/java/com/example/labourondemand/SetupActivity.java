@@ -417,7 +417,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
     public void selectSkill(View view) {
 
         final ArrayList<Integer> selectedList = new ArrayList<>();
-
+        Log.d("selected",selectedStrings.toString());
         final String[] mSkill = new String[1];
         final String list[] = getResources().getStringArray(R.array.arrays_skill);
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
@@ -442,6 +442,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
                             selectedList.add(which);
                         } else if (selectedList.contains(which)) {
                             selectedList.remove(which);
+                            Log.d("vjv",selectedList.toString());
                         }
                     }
                 });
