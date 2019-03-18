@@ -622,8 +622,8 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                 Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_show);
                 Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_hide);
 
-                navigation.startAnimation(slideDown);
-                navigation.setVisibility(View.GONE);
+//                navigation.startAnimation(slideDown);
+//                navigation.setVisibility(View.GONE);
 
                 //toolbar.startAnimation(slideUp);
                /* toolbar.animate()
