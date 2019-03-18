@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class LabourerFinal extends User implements Serializable {
 
     private Services currentService;
+    private Double averageRating;
     private Boolean isBusy;
     private ArrayList<String> skill;
     private Long workExperience;
@@ -33,6 +34,14 @@ public class LabourerFinal extends User implements Serializable {
         this.isBusy = isBusy;
         this.skill = skill;
         this.workExperience = workExperience;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
     }
 
     public Services getCurrentService() {

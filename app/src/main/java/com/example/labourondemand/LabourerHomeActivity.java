@@ -66,7 +66,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
 
         Intent intent;
 
-        labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer")
+        labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer");
 
         for(int i = 0; i < 5; i++) {
             bundles.add(new Bundle());
