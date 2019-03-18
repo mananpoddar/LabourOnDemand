@@ -116,9 +116,9 @@ public class CheckingActivity extends AppCompatActivity {
                                 session.setType("labourer");
                                 Log.d(TAG, "labourer");
                                 if (session.isSetup(current_user_id)) {
-                                    Intent labourer = new Intent(CheckingActivity.this, LabourerMainActivity.class);
-                                    labourer.putExtra("labourer", (Serializable) session.getLabourer(current_user_id));
-                                    startActivity(labourer);
+                                    Intent intent = new Intent(CheckingActivity.this, LabourerMainActivity.class);
+                                    intent.putExtra("labourer", (Serializable) session.getLabourer(current_user_id));
+                                    startActivity(intent);
                                     finish();
                                 } else {
                                     firebaseFirestore.collection("labourer").document(current_user_id).get()
@@ -126,10 +126,10 @@ public class CheckingActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     if (documentSnapshot.exists()) {
-                                                        Labourer labourer = documentSnapshot.toObject(Labourer.class);
-                                                        session.createProfileLabourer(labourer.getName(), labourer.getImage(), labourer.getDob(), labourer.getCity()
-                                                                , labourer.getState(), labourer.getPhone(), labourer.getAddressLine1(), labourer.getAddressLine2()
-                                                                , labourer.getAddressLine3(), labourer.getSkill(), 9L);
+                                                        LabourerFinal labourerFinal = documentSnapshot.toObject(LabourerFinal.class);
+                                                        session.createProfileLabourer(labourerFinal.getName(), labourerFinal.getImage(), labourerFinal.getDob(), labourerFinal.getCity()
+                                                                , labourerFinal.getState(), labourerFinal.getPhone(), labourerFinal.getAddressLine1(), labourerFinal.getAddressLine2()
+                                                                , labourerFinal.getAddressLine3(), labourerFinal.getSkill(), 9L);
 
                                                         Intent intent = new Intent(CheckingActivity.this, LabourerHomeActivity.class);
                                                         startActivity(intent);

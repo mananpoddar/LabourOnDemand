@@ -12,6 +12,10 @@ public class LabourerFinal extends User implements Serializable {
     private Long workExperience;
     private ArrayList<ServicesFinal> incomingServices, historyServices;
 
+    public LabourerFinal(){
+
+    }
+
     public LabourerFinal(Services currentService, Boolean isBusy, ArrayList<String> skill, Long workExperience, ArrayList<ServicesFinal> incomingServices, ArrayList<ServicesFinal> historyServices) {
         this.currentService = currentService;
         this.isBusy = isBusy;

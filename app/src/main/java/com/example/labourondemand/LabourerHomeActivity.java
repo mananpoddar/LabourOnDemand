@@ -35,8 +35,10 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
     private FirebaseAuth firebaseAuth;
     private String tag = LabourerHomeActivity.class.getName();
     private BottomNavigationView navigation;
-    private LabourerFinal labourerFinal;
-
+    private LabourerFinal labourerFinal = new LabourerFinal();
+    private ArrayList<Bundle> bundles = new ArrayList<>();
+    private ArrayList<CardVIewJobs> cardViewJobs = new ArrayList<CardVIewJobs>();
+    private ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
     @SuppressLint("ResourceType")
     @Override
@@ -60,30 +62,37 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         ViewPager viewPager = findViewById(R.id.labourer_home_vp);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-        ArrayList<Bundle> bundles = new ArrayList<>();
 
         Intent intent;
 
-        labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer")
+//        labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer");
+//
+//        if (labourerFinal.getCurrentService() == null) {
+//            Log.d("tagggg",labourerFinal.getSkill()+"!");
+//            fetchServices();
+//        }
 
-        for(int i = 0; i < 5; i++) {
-            bundles.add(new Bundle());
-            bundles.get(i).putString("key",  Integer.toString(i));
+        if (labourerFinal.getName() == null) {
+            fetchFromFirebase();
+        } else {
+            fetchServices();
         }
 
-        ArrayList<CardVIewJobs> cardViewJobs = new ArrayList<CardVIewJobs>();
+
+        for (int i = 0; i < 5; i++) {
+            bundles.add(new Bundle());
+            bundles.get(i).putString("key", Integer.toString(i));
+        }
 
 
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             cardViewJobs.add(new CardVIewJobs());
             cardViewJobs.get(i).setArguments(bundles.get(i));
         }
 
 
         //viewPagerAdapter.addFragment(hello1, "Hello1");
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             viewPagerAdapter.addFragment(cardViewJobs.get(i), "hello" + i);
         }
         //viewPagerAdapter.addFragment(hello2, "Hello2");
@@ -135,7 +144,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
             startActivity(intent);
         } else if (id == R.id.nav_jobs) {
 
-        }else if (id == R.id.nav_profile) {
+        } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfileActivity.class);
             /*Bundle bundle = new Bundle();
             bundle.putParcelable("labourer",labourer);*//*
@@ -193,6 +202,57 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
 
     }
 
+    private void fetchServices() {
+        for (int i = 0; i < labourerFinal.getSkill().size(); i++)
+            //add isApplyable later
+            firebaseFirestore.collection("services").whereEqualTo("skill", labourerFinal.getSkill().get(i)).whereEqualTo("status", "incoming").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                ServicesFinal servicesFinal = new ServicesFinal();
+                                Log.d("tag", labourerFinal.getSkill() + "!" + documentSnapshot.get("skill") + "!" + documentSnapshot.getData().toString());
+                                Log.d("service fetched", documentSnapshot.getString("serviceId"));
+                                servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
+                                servicesFinal.setCustomerUID(documentSnapshot.getString("customerUID"));
+                                Log.d("I don't know", servicesFinal.getCustomerUID());
+                                final ServicesFinal finalServices = servicesFinal;
+                                ServicesFinal finalServicesFinal = servicesFinal;
+                                firebaseFirestore.collection("customer").document(servicesFinal.getCustomerUID()).get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot1) {
+                                                // To add code to add to viewPager
+//                                                bundles.add(new Bundle());
+//                                                bundles.get(i[0]).putString("key", finalServicesFinal.getCustomerUID());
+//                                                cardViewJobs.add(new CardVIewJobs());
+//                                                cardViewJobs.get(i[0]).setArguments(bundles.get(i[0]));
+//                                                viewPagerAdapter.addFragment(cardViewJobs.get(i[0]), "hello" + i[0]);
+//                                                i[0] = i[0] +1;
+                                                //
+                                                //finalServices.setCustomer(documentSnapshot.toObject(Customer.class));
+                                                //dashboardAdapter.added(finalServices);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(tag, "error fetchService2 : " + e.toString());
+                                            }
+                                        });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(tag, "error fetchService1 : " + e.toString());
+                        }
+                    });
+    }
+
+    //Later to be deleted
+
     private void fetchFromFirebase() {
 
         firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).get()
@@ -202,12 +262,12 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
                         //labourer = new Labourer();
                         if (documentSnapshot.getData() != null) {
                             labourerFinal = documentSnapshot.toObject(LabourerFinal.class);
-                            Log.d(tag, documentSnapshot.getData().toString() + "!");
+                            Log.d("Labourer info fetched", firebaseAuth.getUid() + "!");
 
                             if (labourerFinal.getCurrentService() == null) {
-                                Log.d("tagggg",labourerFinal.getSkill()+"!");
+                                Log.d("tagggg", labourerFinal.getSkill() + "!");
                                 fetchServices();
-                            }else{
+                            } else {
 
                             }
 
@@ -224,47 +284,5 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
                 });
     }
 
-    private void fetchServices() {
-
-        firebaseFirestore.collection("services").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                            Services services = new Services() ;
-                            Log.d("tag",labourerFinal.getSkill()+"!"+documentSnapshot.get("skill")+"!"+documentSnapshot.getData().toString());
-                            if(documentSnapshot.getString("skill").equals(labourerFinal.getSkill())){
-                                services = documentSnapshot.toObject(Services.class);
-                                services.setServiceID(documentSnapshot.getId());
-                                final Services finalServices = services;
-                                firebaseFirestore.collection("customer").document(services.getCustomerUID()).get()
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                // To add code to add to viewPager
-
-
-                                                //
-                                                //finalServices.setCustomer(documentSnapshot.toObject(Customer.class));
-                                                //dashboardAdapter.added(finalServices);
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.d(tag,"error fetchService2 : "+e.toString());
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(tag,"error fetchService1 : "+e.toString());
-                    }
-                });
-    }
 }
 
