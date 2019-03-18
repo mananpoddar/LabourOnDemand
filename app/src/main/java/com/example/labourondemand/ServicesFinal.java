@@ -14,7 +14,7 @@ public class ServicesFinal implements Serializable {
     private Double rating;
     private HashMap<String, Long> labourerResponses;
     private ArrayList<String> images, selectedLabourerUID;
-
+    private Double destinationLatitude, destinationLongitude;
     private CustomerFinal customer;
     private ArrayList<LabourerFinal> labourers;
     private GeoPoint destination;
@@ -22,6 +22,22 @@ public class ServicesFinal implements Serializable {
     private Boolean isPaid, isApplyable;
 
     public ServicesFinal() {
+    }
+
+    public Double getDestinationLatitude() {
+        return destinationLatitude;
+    }
+
+    public void setDestinationLatitude(Double destinationLatitude) {
+        this.destinationLatitude = destinationLatitude;
+    }
+
+    public Double getDestinationLongitude() {
+        return destinationLongitude;
+    }
+
+    public void setDestinationLongitude(Double destinationLongitude) {
+        this.destinationLongitude = destinationLongitude;
     }
 
     public Boolean getApplyable() {

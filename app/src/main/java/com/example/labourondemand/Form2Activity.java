@@ -60,8 +60,7 @@ public class Form2Activity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private Services services = new Services();
-    private ServicesFinal servicesFinal = new ServicesFinal();
+    private ServicesFinal servicesFinal;
     private EditText description, addressLine1, addressLine2, landmark, city, title, numberOfLabourers, dateTime;
     private Button submitButton;
     private ViewPager viewPager;
@@ -82,12 +81,15 @@ public class Form2Activity extends AppCompatActivity {
     private String st = "";
     private SessionManager session;
     private TabLayout tabsImages;
-    private ImageView choose;
+    private ImageView choose, skillPic;
+    private TextView skillText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.form2);
+
+        servicesFinal = new ServicesFinal();
         toolbar = findViewById(R.id.form2_tl);
         toolbar.setTitle("Fill Form");
         setSupportActionBar(toolbar);
@@ -106,6 +108,8 @@ public class Form2Activity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         session = new SessionManager(getApplicationContext());
 
+        skillPic = findViewById(R.id.form2_skill_iv);
+        skillText = findViewById(R.id.form2_skill_tv);
         choose = findViewById(R.id.form2_choose_iv);
         viewPager = findViewById(R.id.activity_form2_vp);
         floatingActionButton = findViewById(R.id.activity_form2_fab);
@@ -118,7 +122,34 @@ public class Form2Activity extends AppCompatActivity {
         tabsImages = findViewById(R.id.form2_tl_images);
         tabsImages.setupWithViewPager(viewPager,true);
 
-        services.setSkill(getIntent().getExtras().getString("skill"));
+        servicesFinal.setSkill(getIntent().getExtras().getString("skill"));
+
+        if(servicesFinal.getSkill().equals("Carpenter"))
+        {
+            skillText.setText("Carpenter");
+            skillPic.setImageDrawable(getDrawable(R.drawable.ic_carpenter_tools_colour));
+        }else if(servicesFinal.getSkill().equals("Plumber"))
+        {
+            skillText.setText("Plumber");
+            skillPic.setImageDrawable(getDrawable(R.drawable.ic_plumber_tools));
+        }else if(servicesFinal.getSkill().equals("Electrician"))
+        {
+            skillText.setText("Electrician");
+            skillPic.setImageDrawable(getDrawable(R.drawable.ic_electric_colour));
+        }else if(servicesFinal.getSkill().equals("Painter"))
+        {
+            skillText.setText("Painter");
+            skillPic.setImageDrawable(getDrawable(R.drawable.ic_paint_roller));
+        }else if(servicesFinal.getSkill().equals("Constructor"))
+        {
+            skillText.setText("Constructor");
+            skillPic.setImageDrawable(getDrawable(R.drawable.ic_construction_colour));
+        }else if(servicesFinal.getSkill().equals("Chef"))
+        {
+            skillText.setText("Chef");
+            skillPic.setImageDrawable(getDrawable(R.drawable.ic_cooking_colour));
+        }
+
         customer = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
 
         dateTime.setOnClickListener(new View.OnClickListener() {
@@ -245,10 +276,13 @@ public class Form2Activity extends AppCompatActivity {
             servicesFinal.setNumOfLabourers(Long.valueOf(number_string));
             servicesFinal.setCustomerAmount(Long.valueOf(amonut_string));
             //servicesFinal.setServiceId(firebaseAuth.getUid() + "+" + String.valueOf(System.currentTimeMillis()));
-            servicesFinal.setServiceId("1" + "+" + String.valueOf(System.currentTimeMillis()));
+            servicesFinal.setServiceId(customer.getId() + "+" + String.valueOf(System.currentTimeMillis()));
             servicesFinal.setSkill(getIntent().getExtras().getString("skill"));
-            servicesFinal.setDestination(customer.getDestination());
+            //servicesFinal.setDestination(customer.getDestination());
+            servicesFinal.setDestinationLatitude(customer.getDestinationLatitude());
+            servicesFinal.setDestinationLongitude(customer.getDestinationLongitude());
             servicesFinal.setStatus("incoming");
+            servicesFinal.setTitle(title_string);
             servicesFinal.setStartTime(st);
             sendToFirebase();
         }
@@ -303,10 +337,11 @@ public class Form2Activity extends AppCompatActivity {
 
         //map.put("labourUID", "");
         map.put("customerUID", firebaseAuth.getUid());
-        map.put("customerAmount", services.getCustomerAmount());
-        map.put("description", services.getDescription());
+        map.put("customerAmount", servicesFinal.getCustomerAmount());
+        map.put("description", servicesFinal.getDescription());
         // map.put("feedback","");
-        map.put("skill", services.getSkill());
+        map.put("skill", servicesFinal.getSkill());
+        map.put("title",servicesFinal.getTitle());
         //map.put("images", pictures);
         //map.put("labourResponses", new HashMap<String, Long>());
       /*  map.put("addressLine1",services.getAddressLine1());
@@ -333,14 +368,14 @@ public class Form2Activity extends AppCompatActivity {
                 compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] thumbData = baos.toByteArray();
 
-                final UploadTask image_path = storageReference.child("services").child(pictures.indexOf(uri) + services.getServiceID() + ".jpg").putBytes(thumbData);
+                final UploadTask image_path = storageReference.child("services").child(pictures.indexOf(uri) + servicesFinal.getServiceId() + ".jpg").putBytes(thumbData);
 
                 image_path.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                         Log.d("inside file", taskSnapshot.toString());
-                        storageReference.child("services").child(pictures.indexOf(uri) + services.getServiceID() + ".jpg").getDownloadUrl()
+                        storageReference.child("services").child(pictures.indexOf(uri) + servicesFinal.getServiceId() + ".jpg").getDownloadUrl()
                                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {

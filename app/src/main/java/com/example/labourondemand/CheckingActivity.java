@@ -51,9 +51,8 @@ public class CheckingActivity extends AppCompatActivity {
         if (currentUser == null) {
             Log.d(TAG, "send to login : Checking");
             sendToLogin();
-        } /*else if (session.isLoggedIn()) {
-
-        } */else {
+        }else {
+            Log.d("cdsc","csdc");
             current_user_id = mAuth.getCurrentUser().getUid();
             Log.d(TAG, current_user_id);
 

@@ -98,6 +98,8 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         session = new SessionManager(getApplicationContext());
 
         firebaseAuth = FirebaseAuth.getInstance();
+        userId = firebaseAuth.getCurrentUser().getUid();
+        Log.d("user in setup",userId+"!");
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
         /*viewPager = findViewById(R.id.setup_vp);
@@ -266,7 +268,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         progressBar.setVisibility(View.VISIBLE);
         if (isChanged) {
 
-            userId = firebaseAuth.getCurrentUser().getUid();
+
 
             File newImageFile = new File(mainImageURI.getPath());
             try {
@@ -364,7 +366,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
         ArrayList<String> h = new ArrayList<>();
 
         userMap.put("services", h);
-
+        Log.d("cdc",userId+"!"+type);
         firebaseFirestore.collection(type).document(userId).set(userMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -437,7 +439,6 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         // mSkill[0] = list[which];
-
                         if (isChecked) {
                             selectedList.add(which);
                         } else if (selectedList.contains(which)) {
@@ -453,11 +454,7 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
                 for (int j = 0; j < selectedList.size(); j++) {
                     selectedStrings.add(list[selectedList.get(j)]);
                     Log.d(" name", list[selectedList.get(j)]);
-                   /* for(Item item1 : mainActivity.frequentOrders.get(items[selectedList.get(j)]).getFrequentItemList()){
-                        Log.d("item", item1.getShopId() +" "+item.getShopId());
-                        if(item1.getShopId().equals(item.getShopId()) && item1.getItemName().equals(item.getItemName())){
-                            ctr = 1;
-                        }*/
+
                 }
                 skill.setText(selectedStrings.toString());
             }

@@ -113,10 +113,10 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         Log.d("tag", "customer Home Activity onRestoreInstanceState");
 
         Location loc1 = new Location("");
-        loc1.setLatitude(customer.getDestination().getLatitude());
-        loc1.setLongitude(customer.getDestination().getLongitude());
+        loc1.setLatitude(customer.getDestinationLatitude());
+        loc1.setLongitude(customer.getDestinationLongitude());
         customer = savedInstanceState.getParcelable("customer");
-        Log.d("customer",customer.getDestination()+"!");
+        //Log.d("customer",customer.getDestination()+"!");
         /*horizontalScrollViewAdapter = new HorizontalScrollViewAdapter(context, recyclerView, mMap,
                 savedInstanceState.getString("skill"), loc1, customer.getLabourersLocation());*/
 
@@ -185,8 +185,8 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
             Log.d("savedInstance", "customer Home Activity onSavedInstanceState");
 
             Location loc1 = new Location("");
-            loc1.setLatitude(customer.getDestination().getLatitude());
-            loc1.setLongitude(customer.getDestination().getLongitude());
+            loc1.setLatitude(customer.getDestinationLatitude());
+            loc1.setLongitude(customer.getDestinationLongitude());
             customer = savedInstanceState.getParcelable("customer");
             horizontalScrollViewAdapter = new HorizontalScrollViewAdapter(context, recyclerView, mMap,
                     savedInstanceState.getString("skill"), loc1, customer.getLabourersLocation());
@@ -206,7 +206,8 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
             @Override
             public void onClick(View v) {
                 //horizontalScrollViewAdapter.removeListener();
-                customer.setDestination(geoPoint);
+                customer.setDestinationLatitude(geoPoint.getLatitude());
+                customer.setDestinationLongitude(geoPoint.getLongitude());
                 Intent intent = new Intent(CustomerHomeActivity.this, Form2Activity.class);
                 intent.putExtra("customer",customer);
                 intent.putExtra("skill", horizontalScrollViewAdapter.getSkill());
@@ -236,6 +237,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         navigationView.setCheckedItem(1);
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.getMenu().getItem(1).setChecked(true);
 
         /*FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
@@ -348,13 +350,18 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.bottom_navigation_home:
-
                     return true;
                 case R.id.bottom_navigation_history:
-
+                    Intent intent = new Intent(CustomerHomeActivity.this,CustomerHistoryActivity.class);
+                    intent.putExtra("customer",customer);
+                    startActivity(intent);
+                    finish();
                     return true;
                 case R.id.bottom_navigation_jobs:
-
+                    Intent intent1 = new Intent(CustomerHomeActivity.this,CustomerJobsActivity.class);
+                    intent1.putExtra("customer",customer);
+                    startActivity(intent1);
+                    finish();
                     return true;
             }
             return false;

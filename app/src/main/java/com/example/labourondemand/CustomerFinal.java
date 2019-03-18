@@ -13,8 +13,7 @@ import java.util.HashMap;
 public class CustomerFinal extends User implements Serializable {
 
     private ArrayList<ServicesFinal> historyServices, currentServices, incomingServices;
-    private ArrayList<String> currentServicesId;
-    private GeoPoint destination;
+    private Double destinationLatitude, destinationLongitude;
     private HashMap<String, Marker> labourersLocation;
 
     @Override
@@ -23,33 +22,26 @@ public class CustomerFinal extends User implements Serializable {
                 "historyServices=" + historyServices +
                 ", currentServices=" + currentServices +
                 ", incomingServices=" + incomingServices +
-                ", destination=" + destination +
+                ", destinationLatitude=" + destinationLatitude +
+                ", destinationLongitude=" + destinationLongitude +
                 ", labourersLocation=" + labourersLocation +
                 '}';
-    }
-
-    public ArrayList<String> getCurrentServicesId() {
-        return currentServicesId;
-    }
-
-    public void setCurrentServicesId(ArrayList<String> currentServicesId) {
-        this.currentServicesId = currentServicesId;
     }
 
     public CustomerFinal() {
 
     }
 
-    public CustomerFinal(ArrayList<ServicesFinal> historyServices, ArrayList<ServicesFinal> currentServices, ArrayList<ServicesFinal> incomingServices,
+   /* public CustomerFinal(ArrayList<ServicesFinal> historyServices, ArrayList<ServicesFinal> currentServices, ArrayList<ServicesFinal> incomingServices,
                          GeoPoint destination, HashMap<String, Marker> labourersLocation) {
         this.historyServices = historyServices;
         this.currentServices = currentServices;
         this.incomingServices = incomingServices;
         this.destination = destination;
         this.labourersLocation = labourersLocation;
-    }
+    }*/
 
-    public CustomerFinal(String id, String name, String image, String dob, String city, String state, String addressLine1, String addressLine2,
+   /* public CustomerFinal(String id, String name, String image, String dob, String city, String state, String addressLine1, String addressLine2,
                          String addressLine3, Long phone, Long wallet, ArrayList<String> services, ArrayList<ServicesFinal> historyServices,
                          ArrayList<ServicesFinal> currentServices, ArrayList<ServicesFinal> incomingServices, GeoPoint destination, HashMap<String,
             Marker> labourersLocation) {
@@ -59,7 +51,7 @@ public class CustomerFinal extends User implements Serializable {
         this.incomingServices = incomingServices;
         this.destination = destination;
         this.labourersLocation = labourersLocation;
-    }
+    }*/
 
 
     public CustomerFinal(String id, String name, String image, String dob, String city, String state, String addressLine1, String addressLine2, String addressLine3,
@@ -69,6 +61,22 @@ public class CustomerFinal extends User implements Serializable {
         this.currentServices = new ArrayList<ServicesFinal>();
         this.incomingServices = new ArrayList<ServicesFinal>();
 
+    }
+
+    public Double getDestinationLatitude() {
+        return destinationLatitude;
+    }
+
+    public void setDestinationLatitude(Double destinationLatitude) {
+        this.destinationLatitude = destinationLatitude;
+    }
+
+    public Double getDestinationLongitude() {
+        return destinationLongitude;
+    }
+
+    public void setDestinationLongitude(Double destinationLongitude) {
+        this.destinationLongitude = destinationLongitude;
     }
 
     public ArrayList<ServicesFinal> getHistoryServices() {
@@ -95,13 +103,13 @@ public class CustomerFinal extends User implements Serializable {
         this.incomingServices = incomingServices;
     }
 
-    public GeoPoint getDestination() {
+   /* public GeoPoint getDestination() {
         return destination;
     }
 
     public void setDestination(GeoPoint destination) {
         this.destination = destination;
-    }
+    }*/
 
     public HashMap<String, Marker> getLabourersLocation() {
         return labourersLocation;

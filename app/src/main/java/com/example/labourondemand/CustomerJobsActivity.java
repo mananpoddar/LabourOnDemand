@@ -29,7 +29,7 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
     private FirebaseAuth firebaseAuth;
     private String tag = LabourerMainActivity.class.getName();
     private BottomNavigationView navigation;
-    private Customer customer;
+    private CustomerFinal customer;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
 
@@ -54,10 +54,12 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
         navigationView.setCheckedItem(2);
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.getMenu().getItem(2).setChecked(true);
+
 
         Bundle bundle = new Bundle();
-        customer = getIntent().getParcelableExtra("user");
-        bundle.putParcelable("customer", customer);
+        customer = (CustomerFinal) getIntent().getSerializableExtra("customer");
+        bundle.putSerializable("customer", customer);
 
         viewPager = findViewById(R.id.customer_jobs_vp);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -84,13 +86,18 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.bottom_navigation_home:
-
+                    Intent intent = new Intent(CustomerJobsActivity.this,CustomerHomeActivity.class);
+                    intent.putExtra("customer",customer);
+                    startActivity(intent);
+                    finish();
                     return true;
                 case R.id.bottom_navigation_history:
-
+                    Intent intent1 = new Intent(CustomerJobsActivity.this,CustomerHistoryActivity.class);
+                    intent1.putExtra("customer",customer);
+                    startActivity(intent1);
+                    finish();
                     return true;
                 case R.id.bottom_navigation_jobs:
-
                     return true;
             }
             return false;
