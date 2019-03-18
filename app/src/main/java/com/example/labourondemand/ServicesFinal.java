@@ -14,7 +14,8 @@ public class ServicesFinal implements Serializable {
     private Double rating;
     private HashMap<String, Long> labourerResponses;
     private ArrayList<String> images, selectedLabourerUID;
-    private Customer customer;
+
+    private CustomerFinal customer;
     private ArrayList<LabourerFinal> labourers;
     private GeoPoint destination;
     private String startTime, endTime;
@@ -143,11 +144,11 @@ public class ServicesFinal implements Serializable {
         this.selectedLabourerUID = selectedLabourerUID;
     }
 
-    public Customer getCustomer() {
+    public CustomerFinal getCustomer() {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
+    public void setCustomer(CustomerFinal customer) {
         this.customer = customer;
     }
 

@@ -48,6 +48,7 @@ public class LabourerAdapter extends RecyclerView.Adapter<LabourerAdapter.MyView
 
     @Override
     public void onBindViewHolder(final LabourerAdapter.MyViewHolder holder, final int position) {
+
         LabourerFinal labourer = servicesFinals.getLabourers().get(position);
         holder.name.setText(labourer.getName());
 

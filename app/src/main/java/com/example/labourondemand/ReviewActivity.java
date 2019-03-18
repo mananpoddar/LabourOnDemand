@@ -163,7 +163,7 @@ public class ReviewActivity extends AppCompatActivity
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onFailure(@android.support.annotation.NonNull Exception e) {
+                        public void onFailure(@NonNull Exception e) {
                             //Log.d(TAG, e.toString());
                             Log.d(TAG, e.toString());
                             progressBar.setVisibility(View.GONE);

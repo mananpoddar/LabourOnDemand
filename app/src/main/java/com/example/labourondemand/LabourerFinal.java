@@ -83,3 +83,4 @@ public class LabourerFinal extends User implements Serializable {
         this.historyServices = historyServices;
     }
 }
+
