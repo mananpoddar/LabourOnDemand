@@ -48,6 +48,7 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
     private FirebaseAuth firebaseAuth;
     private String tag = LabourerMainActivity.class.getName();
     private BottomNavigationView navigation;
+    private CustomerFinal customer;
     private RecyclerView recyclerView;
     private Context context;
     private static final String TAG = "CustomerHistoryActivity";
@@ -58,6 +59,8 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_history);
+
+        customer = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
 
         toolbar = findViewById(R.id.customer_history_tb);
         drawerLayout = findViewById(R.id.customer_history_dl);
@@ -74,6 +77,7 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
         navigationView.setCheckedItem(1);
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.getMenu().getItem(0).setChecked(true);
 
         customer = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
         if(customer != null){
@@ -148,13 +152,19 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.bottom_navigation_home:
-
+                    Intent intent = new Intent(CustomerHistoryActivity.this,CustomerHomeActivity.class);
+                    intent.putExtra("customer",customer);
+                    startActivity(intent);
+                    finish();
                     return true;
                 case R.id.bottom_navigation_history:
 
                     return true;
                 case R.id.bottom_navigation_jobs:
-
+                    Intent intent1 = new Intent(CustomerHistoryActivity.this,CustomerJobsActivity.class);
+                    intent1.putExtra("customer",customer);
+                    startActivity(intent1);
+                    finish();
                     return true;
             }
             return false;

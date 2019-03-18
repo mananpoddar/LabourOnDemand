@@ -6,10 +6,15 @@ import java.util.ArrayList;
 public class LabourerFinal extends User implements Serializable {
 
     private Services currentService;
+    private Double averageRating;
     private Boolean isBusy;
     private ArrayList<String> skill;
     private Long workExperience;
     private ArrayList<ServicesFinal> incomingServices, historyServices;
+
+    public LabourerFinal() {
+
+    }
 
     public LabourerFinal(Services currentService, Boolean isBusy, ArrayList<String> skill, Long workExperience,
                          ArrayList<ServicesFinal> incomingServices, ArrayList<ServicesFinal> historyServices) {
@@ -33,6 +38,14 @@ public class LabourerFinal extends User implements Serializable {
         this.isBusy = isBusy;
         this.skill = skill;
         this.workExperience = workExperience;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
     }
 
     public Services getCurrentService() {
@@ -81,6 +94,18 @@ public class LabourerFinal extends User implements Serializable {
 
     public void setHistoryServices(ArrayList<ServicesFinal> historyServices) {
         this.historyServices = historyServices;
+    }
+
+    @Override
+    public String toString() {
+        return "LabourerFinal{" +
+                "currentService=" + currentService +
+                ", isBusy=" + isBusy +
+                ", skill=" + skill +
+                ", workExperience=" + workExperience +
+                ", incomingServices=" + incomingServices +
+                ", historyServices=" + historyServices +
+                '}';
     }
 }
 

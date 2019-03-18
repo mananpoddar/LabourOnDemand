@@ -100,7 +100,7 @@
                     android:background="@color/white">
 
                     <ImageView
-                        android:id="@+id/circleImageView"
+                        android:id="@+id/form2_skill_iv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -112,6 +112,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/form2_skill_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -120,7 +121,7 @@
                         android:text="Carpenter"
                         android:textSize="@dimen/text_size_large"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/circleImageView"
+                        app:layout_constraintStart_toEndOf="@+id/form2_skill_iv"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </android.support.constraint.ConstraintLayout>
@@ -170,7 +171,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
-                android:hint="Labourers Size"
+                android:hint="Number of Labourers"
                 android:textColorHint="@color/colorPrimary">
 
                 <EditText
@@ -233,6 +234,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:background="@color/orange"
                 android:onClick="save_description"
