@@ -57,6 +57,8 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
         navigationView.setCheckedItem(2);
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.getMenu().getItem(2).setChecked(true);
+
 
         customer = (CustomerFinal) getIntent().getSerializableExtra("customer");
 
@@ -88,13 +90,18 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.bottom_navigation_home:
-
+                    Intent intent = new Intent(CustomerJobsActivity.this,CustomerHomeActivity.class);
+                    intent.putExtra("customer",customer);
+                    startActivity(intent);
+                    finish();
                     return true;
                 case R.id.bottom_navigation_history:
-
+                    Intent intent1 = new Intent(CustomerJobsActivity.this,CustomerHistoryActivity.class);
+                    intent1.putExtra("customer",customer);
+                    startActivity(intent1);
+                    finish();
                     return true;
                 case R.id.bottom_navigation_jobs:
-
                     return true;
             }
             return false;
