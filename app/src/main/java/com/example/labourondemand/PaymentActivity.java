@@ -3,6 +3,7 @@ package com.example.labourondemand;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -74,7 +75,7 @@ public class PaymentActivity extends AppCompatActivity {
                                                     {   progressBar.setVisibility(View.GONE);
                                                         Intent intent = new Intent(PaymentActivity.this, ReviewActivity.class);
                                                         intent.putExtra("customer",customerFinal);
-                                                        intent.putExtra("services",servicesFinal);
+                                                        intent.putExtra("services", servicesFinal);
                                                         startActivity(intent);
                                                         finish();
                                                     }

@@ -53,5 +53,6 @@
     <string name="title_activity_customer_home">Map</string>
     <string name="title_history">History</string>
     <string name="title_jobs">Jobs</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>
