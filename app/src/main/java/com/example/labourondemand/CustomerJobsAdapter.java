@@ -45,8 +45,12 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
         }
     }
 
-    public void setService(ServicesFinal service) {
+    public ServicesFinal getService() {
+        return service;
+    }
 
+    public void setService(ServicesFinal service) {
+        Log.d("set Service in ada",service.toString());
         this.service = service;
     }
 

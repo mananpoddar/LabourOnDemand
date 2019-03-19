@@ -42,14 +42,14 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
 
-        <service
+       <!-- <service
             android:name=".notifications.MyService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
+        </service>-->
         <!--
 <service android:name=".java.MyFirebaseMessagingService">
             <intent-filter>

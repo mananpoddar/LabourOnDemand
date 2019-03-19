@@ -51,8 +51,8 @@ public class CheckingActivity extends AppCompatActivity {
         if (currentUser == null) {
             Log.d(TAG, "send to login : Checking");
             sendToLogin();
-        }else {
-            Log.d("cdsc","csdc");
+        } else {
+            Log.d("cdsc", "csdc");
             current_user_id = mAuth.getCurrentUser().getUid();
             Log.d(TAG, current_user_id);
 
@@ -68,10 +68,25 @@ public class CheckingActivity extends AppCompatActivity {
 
                                 if (session.isSetupCustomer(current_user_id)) {
                                     Log.d("isSetup", "customer");
-                                    Intent customer = new Intent(CheckingActivity.this, CustomerHomeActivity.class);
-                                    customer.putExtra("customer", session.getCustomer(current_user_id));
-                                    startActivity(customer);
-                                    finish();
+
+                                    CustomerFinal customerFinal = session.getCustomer(current_user_id);
+
+                                    if (customerFinal.getNotPaidService() != null) {
+                                        Intent intent = new Intent(CheckingActivity.this, PaymentActivity.class);
+                                        intent.putExtra("customer", customerFinal);
+                                        startActivity(intent);
+                                        finish();
+                                    } else if (customerFinal.getNotReviewedService() != null) {
+                                        Intent intent = new Intent(CheckingActivity.this, ReviewActivity2.class);
+                                        intent.putExtra("customer", customerFinal);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        Intent intent = new Intent(CheckingActivity.this, CustomerHomeActivity.class);
+                                        intent.putExtra("customer", customerFinal);
+                                        startActivity(intent);
+                                        finish();
+                                    }
                                 } else {
                                     firebaseFirestore.collection("customer").document(current_user_id).get()
                                             .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -79,6 +94,7 @@ public class CheckingActivity extends AppCompatActivity {
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     if (documentSnapshot.exists()) {
                                                         CustomerFinal customer = documentSnapshot.toObject(CustomerFinal.class);
+                                                        customer.setId(documentSnapshot.getId());
                                                         session.saveCustomer(customer);
                                                         Intent intent = new Intent(CheckingActivity.this, CustomerHomeActivity.class);
                                                         intent.putExtra("customer", customer);
@@ -115,13 +131,14 @@ public class CheckingActivity extends AppCompatActivity {
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     if (documentSnapshot.exists()) {
                                                         LabourerFinal labourer = documentSnapshot.toObject(LabourerFinal.class);
+                                                        labourer.setId(documentSnapshot.getId());
                                                         session.saveLabourer(labourer);
                                                         /*session.createProfileLabourer(labourer.getName(), labourer.getImage(), labourer.getDob(), labourer.getCity()
                                                                 , labourer.getState(), labourer.getPhone(), labourer.getAddressLine1(), labourer.getAddressLine2()
                                                                 , labourer.getAddressLine3(), labourer.getSkill(), 9L);*/
 
                                                         Intent intent = new Intent(CheckingActivity.this, LabourerHomeActivity.class);
-                                                        intent.putExtra("labourer",labourer);
+                                                        intent.putExtra("labourer", labourer);
                                                         startActivity(intent);
 
                                                     } else {
