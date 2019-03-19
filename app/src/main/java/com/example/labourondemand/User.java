@@ -14,7 +14,6 @@ public class User implements Serializable/*implements Parcelable*/{
     private GeoPoint currentLocation;
     private Long phone,wallet;
     private ArrayList<String> services;
-    private ServicesFinal servicesFinal;
 
 
     public User() {
