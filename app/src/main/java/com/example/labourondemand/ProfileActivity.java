@@ -105,6 +105,8 @@ public class ProfileActivity extends AppCompatActivity
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
         userMap = new HashMap<>();
         session = new SessionManager(getApplicationContext());
 
@@ -134,7 +136,7 @@ public class ProfileActivity extends AppCompatActivity
         name = findViewById(R.id.profile_et_name);
         photo = findViewById(R.id.profile_civ_photo);
         progressBar = findViewById(R.id.profile_pb);
-        progressBar.setVisibility(View.VISIBLE);
+
         submit = findViewById(R.id.profile_btn_submit);
         submit.setVisibility(View.GONE);
         tabLayout = findViewById(R.id.profile_tl);
@@ -146,6 +148,8 @@ public class ProfileActivity extends AppCompatActivity
         if (type.equals("labourer")) {
             isLabourer = true;
             labourer = (LabourerFinal) getIntent().getSerializableExtra("labourer");
+            labourer.setId(firebaseAuth.getUid());
+            Log.d("profile lab",labourer.getId()+"!");
             bundle.putSerializable("labourer", labourer);
             bundle.putString("type", "labourer");
             name.setText(labourer.getName());
@@ -155,6 +159,8 @@ public class ProfileActivity extends AppCompatActivity
         } else {
             //
             customer = (CustomerFinal) getIntent().getSerializableExtra("customer");
+            customer.setId(firebaseAuth.getUid());
+            Log.d("profile cus",customer.getId()+"!");
             bundle.putSerializable("customer", customer);
             if (customer == null)
                 Log.d(TAG, "onCreate: errorororororo");
@@ -192,18 +198,17 @@ public class ProfileActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(viewPager);
         isEditable = false;
 
-       /* edit.setOnClickListener(new View.OnClickListener() {
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submit.setClickable(true);
                 isEditable = true;
                 submit.setVisibility(View.VISIBLE);
                 edit.setVisibility(View.GONE);
-                editfunction(v);
+                editfunction();
             }
-        });*/
+        });
 
-        progressBar.setVisibility(View.GONE);
     }
 
 
@@ -281,6 +286,7 @@ public class ProfileActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
+
                     boolean isInputRight = true;
 
                     /*if (!isValidEmail(emailid.getText().toString().trim())) {
@@ -326,6 +332,7 @@ public class ProfileActivity extends AppCompatActivity
 
 
                     if (isInputRight) {
+                        progressBar.setVisibility(View.VISIBLE);
                         name.setFocusableInTouchMode(false);
                         name.setFocusable(false);
                         //emailid.setFocusableInTouchMode(false);
@@ -388,6 +395,8 @@ public class ProfileActivity extends AppCompatActivity
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
+                                                        progressBar.setVisibility(View.INVISIBLE);
+
                                                         Toast.makeText(ProfileActivity.this, "(IMAGE Error uri) : " + e.toString(), Toast.LENGTH_LONG).show();
                                                     }
                                                 });
@@ -475,7 +484,7 @@ public class ProfileActivity extends AppCompatActivity
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(ProfileActivity.this, "The user Settings are updated.", Toast.LENGTH_LONG).show();
                         Log.d(TAG, "onSuccess: Success!");
-
+                        progressBar.setVisibility(View.GONE);
                         if (type.equals("customer")) {
                             session.saveCustomer(customer);
                         } else {
@@ -486,6 +495,8 @@ public class ProfileActivity extends AppCompatActivity
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        progressBar.setVisibility(View.GONE);
+
                         //String error = task.getException().getMessage();
                         Toast.makeText(ProfileActivity.this, "(FIRESTORE Error) : " + e.toString(), Toast.LENGTH_LONG).show();
                     }
@@ -594,7 +605,7 @@ public class ProfileActivity extends AppCompatActivity
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         //menu.getItem(0).setVisible(false);
@@ -621,7 +632,7 @@ public class ProfileActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
    /* @SuppressWarnings("StatementWithEmptyBody")
     @Override

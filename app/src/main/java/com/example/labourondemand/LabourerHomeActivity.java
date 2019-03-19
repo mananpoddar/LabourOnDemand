@@ -1,12 +1,16 @@
 package com.example.labourondemand;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,13 +21,24 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 
@@ -43,11 +58,45 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
+    static LabourerHomeActivity instance;
+    LocationRequest locationRequest;
+    FusedLocationProviderClient fusedLocationProviderClient;
+
+    public static LabourerHomeActivity getInstance() {
+        return instance;
+    }
+    TextView textView;
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_labourer_home);
+
+        instance = this;
+
+        textView = findViewById(R.id.labourer_home_no_response_tv);
+
+        /*Dexter.withActivity(this)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        updateLocation();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(LabourerHomeActivity.this, "you nsna", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                    }
+                }).check();*/
+
+        this.startService(new Intent(this,MyLocationService .class));
 
         toolbar = findViewById(R.id.labourer_home_tb);
         drawerLayout = findViewById(R.id.labourer_home_dl);
@@ -69,13 +118,13 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         viewPagerAdapterLabourer = new ViewPagerAdapterLabourer(getSupportFragmentManager());
         CardVIewJobs c = new CardVIewJobs();
 
-        viewPagerAdapterLabourer.addFragment(c,"deddescs");
-        viewPagerAdapterLabourer.addFragment(new CardVIewJobs(),"cdc");
+        viewPagerAdapterLabourer.addFragment(c, "deddescs");
+        viewPagerAdapterLabourer.addFragment(new CardVIewJobs(), "cdc");
         viewPager.setAdapter(viewPagerAdapterLabourer);
         tabLayout.setupWithViewPager(viewPager);
 
         labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer");
-        Log.d("labourerHome",labourerFinal.toString());
+        Log.d("labourerHome", labourerFinal.toString());
 //
 //        if (labourerFinal.getCurrentService() == null) {
 //            Log.d("tagggg",labourerFinal.getSkill()+"!");
@@ -110,6 +159,44 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
 
         //viewPager.setAdapter(viewPagerAdapterLabourer);
 
+    }
+
+    private void updateLocation() {
+        buildLocationRequest();
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent());
+        
+    }
+
+    public void update(final String value)
+    {
+
+        LabourerHomeActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("location brodcast ",value+"!");
+                textView.setText(value);
+            }
+        });
+    }
+
+    private PendingIntent getPendingIntent() {
+        Intent intent = new Intent(this,MyLocation.class);
+        intent.setAction(MyLocation.ACTION_PROCESS_UPDATE);
+        return PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void buildLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(2000);
+        locationRequest.setFastestInterval(1000);
+        locationRequest.setSmallestDisplacement(10f);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -227,7 +314,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
                                 Log.d("service fetched", documentSnapshot.getString("serviceId"));
                                 ServicesFinal servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
                                 //servicesFinal.setCustomerUID(documentSnapshot.getString("customerUID"));
-                                Log.d("I don't know", "+"+servicesFinal.getCustomerUID()+"!");
+                                Log.d("I don't know", "+" + servicesFinal.getCustomerUID() + "!");
                                 //final ServicesFinal finalServices = servicesFinal;
                                 //ServicesFinal finalServicesFinal = servicesFinal;
                                 //firebaseFirestore.collection("customer").document(servicesFinal.getCustomerUID())

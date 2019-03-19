@@ -1,53 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CustomerJobsFragment">
 
-    <TextView
-        android:id="@+id/customer_jobs_jobDescription"
-        android:layout_width="178dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="Job Description here"
-        app:layout_constraintStart_toEndOf="@+id/customer_jobs_toolbox"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/customer_jobs_labourers"
+    <android.support.v7.widget.CardView
+        android:id="@+id/customer_jobs_fragment_cv"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_marginTop="24dp"
-        android:text="LABOURERS"
-        android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@+id/customer_jobs_jobDescription"
-        tools:layout_editor_absoluteX="16dp" />
-
-    <ImageView
-        android:id="@+id/customer_jobs_toolbox"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/customer_job_tool_box"
-        app:layout_constraintBottom_toBottomOf="@+id/customer_jobs_jobDescription"
-        app:layout_constraintEnd_toStartOf="@+id/customer_jobs_jobDescription"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/customer_jobs_jobDescription" />
-
-    <ImageView
-        android:id="@+id/customer_jobs_iv_jobtype"
-        android:layout_width="52dp"
-        android:layout_height="47dp"
+        android:layout_height="100dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:src="@drawable/ic_paint_roller__no_colour"
-        app:layout_constraintBottom_toBottomOf="@+id/customer_jobs_jobDescription"
-        app:layout_constraintEnd_toStartOf="@+id/customer_jobs_job_done"
-        app:layout_constraintStart_toEndOf="@+id/customer_jobs_jobDescription"
-        app:layout_constraintTop_toTopOf="@+id/customer_jobs_jobDescription" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/customer_jobs_toolbox"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_carpenter_tools_colour"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/customer_jobs_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Title"
+                app:layout_constraintStart_toEndOf="@+id/customer_jobs_toolbox"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/customer_jobs_jobDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Job Description here"
+                app:layout_constraintStart_toEndOf="@+id/customer_jobs_toolbox"
+                app:layout_constraintTop_toBottomOf="@+id/customer_jobs_title" />
+
+            <ImageView
+                android:id="@+id/customer_jobs_st_iv"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_history_black_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/customer_jobs_start_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="Time"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/customer_jobs_toolbox" />
+
+            <Button
+                android:id="@+id/customer_jobs_done_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/orange"
+                android:text="Job Done"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+
+
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
@@ -55,7 +97,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customer_jobs_labourers">
+        app:layout_constraintTop_toBottomOf="@+id/customer_jobs_fragment_cv">
 
         <android.support.v4.widget.NestedScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -88,19 +130,7 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <Button
-        android:id="@+id/customer_jobs_job_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/orange"
-        android:text="Job Done"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/customer_jobs_labourers"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
 
 </android.support.constraint.ConstraintLayout>

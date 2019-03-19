@@ -452,7 +452,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menu.getItem(1).setEnabled(false);
+        //menu.getItem(1).setEnabled(false);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }

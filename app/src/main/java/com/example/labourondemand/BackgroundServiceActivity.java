@@ -1,3 +1,4 @@
+/*
 package com.example.labourondemand;
 import android.Manifest;
 import android.content.ComponentName;
@@ -116,4 +117,4 @@ public class BackgroundServiceActivity extends AppCompatActivity {
             }
         }
     };
-}
+}*/
