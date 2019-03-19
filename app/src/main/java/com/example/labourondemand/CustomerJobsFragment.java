@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +18,17 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 /**
@@ -71,22 +79,20 @@ public class CustomerJobsFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         if (bundle != null) {
-            customer = bundle.getParcelable("customer");
+            customer =  bundle.getParcelable("customer");
+            currentService = bundle.getParcelable("service");
+            Log.d(TAG, "onCreate: bundle recieved");
         }
     }
 
-    private Customer customer;
+    private CustomerFinal customer;
+    private ServicesFinal currentService;
     private RecyclerView recyclerView;
-    private DashboardAdapter customerDashboardAdapter;
-    private FirebaseFirestore firebaseFirestore;
+    private CustomerJobsAdapter customerJobsAdapter;
+    private FirebaseFirestore db;
     private FirebaseAuth firebaseAuth;
     private Services services = new Services();
     private TextView noResponse;
-
-    //vars(demo)
-    private ArrayList<String> mNames = new ArrayList<>();
-    private ArrayList<String> mFroms = new ArrayList<>();
-    private ArrayList<String> mTos = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,101 +101,42 @@ public class CustomerJobsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_customer_jobs, container, false);
 
         noResponse = view.findViewById(R.id.customer_dashboard2_tv_no_response);
-        customer = (Customer) mActivity.getIntent().getExtras().get("customer");
-        //services = (Services) getIntent().getExtras().get("services");
-        firebaseFirestore = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-//        recyclerView = view.findViewById(R.id.customer_jobs_rv);
-//        customerDashboardAdapter = new DashboardAdapter(getActivity() ,1,new ArrayList<Labourer>(), services);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        recyclerView.setAdapter(customerDashboardAdapter);
-//        recyclerView.setHasFixedSize(false);
-        //fetchLabourResponses();
-
-        initText();
-
-        //dummy for presenting
-        RecyclerView recyclerView = view.findViewById(R.id.customer_jobs_rv);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), mNames, mFroms, mTos);
-        recyclerView.setAdapter(adapter);
+        recyclerView = view.findViewById(R.id.customer_jobs_rv);
+        customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(customerJobsAdapter);
+        recyclerView.setHasFixedSize(false);
 
-        return view;
-    }
 
-    //dummy function
-    private void initText() {
-        //Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
-
-        mNames.add("Shanthanu");
-        mNames.add("Varun");
-        mNames.add("Narayan");
-        mNames.add("Prajwal");
-        mNames.add("Manan");
-        mNames.add("Srivatsan");
-        mNames.add("dummy 1");
-        mNames.add("dummy 2");
-        mNames.add("dummy 3");
-
-        mFroms.add("Bombay");
-        mFroms.add("Delhi");
-        mFroms.add("Udupi");
-
-        mTos.add("Udupi");
-        mTos.add("Delhi");
-        mTos.add("Bombay");
-
-        for(int i = 0; i < 6; i++) {
-            mFroms.add("location" + i);
-            mTos.add("location" + (9+i));
-        }
-    }
-
-    private void fetchLabourResponses() {
-
-        firebaseFirestore.collection("services").document(customer.getCurrentService()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("services").document(currentService.getServiceId())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot snapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                        Log.d("service in dashboard22", customer.getCurrentService());
-                        services = documentSnapshot.toObject(Services.class);
-                        services.setServiceID(customer.getCurrentService());
-                        Log.d("service in dashboard22", services.getAddressLine1()+"!");
-                        if(services.getLabourerResponses() != null) {
-                            noResponse.setVisibility(View.GONE);
-                            customerDashboardAdapter.setServiceAndCustomer(services, customer);
-                            Log.d("customerboardAdapter",services.getLabourerResponses().toString());
-                            for (final String s : services.getLabourerResponses().keySet()) {
-                                firebaseFirestore.collection("labourer").document(s)
-                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        Labourer labourer = new Labourer();
-                                        labourer = documentSnapshot.toObject(Labourer.class);
-                                        labourer.setCurrentServicePrice(services.getLabourerResponses().get(s));
-                                        customerDashboardAdapter.addedFromCustomer(labourer);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-
-                                    }
-                                });
-                            }
-
-                        }else{
-                            noResponse.setText("No Response from any Labourers");
+                        if (e != null) {
+                            Log.w(TAG, "listen:error", e);
+                            return;
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+
+                        if (snapshot != null && snapshot.exists()) {
+                            Log.d(TAG, "Current data: " + snapshot.getData());
+                            ServicesFinal updatedService = snapshot.toObject(ServicesFinal.class);
+                            ArrayList<LabourerFinal> labourersToBeAdded = updatedService.getLabourers();
+                            labourersToBeAdded.removeAll(currentService.getLabourers());
+                            for(int i = 0; i < labourersToBeAdded.size(); i++) {
+                                customerJobsAdapter.addLabourer(labourersToBeAdded.get(i));
+                            }
+                        } else {
+                            Log.d(TAG, "Current data: null");
+                        }
 
                     }
                 });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
