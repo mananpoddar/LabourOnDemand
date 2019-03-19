@@ -25,7 +25,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -46,6 +45,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -54,6 +54,7 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.GeoQuery;
@@ -94,15 +95,14 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     private GeoPoint destination, geoPoint;
     private FirebaseInstanceId firebaseInstanceId;
 
-    private static String TAG = "CustomerHomeActivity";
-
+    private static final String TAG = "CustomerHomeActivity";
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Bundle bundle = new Bundle();
         Log.d("tag", "onSaveInstanceState");
 
-        //outState.putString("skill", horizontalScrollViewAdapter.getSkill());
+        outState.putString("skill", horizontalScrollViewAdapter.getSkill());
         //outState.putSerializable("labourersLocation", horizontalScrollViewAdapter.getLabourersLocation());
         //customer.setLabourersLocation(horizontalScrollViewAdapter.getLabourersLocation());
         outState.putSerializable("customer", customer);
@@ -125,30 +125,6 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: start");
-        Log.d(TAG, "onStart: end");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d(TAG, "onRestart: customer " + customer.getId());
-        customer = session.getCustomer(customer.getId());
-        Log.d(TAG, "onRestart: customer " + customer.getName());
-        Log.d(TAG, "onRestart: start");
-        Log.d(TAG, "onRestart: end");
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Log.d(TAG, "onPostResume: start");
-        Log.d(TAG, "onPostResume: end");
-    }
-
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +134,9 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("sample");
+
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
@@ -169,7 +148,19 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
-
+                        firebaseFirestore.collection("customer").document(firebaseAuth.getUid()).update("token",token)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("TOKEN","SUCCESS");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("TOKEN Failure",e.toString());
+                                    }
+                                });
                         // Log and toast
                         //String msg = getString(R.string.msg_token_fmt, token);
                         Log.d("dcs", token);
@@ -368,6 +359,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
         /*horizontalScrollMenuView = (HorizontalScrollMenuView) findViewById(R.id.customer_home_hsmv);
         initMenu();*/
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -417,10 +409,13 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
             /*Intent intent = new Intent(this, PreviousActivity.class);
             startActivity(intent);*/
         } else if (id == R.id.nav_profile) {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("customer", customer);
-            intent.putExtra("type", "customer");
-            startActivity(intent);
+            /*Intent intent = new Intent(this, ProfileActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("labourer",labourer);
+            intent.putExtra("user", labourer);
+            intent.putExtra("type","labourer");
+            Log.d(tag, "labourer : " + labourer.getAddressLine1());
+            startActivity(intent);*/
         } else if (id == R.id.nav_manage) {
             //Intent settings = new Intent(LabourerMainActivity.this,SettingsActivity.class);
             //startActivity(settings);
@@ -441,18 +436,9 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         return true;
     }
 
-    /*@Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_toolbar, menu);
-        menu.getItem(1).setEnabled(false);
-        return super.onPrepareOptionsMenu(menu);
-    }*/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menu.getItem(1).setEnabled(false);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }

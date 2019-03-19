@@ -19,8 +19,6 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-
 public class CustomerJobsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         CustomerJobsFragment.OnFragmentInteractionListener{
 
@@ -34,7 +32,6 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
     private CustomerFinal customer;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
-    private ArrayList<ServicesFinal> currentServices;
 
 
     @SuppressLint("ResourceType")
@@ -60,24 +57,23 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
         navigation.getMenu().getItem(2).setChecked(true);
 
 
+        Bundle bundle = new Bundle();
         customer = (CustomerFinal) getIntent().getSerializableExtra("customer");
-
+        bundle.putSerializable("customer", customer);
 
         viewPager = findViewById(R.id.customer_jobs_vp);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         //there should be multiple jobs
+        CustomerJobsFragment customerJobsFragment1 = new CustomerJobsFragment();
+        CustomerJobsFragment customerJobsFragment2 = new CustomerJobsFragment();
 
-        currentServices = customer.getCurrentServices();
+        customerJobsFragment1.setArguments(bundle);
+        customerJobsFragment1.setArguments(bundle);
 
-        for(int i = 0; i < currentServices.size(); i++) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("customer", customer);
-            bundle.putSerializable("service", currentServices.get(i));
-            CustomerJobsFragment customerJobsFragment = new CustomerJobsFragment();
-            customerJobsFragment.setArguments(bundle);
-            viewPagerAdapter.addFragment(customerJobsFragment, "Job" + i);
-        }
+        //should be inside a for loop through all fragments
+        viewPagerAdapter.addFragment(customerJobsFragment1, "Job1");
+        viewPagerAdapter.addFragment(customerJobsFragment2, "Job2");
 
         viewPager.setAdapter(viewPagerAdapter);
 

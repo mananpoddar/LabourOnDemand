@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -37,11 +38,20 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
         this.context = context;
         this.service = service;
         this.labourers = service.getLabourers();
-        selectedLabourersUID = new ArrayList<>();
+        if(service.getSelectedLabourerUID() == null){
+            selectedLabourersUID = new ArrayList<>();
+        }else {
+            selectedLabourersUID = service.getSelectedLabourerUID();
+        }
+    }
+
+    public void setService(ServicesFinal service) {
+
+        this.service = service;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, tags, landmark, distance;
+        public TextView name, rating, price, distance;
         public CircleImageView photo;
         public ConstraintLayout constraintLayout;
         public Button accept;
@@ -49,8 +59,8 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
         public MyViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.item_service_tv_name);
-            tags = view.findViewById(R.id.item_service_tv_tags);
-            landmark = view.findViewById(R.id.item_service_tv_landmark);
+            rating = view.findViewById(R.id.item_service_tv_tags);
+            price = view.findViewById(R.id.item_service_tv_landmark);
             distance = view.findViewById(R.id.item_service_tv_distance);
             photo = view.findViewById(R.id.item_service_civ_photo);
             constraintLayout = view.findViewById(R.id.item_service_cl);
@@ -70,50 +80,66 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull CustomerJobsAdapter.MyViewHolder holder, int position) {
+
         final LabourerFinal labourer = labourers.get(position);
         Glide.with(context).load(labourer.getImage()).into(holder.photo);
         holder.name.setText(labourer.getName());
-        holder.landmark.setText( String.valueOf(service.getLabourerResponses().get(labourer.getId())));
+        holder.price.setText( String.valueOf(service.getLabourerResponses().get(labourer.getId())));
         holder.accept.setText("Accept");
         if(labourer.getAverageRating() == null){
-            holder.tags.setText("No Rating");
+            holder.rating.setText("No Rating");
         }else {
-            holder.tags.setText(String.valueOf(labourer.getAverageRating()));
+            holder.rating.setText(String.valueOf(labourer.getAverageRating()));
         }
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                selectedLabourersUID = service.getSelectedLabourerUID();
                 if(selectedLabourersUID.size() < service.getNumOfLabourers()) {
-                    selectedLabourersUID.add(labourer.getId());
-                    labourer.setCurrentService(service);
+                    service.getSelectedLabourerUID().add(labourer.getId());
 
-                    //stuff left here
+                    //selectedLabourersUID.add(labourer.getId());
+                    //labourer.setCurrentServiceId(service.getServiceId());
 
-                    labourer.setCurrentServiceId(service.getServiceId());
-
-                    db.collection("labourer").document(labourer.getId())
-                            .set(labourer)
+                    db.collection("service").document(service.getServiceId())
+                            .update("selectedLabourerUID", FieldValue.arrayUnion(service.getServiceId()))
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "onSuccess: Labourer successfully written.");
+                                    Log.d(TAG, "onSuccess: Service successfully updated.");
+
+                                    db.collection("labourer").document(labourer.getId())
+                                            .update("currentServiceId",service.getServiceId())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "onSuccess: Labourer successfully written.");
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "onFailure: Error writing labourer back.", e);
+                                                }
+                                            });
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "onFailure: Error writing labourer back.", e);
+                                    Log.w(TAG, "onFailure: Service not updated.", e);
                                 }
                             });
 
+
+
                     //logic for labourer (goes in a batch)
                     if(selectedLabourersUID.size() == service.getNumOfLabourers()) {
-                        service.setSelectedLabourerUID(selectedLabourersUID);
+                        //service.setSelectedLabourerUID(selectedLabourersUID);
                         service.setApplyable(false);
 
                         db.collection("service").document(service.getServiceId())
-                                .set(service)
+                                .update("isApplyable",false )
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -140,6 +166,12 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
         return labourers.size();
     }
 
+
+    public void clear(){
+        labourers.clear();
+        notifyDataSetChanged();
+    }
+
     public void addLabourer(LabourerFinal labourer){
         Log.d("addedFromCustomer ", labourers.size()+"s");
         labourers.add(labourer);
@@ -151,5 +183,9 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
         labourers.set(positionA, labourers.get(positionB));
         labourers.set(positionB, labourerA);
         notifyDataSetChanged(); //to trigger onBindViewHolder
+    }
+
+    public Boolean isDone(){
+        return !service.getApplyable();
     }
 }

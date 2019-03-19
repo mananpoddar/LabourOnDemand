@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -33,12 +34,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 
@@ -97,6 +102,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         viewPager.setAdapter(viewPagerAdapterLabourer);
 
         labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer");
+
         Log.d("labourerHome", labourerFinal.toString());
 
        /* slide = new Slide(this, new ArrayList<String>());
@@ -105,6 +111,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         tabsImages = findViewById(R.id.labourer_home_tl);
         tabsImages.setupWithViewPager(viewPager, true);
         //Log.d("MAP",context.getPackageManager().getPackageInfo("com.google.android.gms",0).versionName);
+
 //
 //        if (labourerFinal.getCurrentService() == null) {
 //            Log.d("tagggg",labourerFinal.getSkill()+"!");
