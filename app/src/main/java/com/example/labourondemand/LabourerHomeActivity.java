@@ -119,7 +119,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
 //            fetchServices();
 //        }
 
-/*
+/*      //dummy comment
         for (int i = 0; i < 5; i++) {
             bundles.add(new Bundle());
             bundles.get(i).putString("key", Integer.toString(i));
