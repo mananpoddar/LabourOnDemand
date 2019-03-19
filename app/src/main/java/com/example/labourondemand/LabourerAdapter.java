@@ -25,7 +25,7 @@ public class LabourerAdapter extends RecyclerView.Adapter<LabourerAdapter.MyView
 
         public MyViewHolder(View view) {
             super(view);
-            name = view.findViewById(R.id.item_service_tv_name);
+            name = view.findViewById(R.id.item_service_tv_title);
             photo = view.findViewById(R.id.item_service_civ_photo);
         }
     }

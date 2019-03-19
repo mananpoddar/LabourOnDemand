@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/item_service_tv_name"
+            android:id="@+id/item_service_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -56,7 +56,7 @@
             android:layout_marginTop="8dp"
             android:text="TAGS"
             app:layout_constraintStart_toEndOf="@+id/item_service_civ_photo"
-            app:layout_constraintTop_toBottomOf="@+id/item_service_tv_name" />
+            app:layout_constraintTop_toBottomOf="@+id/item_service_tv_title" />
 
         <TextView
             android:id="@+id/item_service_tv_distance"

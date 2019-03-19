@@ -271,6 +271,7 @@ public class Form2Activity extends AppCompatActivity {
             services.setCustomerAmount(Long.valueOf(amonut_string));*/
 
             servicesFinal.setCustomerUID(firebaseAuth.getUid());
+            servicesFinal.setCustomer(customer);
             //servicesFinal.setCustomerUID("1");
             servicesFinal.setDescription(problem_description);
             servicesFinal.setNumOfLabourers(Long.valueOf(number_string));
