@@ -27,6 +27,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -107,14 +108,14 @@ public class CustomerJobsFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-        Spinner spin = (Spinner) view.findViewById(R.id.spinner);
-        spin.setOnItemSelectedListener();
-
-        //Creating the ArrayAdapter instance having the country list
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,country);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        spin.setAdapter(aa);
+//        Spinner spin = (Spinner) view.findViewById(R.id.spinner);
+//        spin.setOnItemSelectedListener();
+//
+//        //Creating the ArrayAdapter instance having the country list
+//        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,country);
+//        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        //Setting the ArrayAdapter data on the Spinner
+//        spin.setAdapter(aa);
 
         done = view.findViewById(R.id.customer_jobs_done_btn);
 
@@ -237,6 +238,35 @@ public class CustomerJobsFragment extends Fragment {
                 });
 
         return view;
+    }
+
+    void sortLabourerBasedOnPrice() {
+        ArrayList<LabourerFinal> labourers = customerJobsAdapter.getLabourers();
+
+        for(int i = 0; i < labourers.size(); i++) {
+            int min = 0;
+            for(int j = i+1; j < labourers.size(); j++) {
+                if(currentService.getLabourerResponses().get(labourers.get(i).getId()) < currentService.getLabourerResponses().get(labourers.get(i).getId())) {
+                    min = i;
+                }
+            }
+            customerJobsAdapter.swapItems(i, min);
+        }
+    }
+
+    void sortLabourerBasedOnRating() {
+        ArrayList<LabourerFinal> labourers = customerJobsAdapter.getLabourers();
+
+        for(int i = 0; i < labourers.size(); i++) {
+            int max = 0;
+            for(int j = i+1; j < labourers.size(); j++) {
+                if(labourers.get(i).getAverageRating() > labourers.get(max).getAverageRating()) {
+                    max = i;
+                }
+            }
+            customerJobsAdapter.swapItems(i, max);
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
