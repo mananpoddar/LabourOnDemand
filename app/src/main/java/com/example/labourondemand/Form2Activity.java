@@ -112,7 +112,7 @@ public class Form2Activity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.form2_pb);
 
-        skillPic = findViewById(R.id.form2_skill_iv);
+        skillPic = findViewById(R.id.activity_form2_iv_skill);
         skillText = findViewById(R.id.form2_skill_tv);
         choose = findViewById(R.id.form2_choose_iv);
         viewPager = findViewById(R.id.activity_form2_vp);
