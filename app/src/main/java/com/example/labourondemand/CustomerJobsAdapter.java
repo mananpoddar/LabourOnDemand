@@ -178,6 +178,10 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
         notifyItemInserted(labourers.indexOf(labourer));
     }
 
+    public ArrayList<LabourerFinal> getLabourers() {
+        return labourers;
+    }
+
     public void swapItems(int positionA, int positionB) {
         LabourerFinal labourerA = labourers.get(positionA);
         labourers.set(positionA, labourers.get(positionB));
