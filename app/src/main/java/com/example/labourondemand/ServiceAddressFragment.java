@@ -54,7 +54,6 @@ public class ServiceAddressFragment extends Fragment {
     }
 
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +63,7 @@ public class ServiceAddressFragment extends Fragment {
             services = (ServicesFinal) bundle.getSerializable("services");
         }
     }
+
     private ServicesFinal services;
     private TextView a1, a2, landmark, city;
     @Override
@@ -76,11 +76,11 @@ public class ServiceAddressFragment extends Fragment {
         a2 = view.findViewById(R.id.service_address_tv_line2);
         landmark = view.findViewById(R.id.service_address_tv_landmark);
         city = view.findViewById(R.id.service_address_tv_city);
-//
-//        city.setText(services.getCity());
-//        landmark.setText(services.getLandmark());
-//        a1.setText(services.getAddressLine1());
-//        a2.setText(services.getAddressLine2());
+
+        //city.setText(services.getCity());
+        //landmark.setText(services.getLandmark());
+        //  a1.setText(services.getAddressLine1());
+        //  a2.setText(services.getAddressLine2());
 
         return view;
     }

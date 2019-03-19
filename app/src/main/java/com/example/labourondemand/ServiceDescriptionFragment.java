@@ -63,6 +63,7 @@ public class ServiceDescriptionFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             services = (ServicesFinal) bundle.getSerializable("services");
+
         }
     }
 
@@ -76,6 +77,7 @@ public class ServiceDescriptionFragment extends Fragment {
         skill = view.findViewById(R.id.service_description_tv_skill);
         description = view.findViewById(R.id.service_description_tv_description);
         tags = view.findViewById(R.id.service_description_tv_tags);
+
         skill.setText(services.getSkill().toString());
         description.setText(services.getDescription().toString());
         return view;

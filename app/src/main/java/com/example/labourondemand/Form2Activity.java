@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -83,6 +84,7 @@ public class Form2Activity extends AppCompatActivity {
     private TabLayout tabsImages;
     private ImageView choose, skillPic;
     private TextView skillText;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +110,9 @@ public class Form2Activity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         session = new SessionManager(getApplicationContext());
 
-        skillPic = findViewById(R.id.activity_form2_iv_skill);
+        progressBar = findViewById(R.id.form2_pb);
+
+        skillPic = findViewById(R.id.form2_skill_iv);
         skillText = findViewById(R.id.form2_skill_tv);
         choose = findViewById(R.id.form2_choose_iv);
         viewPager = findViewById(R.id.activity_form2_vp);
@@ -151,6 +155,9 @@ public class Form2Activity extends AppCompatActivity {
         }
 
         customer = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
+        customer.setId(firebaseAuth.getUid());
+
+        Log.d("scsdcs","scd"+customer.getId());
 
         dateTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +178,8 @@ public class Form2Activity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                progressBar.setVisibility(View.VISIBLE);
                 save_description(v);
             }
         });
@@ -269,9 +278,7 @@ public class Form2Activity extends AppCompatActivity {
             services.setSkill(getIntent().getExtras().getString("skill"));
             services.setDescription(problem_description);
             services.setCustomerAmount(Long.valueOf(amonut_string));*/
-
             servicesFinal.setCustomerUID(firebaseAuth.getUid());
-            servicesFinal.setCustomer(customer);
             //servicesFinal.setCustomerUID("1");
             servicesFinal.setDescription(problem_description);
             servicesFinal.setNumOfLabourers(Long.valueOf(number_string));
@@ -338,17 +345,17 @@ public class Form2Activity extends AppCompatActivity {
 
         //map.put("labourUID", "");
         map.put("customerUID", firebaseAuth.getUid());
+        map.put("isApplyable",true);
+        map.put("isPaid",false);
         map.put("customerAmount", servicesFinal.getCustomerAmount());
         map.put("description", servicesFinal.getDescription());
+        map.put("status","incoming");
         // map.put("feedback","");
         map.put("skill", servicesFinal.getSkill());
         map.put("title",servicesFinal.getTitle());
         //map.put("images", pictures);
         //map.put("labourResponses", new HashMap<String, Long>());
-      /*  map.put("addressLine1",services.getAddressLine1());
-        map.put("addressLine2",services.getAddressLine2());
-        map.put("city",services.getCity());
-        map.put("landmark",services.getLandmark());*/
+
 
         if (pictures.size() > 0) {
             for (final Uri uri : pictures) {
@@ -386,10 +393,10 @@ public class Form2Activity extends AppCompatActivity {
 
                                         if (uris.size() == pictures.size()) {
                                             HashMap<String, Object> images = new HashMap<>();
-                                            images.put("images", uris);
+                                            map.put("images", uris);
                                             servicesFinal.setImages(uris);
                                             Log.d("tag", "before uploading service to database");
-                                            firebaseFirestore.collection("services").document(servicesFinal.getServiceId()).set(servicesFinal)
+                                            firebaseFirestore.collection("services").document(servicesFinal.getServiceId()).set(map)
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
@@ -409,6 +416,9 @@ public class Form2Activity extends AppCompatActivity {
                                                                         public void onSuccess(Void aVoid) {
 
                                                                             customer.getServices().add(servicesFinal.getServiceId());
+                                                                            if(customer.getIncomingServices() == null){
+                                                                                customer.setIncomingServices(new ArrayList<>());
+                                                                            }
                                                                             customer.getIncomingServices().add(servicesFinal);
                                                                             session.saveServices(servicesFinal);
                                                                             session.saveCustomer(customer);

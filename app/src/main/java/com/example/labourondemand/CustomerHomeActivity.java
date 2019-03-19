@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -53,6 +54,7 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.GeoQuery;
@@ -93,6 +95,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     private GeoPoint destination, geoPoint;
     private FirebaseInstanceId firebaseInstanceId;
 
+    private static final String TAG = "CustomerHomeActivity";
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -131,6 +134,9 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("sample");
+
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
@@ -142,7 +148,19 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
-
+                        firebaseFirestore.collection("customer").document(firebaseAuth.getUid()).update("token",token)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("TOKEN","SUCCESS");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("TOKEN Failure",e.toString());
+                                    }
+                                });
                         // Log and toast
                         //String msg = getString(R.string.msg_token_fmt, token);
                         Log.d("dcs", token);
@@ -341,6 +359,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
 
         /*horizontalScrollMenuView = (HorizontalScrollMenuView) findViewById(R.id.customer_home_hsmv);
         initMenu();*/
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -622,8 +641,8 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                 Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_show);
                 Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_hide);
 
-                navigation.startAnimation(slideDown);
-                navigation.setVisibility(View.GONE);
+//                navigation.startAnimation(slideDown);
+//                navigation.setVisibility(View.GONE);
 
                 //toolbar.startAnimation(slideUp);
                /* toolbar.animate()
