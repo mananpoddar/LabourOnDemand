@@ -96,6 +96,13 @@
             android:label="@string/title_activity_detail_service2"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+
+        <activity
+            android:name=".DetailAcceptedServiceActivity"
+            android:label="@string/title_activity_detail_service2"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+
         <activity
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile2"
