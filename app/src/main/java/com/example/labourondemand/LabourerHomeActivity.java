@@ -56,6 +56,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
     private ArrayList<CardVIewJobs> cardViewJobs = new ArrayList<CardVIewJobs>();
     private ViewPagerAdapterLabourer viewPagerAdapterLabourer; //= new ViewPagerAdapter(getSupportFragmentManager());
     private WrapContentViewPager viewPager;
+    private ArrayList<ServicesFinal> servicesFinalForLocation = new ArrayList<ServicesFinal>();
 
     private TabLayout tabsImages;
 
@@ -139,6 +140,27 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
 
         //viewPager.setAdapter(viewPagerAdapterLabourer);
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mMap.clear();
+                LatLng sydney = new LatLng(servicesFinalForLocation.get(position).getDestinationLatitude(),servicesFinalForLocation.get(position).getDestinationLongitude() );
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private Boolean runtime_permissions(Context context) {
@@ -192,10 +214,9 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         mMap.setMaxZoomPreference(17);
         Log.d("tag", "customer Home Activity onMapReady");
 
-        LatLng sydney = new LatLng(13.006355, 74.79641);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
+//        LatLng sydney = new LatLng(servicesFinalForLocation.get(0).getDestinationLatitude(), servicesFinalForLocation.get(0).getDestinationLongitude());
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         if (!runtime_permissions(getApplicationContext())) {
             Log.d("service onMapReady", "yessss");
@@ -338,6 +359,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
                                 // Log.d("service fetched", documentSnapshot.getString("serviceId"));
                                 ServicesFinal servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
                                 servicesFinal.setServiceId(documentSnapshot.getId());
+                                servicesFinalForLocation.add(servicesFinal);
                                 //servicesFinal.setCustomerUID(documentSnapshot.getString("customerUID"));
                                 Log.d("I don't know", "+" + servicesFinal.getCustomerUID() + "!");
                                 //final ServicesFinal finalServices = servicesFinal;
