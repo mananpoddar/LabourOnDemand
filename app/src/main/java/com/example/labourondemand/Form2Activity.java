@@ -108,7 +108,7 @@ public class Form2Activity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         session = new SessionManager(getApplicationContext());
 
-        skillPic = findViewById(R.id.form2_skill_iv);
+        skillPic = findViewById(R.id.activity_form2_iv_skill);
         skillText = findViewById(R.id.form2_skill_tv);
         choose = findViewById(R.id.form2_choose_iv);
         viewPager = findViewById(R.id.activity_form2_vp);
@@ -402,7 +402,7 @@ public class Form2Activity extends AppCompatActivity {
                                                             /*HashMap<String, String> m = new HashMap<>();
                                                             m.put("currentService", FieldValue.arrayUnion(services.getServiceID()));*/
                                                             firebaseFirestore.collection("customer").document(customer.getId()).
-                                                                    update("currentServices",FieldValue.arrayUnion(servicesFinal.getServiceId()))
+                                                                    update("services",FieldValue.arrayUnion(servicesFinal.getServiceId()))
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {

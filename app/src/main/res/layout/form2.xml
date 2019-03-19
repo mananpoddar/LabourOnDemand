@@ -100,7 +100,7 @@
                     android:background="@color/white">
 
                     <ImageView
-                        android:id="@+id/form2_skill_iv"
+                        android:id="@+id/activity_form2_iv_skill"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -121,7 +121,7 @@
                         android:text="Carpenter"
                         android:textSize="@dimen/text_size_large"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/form2_skill_iv"
+                        app:layout_constraintStart_toEndOf="@+id/activity_form2_iv_skill"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </android.support.constraint.ConstraintLayout>
