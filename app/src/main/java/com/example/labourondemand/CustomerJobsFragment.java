@@ -2,6 +2,7 @@ package com.example.labourondemand;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,15 +13,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 /**
@@ -71,22 +83,21 @@ public class CustomerJobsFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         if (bundle != null) {
-            customer = bundle.getParcelable("customer");
+            customer = (CustomerFinal) bundle.getSerializable("customer");
+            currentService = (ServicesFinal) bundle.getSerializable("service");
+            Log.d(TAG, "onCreate: bundle recieved");
         }
     }
 
-    private Customer customer;
+    private CustomerFinal customer;
+    private ServicesFinal currentService;
     private RecyclerView recyclerView;
-    private DashboardAdapter customerDashboardAdapter;
+    private CustomerJobsAdapter customerJobsAdapter;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private Services services = new Services();
     private TextView noResponse;
-
-    //vars(demo)
-    private ArrayList<String> mNames = new ArrayList<>();
-    private ArrayList<String> mFroms = new ArrayList<>();
-    private ArrayList<String> mTos = new ArrayList<>();
+    private Button done;
+    private ImageView skillPic;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,101 +106,192 @@ public class CustomerJobsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_customer_jobs, container, false);
 
         noResponse = view.findViewById(R.id.customer_dashboard2_tv_no_response);
-        customer = (Customer) mActivity.getIntent().getExtras().get("customer");
-        //services = (Services) getIntent().getExtras().get("services");
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-//        recyclerView = view.findViewById(R.id.customer_jobs_rv);
-//        customerDashboardAdapter = new DashboardAdapter(getActivity() ,1,new ArrayList<Labourer>(), services);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        recyclerView.setAdapter(customerDashboardAdapter);
-//        recyclerView.setHasFixedSize(false);
-        //fetchLabourResponses();
+//        Spinner spin = (Spinner) view.findViewById(R.id.spinner);
+//        spin.setOnItemSelectedListener();
+//
+//        //Creating the ArrayAdapter instance having the country list
+//        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,country);
+//        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        //Setting the ArrayAdapter data on the Spinner
+//        spin.setAdapter(aa);
 
-        initText();
 
-        //dummy for presenting
-        RecyclerView recyclerView = view.findViewById(R.id.customer_jobs_rv);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), mNames, mFroms, mTos);
-        recyclerView.setAdapter(adapter);
+        skillPic = view.findViewById(R.id.customer_jobs_toolbox);
+
+        //add right job type image
+        if(currentService.getSkill().equals("Carpenter"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_carpenter_tools_colour));
+        }else if(currentService.getSkill().equals("Plumber"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_plumber_tools));
+        }else if(currentService.getSkill().equals("Electrician"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_electric_colour));
+        }else if(currentService.getSkill().equals("Painter"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_paint_roller));
+        }else if(currentService.getSkill().equals("Constructor"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_construction_colour));
+        }else if(currentService.getSkill().equals("Chef"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_cooking_colour));
+        }
+
+        done = view.findViewById(R.id.customer_jobs_done_btn);
+
+        Log.d("currentService", currentService.toString() + "!");
+        Log.d("customerinFragment", customer.toString() + "!");
+
+        recyclerView = view.findViewById(R.id.customer_jobs_rv);
+        if (currentService.getLabourers() == null) {
+            currentService.setLabourers(new ArrayList<>());
+        }
+        customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(customerJobsAdapter);
+        recyclerView.setHasFixedSize(false);
+
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String st = "";
+                int mYear, mMonth, mDay, mHour, mMinute;
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMinute = c.get(Calendar.MINUTE);
+
+                st = st+mYear+"/"+mMonth+"/"+mDay;
+                st = st+"/"+mHour+"/"+mMinute;
+               /* if(customerJobsAdapter.isDone()){
+
+                }else{
+                    Toast.makeText(view.getContext(),"")
+                }*/
+
+               firebaseFirestore.collection("service").document(currentService.getServiceId())
+                       .update("endTime",st)
+                       .addOnSuccessListener(new OnSuccessListener<Void>() {
+                           @Override
+                           public void onSuccess(Void aVoid) {
+                               firebaseFirestore.collection("customer").document(customer.getId())
+                                       .update("notPaidService",currentService.getServiceId(),
+                                               "notReviewedService",currentService.getServiceId())
+                                       .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                           @Override
+                                           public void onSuccess(Void aVoid) {
+                                               Intent intent = new Intent(view.getContext(),PaymentActivity.class);
+                                               intent.putExtra("service",currentService);
+                                               intent.putExtra("customer",customer);
+                                               startActivity(intent);
+                                           }
+                                       })
+                                       .addOnFailureListener(new OnFailureListener() {
+                                           @Override
+                                           public void onFailure(@NonNull Exception e) {
+
+                                           }
+                                       });
+
+
+                           }
+                       })
+                       .addOnFailureListener(new OnFailureListener() {
+                           @Override
+                           public void onFailure(@NonNull Exception e) {
+
+                           }
+                       });
+            }
+        });
+
+        firebaseFirestore.collection("services").document(currentService.getServiceId())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot snapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+
+                        if (e != null) {
+                            Log.w(TAG, "listen:error", e);
+                            return;
+                        }
+
+
+                        if (snapshot != null && snapshot.exists()) {
+                            Log.d(TAG, "Current data: " + snapshot.getData());
+                            ServicesFinal updatedService = snapshot.toObject(ServicesFinal.class);
+
+                            customerJobsAdapter.clear();
+                            customerJobsAdapter.setService(updatedService);
+
+                            if (updatedService.getLabourerResponses() != null) {
+                                for (String s : updatedService.getLabourerResponses().keySet()) {
+
+                                    firebaseFirestore.collection("labourer").document(s)
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    LabourerFinal labourerFinal = documentSnapshot.toObject(LabourerFinal.class);
+                                                    customerJobsAdapter.addLabourer(labourerFinal);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+
+                                                }
+                                            });
+                                }
+                            }
+                            /*ArrayList<LabourerFinal> labourersToBeAdded = updatedService.getLabourers();
+                            labourersToBeAdded.removeAll(currentService.getLabourers());
+                            for(int i = 0; i < labourersToBeAdded.size(); i++) {
+                                customerJobsAdapter.addLabourer(labourersToBeAdded.get(i));
+                            }*/
+                        } else {
+                            Log.d(TAG, "Current data: null");
+                        }
+
+                    }
+                });
 
         return view;
     }
 
-    //dummy function
-    private void initText() {
-        //Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+    void sortLabourerBasedOnPrice() {
+        ArrayList<LabourerFinal> labourers = customerJobsAdapter.getLabourers();
 
-        mNames.add("Shanthanu");
-        mNames.add("Varun");
-        mNames.add("Narayan");
-        mNames.add("Prajwal");
-        mNames.add("Manan");
-        mNames.add("Srivatsan");
-        mNames.add("dummy 1");
-        mNames.add("dummy 2");
-        mNames.add("dummy 3");
-
-        mFroms.add("Bombay");
-        mFroms.add("Delhi");
-        mFroms.add("Udupi");
-
-        mTos.add("Udupi");
-        mTos.add("Delhi");
-        mTos.add("Bombay");
-
-        for(int i = 0; i < 6; i++) {
-            mFroms.add("location" + i);
-            mTos.add("location" + (9+i));
+        for(int i = 0; i < labourers.size(); i++) {
+            int min = 0;
+            for(int j = i+1; j < labourers.size(); j++) {
+                if(currentService.getLabourerResponses().get(labourers.get(i).getId()) < currentService.getLabourerResponses().get(labourers.get(i).getId())) {
+                    min = i;
+                }
+            }
+            customerJobsAdapter.swapItems(i, min);
         }
     }
 
-    private void fetchLabourResponses() {
+    void sortLabourerBasedOnRating() {
+        ArrayList<LabourerFinal> labourers = customerJobsAdapter.getLabourers();
 
-        firebaseFirestore.collection("services").document(customer.getCurrentService()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+        for(int i = 0; i < labourers.size(); i++) {
+            int max = 0;
+            for(int j = i+1; j < labourers.size(); j++) {
+                if(labourers.get(i).getAverageRating() > labourers.get(max).getAverageRating()) {
+                    max = i;
+                }
+            }
+            customerJobsAdapter.swapItems(i, max);
+        }
 
-                        Log.d("service in dashboard22", customer.getCurrentService());
-                        services = documentSnapshot.toObject(Services.class);
-                        services.setServiceID(customer.getCurrentService());
-                        Log.d("service in dashboard22", services.getAddressLine1()+"!");
-                        if(services.getLabourerResponses() != null) {
-                            noResponse.setVisibility(View.GONE);
-                            customerDashboardAdapter.setServiceAndCustomer(services, customer);
-                            Log.d("customerboardAdapter",services.getLabourerResponses().toString());
-                            for (final String s : services.getLabourerResponses().keySet()) {
-                                firebaseFirestore.collection("labourer").document(s)
-                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        Labourer labourer = new Labourer();
-                                        labourer = documentSnapshot.toObject(Labourer.class);
-                                        labourer.setCurrentServicePrice(services.getLabourerResponses().get(s));
-                                        customerDashboardAdapter.addedFromCustomer(labourer);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-
-                                    }
-                                });
-                            }
-
-                        }else{
-                            noResponse.setText("No Response from any Labourers");
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -205,8 +307,8 @@ public class CustomerJobsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context instanceof Activity) {
-                mActivity = (Activity) context;
+        if (context instanceof Activity) {
+            mActivity = (Activity) context;
         }
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;

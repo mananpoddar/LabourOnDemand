@@ -1,12 +1,18 @@
 package com.example.labourondemand;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,9 +23,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import android.view.View;
+import android.widget.RelativeLayout;
+
+import com.darwindeveloper.horizontalscrollmenulibrary.custom_views.HorizontalScrollMenuView;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -32,7 +47,7 @@ import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 
-public class LabourerHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CardVIewJobs.OnFragmentInteractionListener {
+public class LabourerHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CardVIewJobs.OnFragmentInteractionListener, OnMapReadyCallback {
 
     protected DrawerLayout drawerLayout;
     protected NavigationView navigationView;
@@ -45,14 +60,23 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
     private ArrayList<Bundle> bundles = new ArrayList<>();
     private ArrayList<CardVIewJobs> cardViewJobs = new ArrayList<CardVIewJobs>();
     private ViewPagerAdapterLabourer viewPagerAdapterLabourer; //= new ViewPagerAdapter(getSupportFragmentManager());
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
+    private WrapContentViewPager viewPager;
+
+    private TabLayout tabsImages;
+
+    private GoogleMap mMap;
+    private SupportMapFragment mapFragment;
+    private View mapView;
+
 
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_labourer_home);
+
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.labourer_home_map);
+        mapView = mapFragment.getView();
 
         toolbar = findViewById(R.id.labourer_home_tb);
         drawerLayout = findViewById(R.id.labourer_home_dl);
@@ -69,55 +93,25 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        tabLayout = findViewById(R.id.labourer_home_tl);
         viewPager = findViewById(R.id.labourer_home_vp);
         viewPagerAdapterLabourer = new ViewPagerAdapterLabourer(getSupportFragmentManager());
         CardVIewJobs c = new CardVIewJobs();
 
-        viewPagerAdapterLabourer.addFragment(c,"deddescs");
-        viewPagerAdapterLabourer.addFragment(new CardVIewJobs(),"cdc");
+        //viewPagerAdapterLabourer.addFragment(c,"deddescs");
+        //viewPagerAdapterLabourer.addFragment(new CardVIewJobs(),"cdc");
         viewPager.setAdapter(viewPagerAdapterLabourer);
-        tabLayout.setupWithViewPager(viewPager);
 
         labourerFinal = (LabourerFinal) getIntent().getExtras().get("labourer");
-        Log.d("labourerHome",labourerFinal.toString());
 
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("cd", "getInstanceId failed", task.getException());
-                            return;
-                        }
+        Log.d("labourerHome", labourerFinal.toString());
 
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-                        firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).update("token",token)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("TOKEN","SUCCESS");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d("TOKEN Failure",e.toString());
-                                    }
-                                });
-                        // Log and toast
-                        //String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d("dcs", token);
-                        Toast.makeText(LabourerHomeActivity.this, token, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+       /* slide = new Slide(this, new ArrayList<String>());
+        viewPager.setAdapter(slide);*/
 
-                    }
-                });
+        tabsImages = findViewById(R.id.labourer_home_tl);
+        tabsImages.setupWithViewPager(viewPager, true);
+        //Log.d("MAP",context.getPackageManager().getPackageInfo("com.google.android.gms",0).versionName);
+
 //
 //        if (labourerFinal.getCurrentService() == null) {
 //            Log.d("tagggg",labourerFinal.getSkill()+"!");
@@ -151,6 +145,88 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         //viewPagerAdapter.addFragment(hello2, "Hello2");*/
 
         //viewPager.setAdapter(viewPagerAdapterLabourer);
+
+    }
+
+    private Boolean runtime_permissions(Context context) {
+        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+            return true;
+        }
+        // locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+        if (mMap != null) {
+            mMap.setMyLocationEnabled(true);
+            // mMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
+            // mMap.setOnMyLocationClickListener(onMyLocationClickListener);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setCompassEnabled(true);
+        }
+        return false;
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 100) {
+
+            Log.d("results",grantResults.toString()+"!");
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("onReqPermissionResult", String.valueOf(requestCode));
+
+                //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+                //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
+                if (mMap != null) {
+                    mMap.setMyLocationEnabled(true);
+                   // mMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
+                    //mMap.setOnMyLocationClickListener(onMyLocationClickListener);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    mMap.getUiSettings().setCompassEnabled(true);
+                }
+            } else {
+                runtime_permissions(getApplicationContext());
+            }
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setMaxZoomPreference(17);
+        Log.d("tag", "customer Home Activity onMapReady");
+
+        LatLng sydney = new LatLng(13.006355, 74.79641);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
+        if (!runtime_permissions(getApplicationContext())) {
+            Log.d("service onMapReady", "yessss");
+        }
+
+        if (mapView != null && mapView.findViewById(Integer.parseInt("1")) != null) {
+            // Get the button view
+            View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+            // and next place it, on bottom right (as Google Maps app)
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+            // position on right bottom
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+            layoutParams.setMargins(0, 0, 30, 220);
+
+            mapView.setBackgroundColor(getResources().getColor(R.color.lightRed));
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapFragment.getMapAsync(this);
 
     }
 
@@ -266,17 +342,32 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
                             for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
 
                                 Log.d("tag", labourerFinal.getSkill() + "!" + documentSnapshot.get("skill") + "!" + documentSnapshot.getData().toString());
-                                Log.d("service fetched", documentSnapshot.getString("serviceId"));
+                                // Log.d("service fetched", documentSnapshot.getString("serviceId"));
                                 ServicesFinal servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
+                                servicesFinal.setServiceId(documentSnapshot.getId());
                                 //servicesFinal.setCustomerUID(documentSnapshot.getString("customerUID"));
-                                Log.d("I don't know", "+"+servicesFinal.getCustomerUID()+"!");
+                                Log.d("I don't know", "+" + servicesFinal.getCustomerUID() + "!");
                                 //final ServicesFinal finalServices = servicesFinal;
                                 //ServicesFinal finalServicesFinal = servicesFinal;
                                 //firebaseFirestore.collection("customer").document(servicesFinal.getCustomerUID())
                                 firebaseFirestore.collection("customer").document(servicesFinal.getCustomerUID()).get()
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
-                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            public void onSuccess(DocumentSnapshot documentSnapshot1) {
+                                                Log.d("doc00", documentSnapshot1.getData() + "!00");
+                                                //CustomerFinal customerFinal = documentSnapshot1.toObject(CustomerFinal.class);
+                                                //Log.d("cus", customerFinal.toString() + "!");
+                                                Log.d("service", servicesFinal.toString() + " hi");
+                                                //servicesFinal.setCustomer(customerFinal);
+                                                Bundle bundle = new Bundle();
+                                                bundle.putSerializable("services", servicesFinal);
+                                                bundle.putSerializable("labourer",labourerFinal);
+                                                CardVIewJobs cv = new CardVIewJobs();
+                                                cv.setArguments(bundle);
+                                                viewPagerAdapterLabourer.addFragment(cv, "cc");
+                                                viewPagerAdapterLabourer.notifyDataSetChanged();
+                                                //viewPager.setAdapter(viewPagerAdapterLabourer);
+
                                                 // To add code to add to viewPager
                                                /* bundles.add(new Bundle());
                                                 bundles.get(j).putString("key", servicesFinal.getCustomerUID());

@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -36,7 +37,7 @@ public class DetailServiceActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private Services services = new Services();
+    private ServicesFinal services = new ServicesFinal();
     private EditText description, addressLine1, addressLine2, landmark, city;
     private Button submitButton;
     private ViewPager viewPager;
@@ -56,7 +57,7 @@ public class DetailServiceActivity extends AppCompatActivity
     private Button submit;
     private String TAG = ProfileActivity.class.getName();
     private Boolean isLabourer = false, isEditting;
-    private Labourer labourer = new Labourer();
+    private LabourerFinal labourer = new LabourerFinal();
     private TextView name;
     private CircleImageView photo;
     private ProgressBar progressBar;
@@ -82,19 +83,22 @@ public class DetailServiceActivity extends AppCompatActivity
         navigationView = findViewById(R.id.detail_service_nav);
         navigationView.setNavigationItemSelectedListener(this);
 
-        services = (Services) getIntent().getExtras().get("service");
+        services = (ServicesFinal) getIntent().getSerializableExtra("services");
+        labourer = (LabourerFinal) getIntent().getSerializableExtra("labourer");
         viewPagerImages = findViewById(R.id.detail_service_vp_images);
         viewPagerData = findViewById(R.id.detail_service_vp_data);
         tabs = findViewById(R.id.detail_service_tl);
         tabsImages = findViewById(R.id.detail_service_tl_images);
         tabsImages.setupWithViewPager(viewPagerImages,true);
 
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("services", services);
+        bundle.putSerializable("labourer",labourer);
+        Log.d("service detail",services.toString());
         slide = new Slide(this, services.getImages());
         viewPagerImages.setAdapter(slide);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("services", services);
 
         ServiceDescriptionFragment serviceDescriptionFragment = new ServiceDescriptionFragment();
         ServiceAddressFragment serviceAddressFragment = new ServiceAddressFragment();

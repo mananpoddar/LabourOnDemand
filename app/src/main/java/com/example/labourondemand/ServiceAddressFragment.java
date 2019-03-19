@@ -59,11 +59,11 @@ public class ServiceAddressFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            services = bundle.getParcelable("services");
+            services = (ServicesFinal) bundle.getSerializable("services");
         }
     }
 
-    private Services services;
+    private ServicesFinal services;
     private TextView a1, a2, landmark, city;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,10 +76,10 @@ public class ServiceAddressFragment extends Fragment {
         landmark = view.findViewById(R.id.service_address_tv_landmark);
         city = view.findViewById(R.id.service_address_tv_city);
 
-        city.setText(services.getCity());
-        landmark.setText(services.getLandmark());
-        a1.setText(services.getAddressLine1());
-        a2.setText(services.getAddressLine2());
+        //city.setText(services.getCity());
+        //landmark.setText(services.getLandmark());
+        //  a1.setText(services.getAddressLine1());
+        //  a2.setText(services.getAddressLine2());
 
         return view;
     }

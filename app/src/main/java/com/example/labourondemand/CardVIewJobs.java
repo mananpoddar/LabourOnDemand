@@ -1,13 +1,28 @@
 package com.example.labourondemand;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 
 /**
@@ -29,7 +44,10 @@ public class CardVIewJobs extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
+    private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
+    private CustomerFinal customerFinal;
+    private LabourerFinal labourerFinal;
     public CardVIewJobs() {
         // Required empty public constructor
     }
@@ -53,6 +71,7 @@ public class CardVIewJobs extends Fragment {
     }
 
     String display;
+    private ServicesFinal servicesFinal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,8 +79,11 @@ public class CardVIewJobs extends Fragment {
 
         Bundle bundle = this.getArguments();
         if(bundle != null) {
+            Log.d(TAG, "onCreate: having fun");
            // display = bundle.getString("key", "Error");
-            ServicesFinal servicesFinal = (ServicesFinal) bundle.getSerializable("services");
+            servicesFinal = (ServicesFinal) bundle.get("services");
+            labourerFinal = (LabourerFinal) bundle.get("labourer");
+            Log.d(TAG, "onCreate: servicesFinal: " + servicesFinal.toString()+"!");
         }
 
     }
@@ -77,8 +99,40 @@ public class CardVIewJobs extends Fragment {
             display = bundle.getString("key","Error");
         }
 
-        TextView textView = view.findViewById(R.id.fragment_card_view_jobs_tv_name);
-        textView.setText("cscscdzsc");
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+//        Bundle bundle = this.getArguments();
+//        if(bundle != null) {
+//            servicesFinal = (ServicesFinal) bundle.getSerializable("services");
+//            //display = bundle.getString("key","Error");
+//        }
+        //if(servicesFinal != null)
+       // {
+            Log.d("service passed",  servicesFinal.toString()+"!");
+        //}
+        TextView amount = view.findViewById(R.id.fragment_card_view_jobs_tv_customer_amount);
+        amount.setText(servicesFinal.getCustomerAmount().toString());
+        fetchCustomer(servicesFinal.getCustomerUID());
+        //Log.d("NULL?",servicesFinal.getCustomerUID());
+        Log.d("Service info", servicesFinal.getCustomerUID());
+
+        //servicesFinal.setCustomer(fetchCustomer(servicesFinal.getCustomerUID()));
+
+        //TextView name = view.findViewById(R.id.fragment_card_view_jobs_tv_name);
+        //name.setText(servicesFinal.getCustomer().getName());
+
+        View cardVIewJobs = view.findViewById(R.id.fragment_card_view_jobs_cv);
+
+        cardVIewJobs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), DetailServiceActivity.class);
+                intent.putExtra("services",servicesFinal);
+                intent.putExtra("labourer",labourerFinal);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
@@ -121,4 +175,29 @@ public class CardVIewJobs extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    CustomerFinal fetchCustomer(String CustomerUID){
+        firebaseFirestore.collection("customer").document(CustomerUID).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        //labourer = new Labourer();
+                        if (documentSnapshot.getData() != null) {
+                            customerFinal = documentSnapshot.toObject(CustomerFinal.class);
+                            Log.d("fetched", documentSnapshot.getData().toString() + "!");
+
+                        } else {
+                            Log.d("not fetched", "null");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+        return customerFinal;
+    }
+
 }

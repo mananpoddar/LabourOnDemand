@@ -55,6 +55,7 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
     private CustomerHistoryAdapter customerHistoryAdapter;
 //    private CustomerFinal customer;
 
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

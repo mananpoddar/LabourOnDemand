@@ -52,18 +52,19 @@ public class ServiceDescriptionFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    private ServicesFinal services;
+    private LabourerFinal labourerFinal;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            services = bundle.getParcelable("services");
+            services = (ServicesFinal) bundle.getSerializable("services");
+
         }
     }
 
-    private Services services;
     private TextView tags, description, skill;
 
     @Override
@@ -75,8 +76,8 @@ public class ServiceDescriptionFragment extends Fragment {
         description = view.findViewById(R.id.service_description_tv_description);
         tags = view.findViewById(R.id.service_description_tv_tags);
 
-        skill.setText(services.getSkill());
-        description.setText(services.getDescription());
+        skill.setText(services.getSkill().toString());
+        description.setText(services.getDescription().toString());
         return view;
     }
 
