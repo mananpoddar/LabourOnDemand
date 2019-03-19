@@ -1,6 +1,5 @@
 package com.example.labourondemand;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,12 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +50,6 @@ public class LabourerHistoryActivity extends AppCompatActivity implements Naviga
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_labourer_history);
         context = this;
-
-
-
         toolbar = findViewById(R.id.labourer_history_tb);
         drawerLayout = findViewById(R.id.labourer_history_dl);
         navigationView = findViewById(R.id.labourer_history_nv);

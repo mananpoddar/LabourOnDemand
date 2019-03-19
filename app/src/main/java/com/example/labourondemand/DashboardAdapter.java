@@ -36,7 +36,7 @@ class   DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.MyViewHol
 
         public MyViewHolder(View view) {
             super(view);
-            name = view.findViewById(R.id.item_service_tv_name);
+            name = view.findViewById(R.id.item_service_tv_title);
             tags = view.findViewById(R.id.item_service_tv_tags);
             landmark = view.findViewById(R.id.item_service_tv_landmark);
             distance = view.findViewById(R.id.item_service_tv_distance);

@@ -67,7 +67,7 @@ public class SessionManager {
     public void saveLabourer(LabourerFinal labourerFinal){
 
         String json = gson.toJson(labourerFinal); // myObject - instance of MyObject
-        editor.putString(labourerFinal.getId(),json);
+        //editor.putString(labourerFinal.(),json);
         editor.commit();
     }
 
@@ -80,14 +80,14 @@ public class SessionManager {
     public void saveCustomer(CustomerFinal customerFinal){
 
         String json = gson.toJson(customerFinal); // myObject - instance of MyObject
-        Log.d("jsonsaveCustomer",json+"!");
+        Log.d("json",json+"!");
         editor.putString(customerFinal.getId(),json);
         editor.commit();
     }
 
     public CustomerFinal getCustomer(String customerUID){
         String json = pref.getString(customerUID, "");
-        Log.d("jsongetCustomer",json+"!");
+        Log.d("json",json+"!");
         CustomerFinal customerFinal = gson.fromJson(json, CustomerFinal.class);
         return customerFinal;
     }

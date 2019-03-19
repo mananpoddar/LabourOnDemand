@@ -1,5 +1,8 @@
 package com.example.labourondemand;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -17,6 +20,7 @@ public class ServicesFinal implements Serializable {
     private Double destinationLatitude, destinationLongitude;
     private CustomerFinal customer;
     private ArrayList<LabourerFinal> labourers;
+    private GeoPoint destination;
     private String startTime, endTime;
     private Boolean isPaid, isApplyable;
 
@@ -175,13 +179,13 @@ public class ServicesFinal implements Serializable {
         this.labourers = labourers;
     }
 
-   /* public GeoPoint getDestination() {
+    public GeoPoint getDestination() {
         return destination;
     }
 
     public void setDestination(GeoPoint destination) {
         this.destination = destination;
-    }*/
+    }
 
     public String getStartTime() {
         return startTime;
@@ -198,4 +202,33 @@ public class ServicesFinal implements Serializable {
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
+
+    @Override
+    public String toString() {
+        return "ServicesFinal{" +
+                "skill='" + skill + '\'' +
+                ", customerUID='" + customerUID + '\'' +
+                ", description='" + description + '\'' +
+                ", feedback='" + feedback + '\'' +
+                ", serviceId='" + serviceId + '\'' +
+                ", status='" + status + '\'' +
+                ", title='" + title + '\'' +
+                ", numOfLabourers=" + numOfLabourers +
+                ", customerAmount=" + customerAmount +
+                ", rating=" + rating +
+                ", labourerResponses=" + labourerResponses +
+                ", images=" + images +
+                ", selectedLabourerUID=" + selectedLabourerUID +
+                ", destinationLatitude=" + destinationLatitude +
+                ", destinationLongitude=" + destinationLongitude +
+                ", customer=" + customer +
+                ", labourers=" + labourers +
+                ", destination=" + destination +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", isPaid=" + isPaid +
+                ", isApplyable=" + isApplyable +
+                '}';
+    }
+
 }

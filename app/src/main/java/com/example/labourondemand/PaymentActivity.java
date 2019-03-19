@@ -3,13 +3,13 @@ package com.example.labourondemand;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,10 +18,7 @@ import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -33,7 +30,6 @@ public class PaymentActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LabourerAdapter labourerAdapter;
     private ProgressBar progressBar;
-
 
 
     @Override
@@ -68,45 +64,30 @@ public class PaymentActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 customerFinal.setWallet(customerFinal.getWallet() - (servicesFinal.getNumOfLabourers() * servicesFinal.getCustomerAmount()));
-                                firebaseFirestore.collection("service").document(servicesFinal.getServiceId())
-                                        .update("isPaid", true)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.d(TAG, "onSuccess: Service successfully PAID.");
-                                                for (LabourerFinal labourerFinal : servicesFinal.getLabourers()) {
-                                                    firebaseFirestore.collection("labourer").document(labourerFinal.getId())
-                                                            .update("wallet", labourerFinal.getWallet() + servicesFinal.getCustomerAmount())
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    if(servicesFinal.getLabourers().indexOf(labourerFinal) == servicesFinal.getLabourers().size()-1)
-                                                                    {   progressBar.setVisibility(View.GONE);
-                                                                        Intent intent = new Intent(PaymentActivity.this, ReviewActivity.class);
-                                                                        intent.putExtra("customer",customerFinal);
-                                                                        intent.putExtra("services",servicesFinal);
-                                                                        startActivity(intent);
-                                                                        finish();
-                                                                    }
-                                                                }
-                                                            })
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
 
-                                                                }
-                                                            });
+                                for (LabourerFinal labourerFinal : servicesFinal.getLabourers()) {
+                                    firebaseFirestore.collection("labourer").document(labourerFinal.getId())
+                                            .update("wallet", labourerFinal.getWallet() + servicesFinal.getCustomerAmount())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    if(servicesFinal.getLabourers().indexOf(labourerFinal) == servicesFinal.getLabourers().size()-1)
+                                                    {   progressBar.setVisibility(View.GONE);
+                                                        Intent intent = new Intent(PaymentActivity.this, ReviewActivity.class);
+                                                        intent.putExtra("customer",customerFinal);
+                                                        intent.putExtra("services", servicesFinal);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
                                                 }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
 
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w(TAG, "onFailure: Service not updated.", e);
-                                            }
-                                        });
-
+                                                }
+                                            });
+                                }
 
                             }
                         })

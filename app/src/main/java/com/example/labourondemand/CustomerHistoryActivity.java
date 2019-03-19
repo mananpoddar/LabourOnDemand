@@ -52,6 +52,8 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
     private RecyclerView recyclerView;
     private Context context;
     private static final String TAG = "CustomerHistoryActivity";
+    private CustomerHistoryAdapter customerHistoryAdapter;
+//    private CustomerFinal customer;
 
 
     @SuppressLint("ResourceType")
@@ -80,21 +82,24 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
         navigation.getMenu().getItem(0).setChecked(true);
 
         customer = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
-        if(customer != null){
+        Log.d("ygy",customer.toString()+"!");
+        customerHistoryAdapter = new CustomerHistoryAdapter(context, new ArrayList<ServicesFinal>());
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        if(customer != null && customer.getHistoryServices() != null){
             recyclerView.setAdapter(new LabourerHistoryRVAdapter(context,customer.getHistoryServices()));
         }
         else {
-            firebaseFirestore.collection("services").get()
+            recyclerView.setAdapter(customerHistoryAdapter);
+//            for(String s : customer.getServices())
+            firebaseFirestore.collection("services").whereEqualTo("status","incoming").get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if(task.isSuccessful()){
-                                ArrayList<ServicesFinal> services = new ArrayList<>();
                                 for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
                                     ServicesFinal service = documentSnapshot.toObject(ServicesFinal.class);
-                                    services.add(service);
+                                    customerHistoryAdapter.added(service);
                                 }
-                                recyclerView.setAdapter(new LabourerHistoryRVAdapter(context,services));
                             }
                         }
                     });
