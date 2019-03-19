@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class LabourerFinal extends User implements Serializable {
 
     private ServicesFinal currentService;
+    private String currentServiceId;
     private Double averageRating;
     private Boolean isBusy;
     private ArrayList<String> skill;
@@ -96,10 +97,20 @@ public class LabourerFinal extends User implements Serializable {
         this.historyServices = historyServices;
     }
 
+    public String getCurrentServiceId() {
+        return currentServiceId;
+    }
+
+    public void setCurrentServiceId(String currentServiceId) {
+        this.currentServiceId = currentServiceId;
+    }
+
     @Override
     public String toString() {
         return "LabourerFinal{" +
                 "currentService=" + currentService +
+                ", currentServiceId='" + currentServiceId + '\'' +
+                ", averageRating=" + averageRating +
                 ", isBusy=" + isBusy +
                 ", skill=" + skill +
                 ", workExperience=" + workExperience +

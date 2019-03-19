@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -93,13 +94,15 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
     private GeoPoint destination, geoPoint;
     private FirebaseInstanceId firebaseInstanceId;
 
+    private static String TAG = "CustomerHomeActivity";
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Bundle bundle = new Bundle();
         Log.d("tag", "onSaveInstanceState");
 
-        outState.putString("skill", horizontalScrollViewAdapter.getSkill());
+        //outState.putString("skill", horizontalScrollViewAdapter.getSkill());
         //outState.putSerializable("labourersLocation", horizontalScrollViewAdapter.getLabourersLocation());
         //customer.setLabourersLocation(horizontalScrollViewAdapter.getLabourersLocation());
         outState.putSerializable("customer", customer);
@@ -120,6 +123,30 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         /*horizontalScrollViewAdapter = new HorizontalScrollViewAdapter(context, recyclerView, mMap,
                 savedInstanceState.getString("skill"), loc1, customer.getLabourersLocation());*/
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: start");
+        Log.d(TAG, "onStart: end");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart: customer " + customer.getId());
+        customer = session.getCustomer(customer.getId());
+        Log.d(TAG, "onRestart: customer " + customer.getName());
+        Log.d(TAG, "onRestart: start");
+        Log.d(TAG, "onRestart: end");
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.d(TAG, "onPostResume: start");
+        Log.d(TAG, "onPostResume: end");
     }
 
     @SuppressLint("ResourceType")
@@ -390,13 +417,10 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
             /*Intent intent = new Intent(this, PreviousActivity.class);
             startActivity(intent);*/
         } else if (id == R.id.nav_profile) {
-            /*Intent intent = new Intent(this, ProfileActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("labourer",labourer);
-            intent.putExtra("user", labourer);
-            intent.putExtra("type","labourer");
-            Log.d(tag, "labourer : " + labourer.getAddressLine1());
-            startActivity(intent);*/
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("customer", customer);
+            intent.putExtra("type", "customer");
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
             //Intent settings = new Intent(LabourerMainActivity.this,SettingsActivity.class);
             //startActivity(settings);
@@ -417,9 +441,18 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         return true;
     }
 
+    /*@Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_toolbar, menu);
+        menu.getItem(1).setEnabled(false);
+        return super.onPrepareOptionsMenu(menu);
+    }*/
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        menu.getItem(1).setEnabled(false);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }
@@ -622,8 +655,8 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                 Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_show);
                 Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_hide);
 
-                navigation.startAnimation(slideDown);
-                navigation.setVisibility(View.GONE);
+//                navigation.startAnimation(slideDown);
+//                navigation.setVisibility(View.GONE);
 
                 //toolbar.startAnimation(slideUp);
                /* toolbar.animate()

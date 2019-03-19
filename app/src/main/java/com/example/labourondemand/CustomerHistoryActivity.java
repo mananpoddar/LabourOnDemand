@@ -1,6 +1,7 @@
 package com.example.labourondemand;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,12 +11,33 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class CustomerHistoryActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -27,6 +49,10 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
     private String tag = LabourerMainActivity.class.getName();
     private BottomNavigationView navigation;
     private CustomerFinal customer;
+    private RecyclerView recyclerView;
+    private Context context;
+    private static final String TAG = "CustomerHistoryActivity";
+//    private CustomerFinal customer;
 
     @SuppressLint("ResourceType")
     @Override
@@ -40,7 +66,8 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
         drawerLayout = findViewById(R.id.customer_history_dl);
         navigationView = findViewById(R.id.customer_history_nv);
         navigation = findViewById(R.id.bottom_nav_view);
-
+        recyclerView = findViewById(R.id.customer_history_rv);
+        context = this;
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         setSupportActionBar(toolbar);
@@ -52,6 +79,70 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.getMenu().getItem(0).setChecked(true);
 
+        customer = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
+        if(customer != null){
+            recyclerView.setAdapter(new LabourerHistoryRVAdapter(context,customer.getHistoryServices()));
+        }
+        else {
+            firebaseFirestore.collection("services").get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                ArrayList<ServicesFinal> services = new ArrayList<>();
+                                for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                    ServicesFinal service = documentSnapshot.toObject(ServicesFinal.class);
+                                    services.add(service);
+                                }
+                                recyclerView.setAdapter(new LabourerHistoryRVAdapter(context,services));
+                            }
+                        }
+                    });
+        }
+
+        /*if(firebaseAuth.getUid()==null){
+            Log.d(TAG,"None");
+        }
+        else {
+            Log.d(TAG, firebaseAuth.getUid());
+        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("services");
+        Query query = databaseReference;
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    List<Service> services = new ArrayList<>();
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                        Service service = snapshot.getValue(Service.class);
+//                        services.add(service);
+//                    }
+//                    recyclerView.setAdapter(new LabourerHistoryRVAdapter(context,services));
+//                    //recyclerView.setLayoutManager(new LinearLayoutManager(CustomerHistoryActivity.this));
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+        DocumentReference docRef = firebaseFirestore.collection("services").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(e != null ){
+                    Log.w(TAG,"Listen Failed",e);
+                    return;
+                }
+
+                List<Service> services = new ArrayList<>();
+                for(QueryDocumentSnapshot doc :queryDocumentSnapshots){
+                    Service service = doc.
+                }
+            }
+        })*/
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
