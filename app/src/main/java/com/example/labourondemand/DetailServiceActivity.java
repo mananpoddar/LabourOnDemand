@@ -57,7 +57,7 @@ public class DetailServiceActivity extends AppCompatActivity
     private Button submit;
     private String TAG = ProfileActivity.class.getName();
     private Boolean isLabourer = false, isEditting;
-    private Labourer labourer = new Labourer();
+    private LabourerFinal labourer = new LabourerFinal();
     private TextView name;
     private CircleImageView photo;
     private ProgressBar progressBar;
@@ -84,6 +84,7 @@ public class DetailServiceActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         services = (ServicesFinal) getIntent().getSerializableExtra("services");
+        labourer = (LabourerFinal) getIntent().getSerializableExtra("labourer");
         viewPagerImages = findViewById(R.id.detail_service_vp_images);
         viewPagerData = findViewById(R.id.detail_service_vp_data);
         tabs = findViewById(R.id.detail_service_tl);
@@ -92,7 +93,7 @@ public class DetailServiceActivity extends AppCompatActivity
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("services", services);
-
+        bundle.putSerializable("labourer",labourer);
         Log.d("service detail",services.toString());
         slide = new Slide(this, services.getImages());
         viewPagerImages.setAdapter(slide);

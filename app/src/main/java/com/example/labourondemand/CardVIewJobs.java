@@ -47,7 +47,7 @@ public class CardVIewJobs extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private CustomerFinal customerFinal;
-
+    private LabourerFinal labourerFinal;
     public CardVIewJobs() {
         // Required empty public constructor
     }
@@ -82,6 +82,7 @@ public class CardVIewJobs extends Fragment {
             Log.d(TAG, "onCreate: having fun");
            // display = bundle.getString("key", "Error");
             servicesFinal = (ServicesFinal) bundle.get("services");
+            labourerFinal = (LabourerFinal) bundle.get("labourer");
             Log.d(TAG, "onCreate: servicesFinal: " + servicesFinal.toString()+"!");
         }
 
@@ -128,6 +129,7 @@ public class CardVIewJobs extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), DetailServiceActivity.class);
                 intent.putExtra("services",servicesFinal);
+                intent.putExtra("labourer",labourerFinal);
                 startActivity(intent);
             }
         });
