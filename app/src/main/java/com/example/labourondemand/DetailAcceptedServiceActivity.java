@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DetailAcceptedServiceActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ServiceAmountFragment.OnFragmentInteractionListener,
+        implements NavigationView.OnNavigationItemSelectedListener, AppliedServiceAmountFragment.OnFragmentInteractionListener,
         ServiceAddressFragment.OnFragmentInteractionListener,ServiceDescriptionFragment.OnFragmentInteractionListener {
 
     private DrawerLayout drawerLayout;

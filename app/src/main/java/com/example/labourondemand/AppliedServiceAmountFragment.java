@@ -74,14 +74,13 @@ public class AppliedServiceAmountFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            services = bundle.getParcelable("services");
+            services = (ServicesFinal)bundle.getSerializable("services");
         }
     }
 
-    private Services services;
+    private ServicesFinal services;
     private TextView customerAmount;
-    private TextInputEditText labourerAmount;
-    private Button submit;
+    private TextView labourerAmount;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
 
@@ -93,66 +92,66 @@ public class AppliedServiceAmountFragment extends Fragment {
 
         customerAmount = view.findViewById(R.id.service_amount_tv_customer_amount);
         labourerAmount = view.findViewById(R.id.service_amount_tiet_labourer_amount);
-        submit = view.findViewById(R.id.service_amount_btn_submit);
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-
-        //  customerAmount.setText(String.valueOf(services.getCustomerAmount()));
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-
-                if(labourerAmount.getText().toString() != null) {
-
-                    HashMap<String, HashMap<String, Long>> map = new HashMap<>();
-                    HashMap<String, Long> m = new HashMap<>();
-                    m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
-
-                    //TODO: updating labourResponse ;
-                    map.put("labourerResponses", m);
-                    services.setCustomerAmount(Long.valueOf(labourerAmount.getText().toString()));
-                    final String sid = services.getServiceID();
-                    //TODO:services.setLabourerResponses(m);
-                    Log.d("tag",sid+"!"+m.toString());
-                    firebaseFirestore.collection("services").document(sid).set(map,SetOptions.merge())
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    HashMap<String, String> lab = new HashMap<>();
-                                    lab.put("currentService", sid);
-
-                                    /*firebaseFirestore.collection("labourer").document(firebaseAuth.getUid())
-                                            .set(lab, SetOptions.merge())
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Intent intent = new Intent(view.getContext(), LabourerMainActivity.class);
-                                                    intent.putExtra("currentService", sid);
-                                                    Toast.makeText(v.getContext(),"Update",Toast.LENGTH_LONG).show();
-                                                    //startActivity(intent);
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.d("tag",e.toString());
-                                                }
-                                            });*/
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                        }
-                    });
-                }else{
-
-                    labourerAmount.setError("Give an amount and then submit");
-
-                }
-            }
-        });
+        Log.d("service id",services.getServiceId().toString());
+        customerAmount.setText(String.valueOf(services.getCustomerAmount()));
+      //  labourerAmount.setText(String.valueOf(ser));
+//
+//        submit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(final View v) {
+//
+//                if(labourerAmount.getText().toString() != null) {
+//
+//                    HashMap<String, HashMap<String, Long>> map = new HashMap<>();
+//                    HashMap<String, Long> m = new HashMap<>();
+//                    m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
+//
+//                    //TODO: updating labourResponse ;
+//                    map.put("labourerResponses", m);
+//                    services.setCustomerAmount(Long.valueOf(labourerAmount.getText().toString()));
+//                    final String sid = services.getServiceID();
+//                    //TODO:services.setLabourerResponses(m);
+//                    Log.d("tag",sid+"!"+m.toString());
+//                    firebaseFirestore.collection("services").document(sid).set(map,SetOptions.merge())
+//                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void aVoid) {
+//                                    HashMap<String, String> lab = new HashMap<>();
+//                                    lab.put("currentService", sid);
+//
+//                                    /*firebaseFirestore.collection("labourer").document(firebaseAuth.getUid())
+//                                            .set(lab, SetOptions.merge())
+//                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                @Override
+//                                                public void onSuccess(Void aVoid) {
+//                                                    Intent intent = new Intent(view.getContext(), LabourerMainActivity.class);
+//                                                    intent.putExtra("currentService", sid);
+//                                                    Toast.makeText(v.getContext(),"Update",Toast.LENGTH_LONG).show();
+//                                                    //startActivity(intent);
+//                                                }
+//                                            })
+//                                            .addOnFailureListener(new OnFailureListener() {
+//                                                @Override
+//                                                public void onFailure(@NonNull Exception e) {
+//                                                    Log.d("tag",e.toString());
+//                                                }
+//                                            });*/
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//
+//                        }
+//                    });
+//                }else{
+//
+//                    labourerAmount.setError("Give an amount and then submit");
+//
+//                }
+//            }
+//        });
 
         return view;
     }
