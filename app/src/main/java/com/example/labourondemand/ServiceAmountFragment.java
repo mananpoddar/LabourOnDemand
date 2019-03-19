@@ -100,6 +100,7 @@ public class ServiceAmountFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
+        // Dummy comment
       //  customerAmount.setText(String.valueOf(services.getCustomerAmount()));
 
         submit.setOnClickListener(new View.OnClickListener() {
