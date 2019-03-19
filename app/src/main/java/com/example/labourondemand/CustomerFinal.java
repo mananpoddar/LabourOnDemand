@@ -42,6 +42,9 @@ public class CustomerFinal extends User implements Serializable {
                 ", destinationLatitude=" + destinationLatitude +
                 ", destinationLongitude=" + destinationLongitude +
                 ", labourersLocation=" + labourersLocation +
+                ", notPaidService='" + notPaidService + '\'' +
+                ", notReviewedService='" + notReviewedService + '\'' +
+                ", user ='" + super.toString() + '\'' +
                 '}';
     }
 

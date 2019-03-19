@@ -194,6 +194,6 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
     }
 
     public Boolean isDone(){
-        return !service.getApplyable();
+        return !service.isApplyable();
     }
 }

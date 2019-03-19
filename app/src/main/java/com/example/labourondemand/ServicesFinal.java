@@ -50,20 +50,20 @@ public class ServicesFinal implements Serializable {
         this.destinationLongitude = destinationLongitude;
     }
 
-    public Boolean getApplyable() {
-        return isApplyable;
-    }
-
-    public void setApplyable(Boolean applyable) {
-        isApplyable = applyable;
-    }
-
-    public Boolean getPaid() {
+    public boolean isPaid() {
         return isPaid;
     }
 
-    public void setPaid(Boolean paid) {
+    public void setPaid(boolean paid) {
         isPaid = paid;
+    }
+
+    public boolean isApplyable() {
+        return isApplyable;
+    }
+
+    public void setApplyable(boolean applyable) {
+        isApplyable = applyable;
     }
 
     public String getTitle() {

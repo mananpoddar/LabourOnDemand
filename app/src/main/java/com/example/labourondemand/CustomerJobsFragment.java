@@ -252,8 +252,11 @@ public class CustomerJobsFragment extends Fragment {
 
                         if (snapshot != null && snapshot.exists()) {
                             Log.d(TAG, "Current data: " + snapshot.getData());
+                            Log.d("snapshotListen JOB frag",snapshot.getData()+"!");
                             ServicesFinal updatedService = snapshot.toObject(ServicesFinal.class);
                             updatedService.setServiceId(snapshot.getId());
+                            updatedService.setApplyable(snapshot.getBoolean("isApplyable"));
+                            updatedService.setPaid(snapshot.getBoolean("isPaid"));
                             customerJobsAdapter.clear();
                             customerJobsAdapter.setService(updatedService);
 
@@ -266,6 +269,7 @@ public class CustomerJobsFragment extends Fragment {
                                                 @Override
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     LabourerFinal labourerFinal = documentSnapshot.toObject(LabourerFinal.class);
+                                                    labourerFinal.setId(documentSnapshot.getId());
                                                     customerJobsAdapter.addLabourer(labourerFinal);
                                                 }
                                             })
