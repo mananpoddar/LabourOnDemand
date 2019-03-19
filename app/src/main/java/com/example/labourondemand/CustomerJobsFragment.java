@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -93,8 +95,8 @@ public class CustomerJobsFragment extends Fragment {
     private CustomerJobsAdapter customerJobsAdapter;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private Services services = new Services();
     private TextView noResponse;
+    private ImageView skillPic;
     private Button done, sort;
 
     @Override
@@ -107,9 +109,40 @@ public class CustomerJobsFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
+//        Spinner spin = (Spinner) view.findViewById(R.id.spinner);
+//        spin.setOnItemSelectedListener();
+//
+//        //Creating the ArrayAdapter instance having the country list
+//        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,country);
+//        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        //Setting the ArrayAdapter data on the Spinner
+//        spin.setAdapter(aa);
+
         /*Spinner spin = (Spinner) view.findViewById(R.id.spinner);
         spin.setOnItemSelectedListener();
 
+        skillPic = view.findViewById(R.id.customer_jobs_toolbox);
+
+        //add right job type image
+        if(currentService.getSkill().equals("Carpenter"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_carpenter_tools_colour));
+        }else if(currentService.getSkill().equals("Plumber"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_plumber_tools));
+        }else if(currentService.getSkill().equals("Electrician"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_electric_colour));
+        }else if(currentService.getSkill().equals("Painter"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_paint_roller));
+        }else if(currentService.getSkill().equals("Constructor"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_construction_colour));
+        }else if(currentService.getSkill().equals("Chef"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_cooking_colour));
+        }
         //Creating the ArrayAdapter instance having the country list
         ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,country);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -126,7 +159,7 @@ public class CustomerJobsFragment extends Fragment {
             currentService.setLabourers(new ArrayList<>());
         }
 
-        
+
 
         customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -153,19 +186,19 @@ public class CustomerJobsFragment extends Fragment {
                     Toast.makeText(view.getContext(),"")
                 }*/
 
-               firebaseFirestore.collection("service").document(services.getServiceID())
+               firebaseFirestore.collection("service").document(currentService.getServiceId())
                        .update("endTime",st)
                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                            @Override
                            public void onSuccess(Void aVoid) {
                                firebaseFirestore.collection("customer").document(customer.getId())
-                                       .update("notPaidService",services.getServiceID(),
-                                               "notReviewedService",services.getServiceID())
+                                       .update("notPaidService",currentService.getServiceId(),
+                                               "notReviewedService",currentService.getServiceId())
                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                                            @Override
                                            public void onSuccess(Void aVoid) {
                                                Intent intent = new Intent(view.getContext(),PaymentActivity.class);
-                                               intent.putExtra("services",services);
+                                               intent.putExtra("service",currentService);
                                                intent.putExtra("customer",customer);
                                                startActivity(intent);
                                            }
@@ -240,6 +273,35 @@ public class CustomerJobsFragment extends Fragment {
                 });
 
         return view;
+    }
+
+    void sortLabourerBasedOnPrice() {
+        ArrayList<LabourerFinal> labourers = customerJobsAdapter.getLabourers();
+
+        for(int i = 0; i < labourers.size(); i++) {
+            int min = 0;
+            for(int j = i+1; j < labourers.size(); j++) {
+                if(currentService.getLabourerResponses().get(labourers.get(i).getId()) < currentService.getLabourerResponses().get(labourers.get(i).getId())) {
+                    min = i;
+                }
+            }
+            customerJobsAdapter.swapItems(i, min);
+        }
+    }
+
+    void sortLabourerBasedOnRating() {
+        ArrayList<LabourerFinal> labourers = customerJobsAdapter.getLabourers();
+
+        for(int i = 0; i < labourers.size(); i++) {
+            int max = 0;
+            for(int j = i+1; j < labourers.size(); j++) {
+                if(labourers.get(i).getAverageRating() > labourers.get(max).getAverageRating()) {
+                    max = i;
+                }
+            }
+            customerJobsAdapter.swapItems(i, max);
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

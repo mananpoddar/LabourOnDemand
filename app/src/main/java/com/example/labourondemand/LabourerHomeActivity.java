@@ -394,6 +394,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
                                                 //servicesFinal.setCustomer(customerFinal);
                                                 Bundle bundle = new Bundle();
                                                 bundle.putSerializable("services", servicesFinal);
+                                                bundle.putSerializable("labourer",labourerFinal);
                                                 CardVIewJobs cv = new CardVIewJobs();
                                                 cv.setArguments(bundle);
                                                 viewPagerAdapterLabourer.addFragment(cv, "cc");
