@@ -14,15 +14,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.labourondemand.notifications.Api;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.okhttp.ResponseBody;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -96,6 +105,50 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
             public void onClick(View v) {
                 selectedLabourersUID = service.getSelectedLabourerUID();
                 if(selectedLabourersUID.size() < service.getNumOfLabourers()) {
+
+                    db.collection("labourer").document(labourer.getId())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            String token = documentSnapshot.getString("token");
+                            Retrofit retrofit = new Retrofit.Builder()
+                                    .baseUrl("https://labourondemand-8e636.firebaseapp.com/api/")
+                                    .addConverterFactory(GsonConverterFactory.create())
+                                    .build();
+
+                            Api api = retrofit.create(Api.class);
+                            String title = "JOB ACCEPTED";
+                            String body = "job accepted";
+                             Call<ResponseBody> call = api.sendNotification(token,title,body);
+
+                             call.enqueue(new Callback<ResponseBody>() {
+                                 @Override
+                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                     try {
+                                         Toast.makeText(context,response.body().string(),Toast.LENGTH_LONG).show();
+                                     } catch (IOException e) {
+                                         e.printStackTrace();
+                                     }
+                                 }
+
+                                 @Override
+                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                 }
+                             });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+
+
+
                     service.getSelectedLabourerUID().add(labourer.getId());
 
                     //selectedLabourersUID.add(labourer.getId());
