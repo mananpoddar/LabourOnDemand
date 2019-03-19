@@ -46,6 +46,8 @@ public class PaymentActivity extends AppCompatActivity {
         servicesFinal = (ServicesFinal) getIntent().getExtras().getSerializable("services");
         customerFinal = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
 
+
+
         recyclerView = findViewById(R.id.review_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         labourerAdapter = new LabourerAdapter(this,servicesFinal);

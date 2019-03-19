@@ -26,8 +26,11 @@ import android.view.MenuItem;
 
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.darwindeveloper.horizontalscrollmenulibrary.custom_views.HorizontalScrollMenuView;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -69,11 +72,41 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
     private View mapView;
 
 
+    static LabourerHomeActivity instance;
+    LocationRequest locationRequest;
+    FusedLocationProviderClient fusedLocationProviderClient;
+
+    public static LabourerHomeActivity getInstance() {
+        return instance;
+    }
+    TextView textView;
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_labourer_home);
+
+        instance = this;
+
+        //textView = findViewById(R.id.labourer_home_no_response_tv);
+
+         /*Dexter.withActivity(this)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        updateLocation();
+                    }
+                     @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(LabourerHomeActivity.this, "you nsna", Toast.LENGTH_LONG).show();
+                    }
+                     @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                     }
+                }).check();*/
+        this.startService(new Intent(this,MyLocationService .class));
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.labourer_home_map);
         mapView = mapFragment.getView();

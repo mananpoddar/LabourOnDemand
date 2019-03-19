@@ -95,7 +95,7 @@ public class CustomerJobsFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private Services services = new Services();
     private TextView noResponse;
-    private Button done;
+    private Button done, sort;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,17 +107,17 @@ public class CustomerJobsFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-        Spinner spin = (Spinner) view.findViewById(R.id.spinner);
+        /*Spinner spin = (Spinner) view.findViewById(R.id.spinner);
         spin.setOnItemSelectedListener();
 
         //Creating the ArrayAdapter instance having the country list
         ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,country);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
-        spin.setAdapter(aa);
+        spin.setAdapter(aa);*/
 
         done = view.findViewById(R.id.customer_jobs_done_btn);
-
+        sort = view.findViewById(R.id.customer_jobs_sort_btn);
         Log.d("currentService", currentService.toString() + "!");
         Log.d("customerinFragment", customer.toString() + "!");
 
@@ -125,6 +125,9 @@ public class CustomerJobsFragment extends Fragment {
         if (currentService.getLabourers() == null) {
             currentService.setLabourers(new ArrayList<>());
         }
+
+        
+
         customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(customerJobsAdapter);

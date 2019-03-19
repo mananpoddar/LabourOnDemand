@@ -110,7 +110,7 @@ public class Form2Activity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         session = new SessionManager(getApplicationContext());
 
-        progressBar = findViewById(R.id.form2_pb);
+        //progressBar = findViewById(R.id.form2_pb);
 
         skillPic = findViewById(R.id.form2_skill_iv);
         skillText = findViewById(R.id.form2_skill_tv);

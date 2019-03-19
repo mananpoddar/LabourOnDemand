@@ -19,10 +19,12 @@ public class ServicesFinal implements Serializable {
     private ArrayList<String> images, selectedLabourerUID;
     private Double destinationLatitude, destinationLongitude;
     private CustomerFinal customer;
-    private ArrayList<LabourerFinal> labourers;
+    private ArrayList<LabourerFinal> labourers, selectedLabourers;
     private GeoPoint destination;
     private String startTime, endTime;
     private Boolean isPaid, isApplyable;
+
+
 
     public ServicesFinal() {
     }
