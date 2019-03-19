@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 
@@ -74,11 +74,14 @@ public class ServiceAmountFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            services = bundle.getParcelable("services");
+            services = (ServicesFinal)bundle.getSerializable("services");
+            labourerFinal = (LabourerFinal)bundle.getSerializable("labourer");
+
         }
     }
 
-    private Services services;
+    private LabourerFinal labourerFinal;
+    private ServicesFinal services;
     private TextView customerAmount;
     private TextInputEditText labourerAmount;
     private Button submit;
@@ -97,7 +100,7 @@ public class ServiceAmountFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-        customerAmount.setText(String.valueOf(services.getCustomerAmount()));
+      //  customerAmount.setText(String.valueOf(services.getCustomerAmount()));
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,14 +110,22 @@ public class ServiceAmountFragment extends Fragment {
 
                     HashMap<String, HashMap<String, Long>> map = new HashMap<>();
                     HashMap<String, Long> m = new HashMap<>();
+                    //System.out.println(services.toString());
+                    Log.d("amount fragment",services.toString());
                     m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
+                    services.setLabourerResponses(m);
+//                    //TODO: updating labourResponse ;
 
                     //TODO: updating labourResponse ;
                     map.put("labourerResponses", m);
-                    services.setCustomerAmount(Long.valueOf(labourerAmount.getText().toString()));
-                    final String sid = services.getServiceID();
+                    final String sid = services.getServiceId();
+
                     //TODO:services.setLabourerResponses(m);
                     Log.d("tag",sid+"!"+m.toString());
+
+          //          Log.d("first service",labourerFinal.getServices().get(0));
+                    firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).update("services", FieldValue.arrayUnion(sid));
+
                     firebaseFirestore.collection("services").document(sid).set(map,SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override

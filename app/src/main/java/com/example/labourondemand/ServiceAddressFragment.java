@@ -54,8 +54,6 @@ public class ServiceAddressFragment extends Fragment {
     }
 
 
-    private ServicesFinal services;
-    private TextView a1, a2, landmark, city;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,10 +61,11 @@ public class ServiceAddressFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            services = bundle.getParcelable("services");
+            services = (ServicesFinal) bundle.getSerializable("services");
         }
     }
-
+    private ServicesFinal services;
+    private TextView a1, a2, landmark, city;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
