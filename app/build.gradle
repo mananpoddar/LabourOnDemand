@@ -58,6 +58,14 @@ dependencies {
     implementation 'com.github.imperiumlabs:GeoFirestore-Android:v1.1.1'
     implementation 'com.koalap:geofirestore-android:1.1.0'
 
+    // dexter runtime permissions
+    implementation 'com.karumi:dexter:5.0.0'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
+    // ButterKnife view binding
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
 }
 apply plugin: 'realm-android'
 apply plugin: 'com.google.gms.google-services'

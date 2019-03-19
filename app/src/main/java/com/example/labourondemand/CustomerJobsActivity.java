@@ -16,7 +16,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -34,7 +37,7 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
     private CustomerFinal customer;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
-    private ArrayList<ServicesFinal> currentServices;
+    private ArrayList<ServicesFinal> incomingServices;
 
 
     @SuppressLint("ResourceType")
@@ -61,25 +64,55 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
 
 
         customer = (CustomerFinal) getIntent().getSerializableExtra("customer");
-
-
         viewPager = findViewById(R.id.customer_jobs_vp);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
+        viewPager.setAdapter(viewPagerAdapter);
         //there should be multiple jobs
 
-        currentServices = customer.getCurrentServices();
 
-        for(int i = 0; i < currentServices.size(); i++) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("customer", customer);
-            bundle.putSerializable("service", currentServices.get(i));
-            CustomerJobsFragment customerJobsFragment = new CustomerJobsFragment();
-            customerJobsFragment.setArguments(bundle);
-            viewPagerAdapter.addFragment(customerJobsFragment, "Job" + i);
+
+        if(customer.getIncomingServices() == null){
+            customer.setIncomingServices(new ArrayList<>());
+
+            for(String s : customer.getServices()){
+                firebaseFirestore.collection("services").document(s)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                ServicesFinal servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
+                                servicesFinal.setServiceId(documentSnapshot.getId());
+                                customer.getIncomingServices().add(servicesFinal);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("customer", customer);
+                                bundle.putSerializable("service", servicesFinal);
+                                CustomerJobsFragment customerJobsFragment = new CustomerJobsFragment();
+                                customerJobsFragment.setArguments(bundle);
+                                viewPagerAdapter.addFragment(customerJobsFragment, "Job");
+                                viewPagerAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+            }
+        }else{
+            incomingServices = customer.getIncomingServices();
+
+            for(int i = 0; i < incomingServices.size(); i++) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("customer", customer);
+                bundle.putSerializable("service", incomingServices.get(i));
+                CustomerJobsFragment customerJobsFragment = new CustomerJobsFragment();
+                customerJobsFragment.setArguments(bundle);
+                viewPagerAdapter.addFragment(customerJobsFragment, "Job" + i);
+                viewPagerAdapter.notifyDataSetChanged();
+            }
         }
 
-        viewPager.setAdapter(viewPagerAdapter);
 
     }
 

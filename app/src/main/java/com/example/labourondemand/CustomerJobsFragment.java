@@ -2,10 +2,10 @@ package com.example.labourondemand;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,20 +13,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -79,8 +79,8 @@ public class CustomerJobsFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         if (bundle != null) {
-            customer =  bundle.getParcelable("customer");
-            currentService = bundle.getParcelable("service");
+            customer = (CustomerFinal) bundle.getSerializable("customer");
+            currentService = (ServicesFinal) bundle.getSerializable("service");
             Log.d(TAG, "onCreate: bundle recieved");
         }
     }
@@ -89,10 +89,11 @@ public class CustomerJobsFragment extends Fragment {
     private ServicesFinal currentService;
     private RecyclerView recyclerView;
     private CustomerJobsAdapter customerJobsAdapter;
-    private FirebaseFirestore db;
+    private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private Services services = new Services();
     private TextView noResponse;
+    private Button done;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,17 +102,80 @@ public class CustomerJobsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_customer_jobs, container, false);
 
         noResponse = view.findViewById(R.id.customer_dashboard2_tv_no_response);
-        db = FirebaseFirestore.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
+        done = view.findViewById(R.id.customer_jobs_done_btn);
+
+        Log.d("currentService", currentService.toString() + "!");
+        Log.d("customerinFragment", customer.toString() + "!");
+
         recyclerView = view.findViewById(R.id.customer_jobs_rv);
+        if (currentService.getLabourers() == null) {
+            currentService.setLabourers(new ArrayList<>());
+        }
         customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(customerJobsAdapter);
         recyclerView.setHasFixedSize(false);
 
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String st = "";
+                int mYear, mMonth, mDay, mHour, mMinute;
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMinute = c.get(Calendar.MINUTE);
 
-        db.collection("services").document(currentService.getServiceId())
+                st = st+mYear+"/"+mMonth+"/"+mDay;
+                st = st+"/"+mHour+"/"+mMinute;
+               /* if(customerJobsAdapter.isDone()){
+
+                }else{
+                    Toast.makeText(view.getContext(),"")
+                }*/
+
+               firebaseFirestore.collection("service").document(services.getServiceID())
+                       .update("endTime",st)
+                       .addOnSuccessListener(new OnSuccessListener<Void>() {
+                           @Override
+                           public void onSuccess(Void aVoid) {
+                               firebaseFirestore.collection("customer").document(customer.getId())
+                                       .update("notPaidService",services.getServiceID(),
+                                               "notReviewedService",services.getServiceID())
+                                       .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                           @Override
+                                           public void onSuccess(Void aVoid) {
+                                               Intent intent = new Intent(view.getContext(),PaymentActivity.class);
+                                               intent.putExtra("services",services);
+                                               intent.putExtra("customer",customer);
+                                               startActivity(intent);
+                                           }
+                                       })
+                                       .addOnFailureListener(new OnFailureListener() {
+                                           @Override
+                                           public void onFailure(@NonNull Exception e) {
+
+                                           }
+                                       });
+
+
+                           }
+                       })
+                       .addOnFailureListener(new OnFailureListener() {
+                           @Override
+                           public void onFailure(@NonNull Exception e) {
+
+                           }
+                       });
+            }
+        });
+
+        firebaseFirestore.collection("services").document(currentService.getServiceId())
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable DocumentSnapshot snapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -121,14 +185,39 @@ public class CustomerJobsFragment extends Fragment {
                             return;
                         }
 
+
                         if (snapshot != null && snapshot.exists()) {
                             Log.d(TAG, "Current data: " + snapshot.getData());
                             ServicesFinal updatedService = snapshot.toObject(ServicesFinal.class);
-                            ArrayList<LabourerFinal> labourersToBeAdded = updatedService.getLabourers();
+
+                            customerJobsAdapter.clear();
+                            customerJobsAdapter.setService(updatedService);
+
+                            if (updatedService.getLabourerResponses() != null) {
+                                for (String s : updatedService.getLabourerResponses().keySet()) {
+
+                                    firebaseFirestore.collection("labourer").document(s)
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    LabourerFinal labourerFinal = documentSnapshot.toObject(LabourerFinal.class);
+                                                    customerJobsAdapter.addLabourer(labourerFinal);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+
+                                                }
+                                            });
+                                }
+                            }
+                            /*ArrayList<LabourerFinal> labourersToBeAdded = updatedService.getLabourers();
                             labourersToBeAdded.removeAll(currentService.getLabourers());
                             for(int i = 0; i < labourersToBeAdded.size(); i++) {
                                 customerJobsAdapter.addLabourer(labourersToBeAdded.get(i));
-                            }
+                            }*/
                         } else {
                             Log.d(TAG, "Current data: null");
                         }
@@ -152,8 +241,8 @@ public class CustomerJobsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context instanceof Activity) {
-                mActivity = (Activity) context;
+        if (context instanceof Activity) {
+            mActivity = (Activity) context;
         }
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
