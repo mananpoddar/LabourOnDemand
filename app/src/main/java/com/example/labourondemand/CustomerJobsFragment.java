@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -94,9 +95,9 @@ public class CustomerJobsFragment extends Fragment {
     private CustomerJobsAdapter customerJobsAdapter;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private Services services = new Services();
     private TextView noResponse;
     private Button done;
+    private ImageView skillPic;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,6 +117,30 @@ public class CustomerJobsFragment extends Fragment {
 //        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //        //Setting the ArrayAdapter data on the Spinner
 //        spin.setAdapter(aa);
+
+
+        skillPic = view.findViewById(R.id.customer_jobs_toolbox);
+
+        //add right job type image
+        if(currentService.getSkill().equals("Carpenter"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_carpenter_tools_colour));
+        }else if(currentService.getSkill().equals("Plumber"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_plumber_tools));
+        }else if(currentService.getSkill().equals("Electrician"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_electric_colour));
+        }else if(currentService.getSkill().equals("Painter"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_paint_roller));
+        }else if(currentService.getSkill().equals("Constructor"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_construction_colour));
+        }else if(currentService.getSkill().equals("Chef"))
+        {
+            skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_cooking_colour));
+        }
 
         done = view.findViewById(R.id.customer_jobs_done_btn);
 
@@ -151,19 +176,19 @@ public class CustomerJobsFragment extends Fragment {
                     Toast.makeText(view.getContext(),"")
                 }*/
 
-               firebaseFirestore.collection("service").document(services.getServiceID())
+               firebaseFirestore.collection("service").document(currentService.getServiceId())
                        .update("endTime",st)
                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                            @Override
                            public void onSuccess(Void aVoid) {
                                firebaseFirestore.collection("customer").document(customer.getId())
-                                       .update("notPaidService",services.getServiceID(),
-                                               "notReviewedService",services.getServiceID())
+                                       .update("notPaidService",currentService.getServiceId(),
+                                               "notReviewedService",currentService.getServiceId())
                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                                            @Override
                                            public void onSuccess(Void aVoid) {
                                                Intent intent = new Intent(view.getContext(),PaymentActivity.class);
-                                               intent.putExtra("services",services);
+                                               intent.putExtra("service",currentService);
                                                intent.putExtra("customer",customer);
                                                startActivity(intent);
                                            }
