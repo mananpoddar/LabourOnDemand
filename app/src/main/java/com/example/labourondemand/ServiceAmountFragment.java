@@ -131,7 +131,7 @@ public class ServiceAmountFragment extends Fragment {
                     final String sid = services.getServiceId();
 
                     //TODO:services.setLabourerResponses(m);
-                    Log.d("tag",sid+"!"+m.toString());
+                    Log.d("labourerResponse",sid+"!"+m.toString());
 
           //          Log.d("first service",labourerFinal.getServices().get(0));
                     firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).update("services", FieldValue.arrayUnion(sid));
@@ -143,6 +143,8 @@ public class ServiceAmountFragment extends Fragment {
                                 public void onSuccess(Void aVoid) {
                                     HashMap<String, String> lab = new HashMap<>();
                                     lab.put("currentService", sid);
+
+
 
                                     /*firebaseFirestore.collection("labourer").document(firebaseAuth.getUid())
                                             .set(lab, SetOptions.merge())

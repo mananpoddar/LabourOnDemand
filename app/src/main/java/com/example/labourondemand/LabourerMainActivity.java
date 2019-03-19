@@ -36,7 +36,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
     private FloatingActionButton fab;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private Labourer labourer = new Labourer();
+    private LabourerFinal labourer;
     private String tag = LabourerMainActivity.class.getName();
     private RecyclerView recyclerView;
     private DashboardAdapter dashboardAdapter;
@@ -53,7 +53,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
         if(getIntent().getExtras() != null) {
             currentService = getIntent().getStringExtra("currentService");
-            labourer = (Labourer) getIntent().getExtras().get("labourer");
+            labourer = (LabourerFinal) getIntent().getExtras().get("labourer");
         }
 
         toolbar = findViewById(R.id.labourer_main_tb);
@@ -110,7 +110,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         //labourer = new Labourer();
                         if (documentSnapshot.getData() != null) {
-                            labourer = documentSnapshot.toObject(Labourer.class);
+                            labourer = documentSnapshot.toObject(LabourerFinal.class);
                             Log.d(tag, documentSnapshot.getData().toString() + "!");
 
                             if (labourer.getCurrentService() == null) {

@@ -125,6 +125,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
         navigationView.setCheckedItem(2);
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.getMenu().getItem(1).setChecked(true);
 
         viewPager = findViewById(R.id.labourer_home_vp);
         viewPagerAdapterLabourer = new ViewPagerAdapterLabourer(getSupportFragmentManager());
@@ -388,7 +389,7 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
 
         for (String skill : labourerFinal.getSkill())
             //add isApplyable later
-            firebaseFirestore.collection("services").whereEqualTo("skill", skill).whereEqualTo("status", "incoming").get()
+            firebaseFirestore.collection("services").whereEqualTo("skill", skill).whereEqualTo("isApplyable", true).get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

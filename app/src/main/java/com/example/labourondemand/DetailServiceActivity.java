@@ -73,7 +73,10 @@ public class DetailServiceActivity extends AppCompatActivity
         toolbar = findViewById(R.id.detail_service_tb);
         drawerLayout =  findViewById(R.id.detail_service_dl);
 
+        toolbar.setTitle("XXXX");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

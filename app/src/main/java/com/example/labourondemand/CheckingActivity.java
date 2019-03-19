@@ -120,7 +120,7 @@ public class CheckingActivity extends AppCompatActivity {
                                 session.setType("labourer");
                                 Log.d(TAG, "labourer");
                                 if (session.isSetupLabourer(current_user_id)) {
-                                    Intent labourer = new Intent(CheckingActivity.this, LabourerMainActivity.class);
+                                    Intent labourer = new Intent(CheckingActivity.this, LabourerHomeActivity.class);
                                     labourer.putExtra("labourer", session.getLabourer(current_user_id));
                                     startActivity(labourer);
                                     finish();
