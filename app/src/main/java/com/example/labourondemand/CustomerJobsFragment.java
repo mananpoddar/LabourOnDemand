@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,6 +106,15 @@ public class CustomerJobsFragment extends Fragment {
         noResponse = view.findViewById(R.id.customer_dashboard2_tv_no_response);
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+
+        Spinner spin = (Spinner) view.findViewById(R.id.spinner);
+        spin.setOnItemSelectedListener();
+
+        //Creating the ArrayAdapter instance having the country list
+        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,country);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        spin.setAdapter(aa);
 
         done = view.findViewById(R.id.customer_jobs_done_btn);
 
