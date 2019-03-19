@@ -77,6 +77,7 @@ public class ServiceAmountFragment extends Fragment {
         if (bundle != null) {
             services = (ServicesFinal)bundle.getSerializable("services");
             labourerFinal = (LabourerFinal)bundle.getSerializable("labourer");
+
         }
     }
     private LabourerFinal labourerFinal;
@@ -99,7 +100,10 @@ public class ServiceAmountFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-//        customerAmount.setText(String.valueOf(services.getCustomerAmount()));
+
+        // Dummy comment
+      //  customerAmount.setText(String.valueOf(services.getCustomerAmount()));
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,16 +119,23 @@ public class ServiceAmountFragment extends Fragment {
                     m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
                     services.setLabourerResponses(m);
 //                    //TODO: updating labourResponse ;
+
+
+                    //System.out.println(services.toString());
+                    Log.d("amount fragment",services.toString());
+                    m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
+                    services.setLabourerResponses(m);
+//                    //TODO: updating labourResponse ;
                     map.put("labourerResponses", m);
 
                     final String sid = services.getServiceId();
-//                    //TODO:services.setLabourerResponses(m);
+
+                    //TODO:services.setLabourerResponses(m);
                     Log.d("tag",sid+"!"+m.toString());
 
-                    //get labour
+          //          Log.d("first service",labourerFinal.getServices().get(0));
+                    firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).update("services", FieldValue.arrayUnion(sid));
 
-                    Log.d("first service",labourerFinal.getServices().get(0));
-                   firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).update("services", FieldValue.arrayUnion(sid));
 
                     firebaseFirestore.collection("services").document(sid).set(map,SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
