@@ -50,15 +50,7 @@
             android:textColorHint="@color/colorPrimary">
         </TextView>
 
-        <Button
-            android:id="@+id/service_amount_btn_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_gravity="bottom"
-            android:text="Submit "
-            android:textColor="@color/white"
-            android:background="@color/orange"/>
+
 
     </LinearLayout>
 

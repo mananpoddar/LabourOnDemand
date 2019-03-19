@@ -96,7 +96,8 @@ public class AppliedServiceAmountFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         Log.d("service id",services.getServiceId().toString());
         customerAmount.setText(String.valueOf(services.getCustomerAmount()));
-      //  labourerAmount.setText(String.valueOf(ser));
+
+        //  labourerAmount.setText(String.valueOf(ser));
 //
 //        submit.setOnClickListener(new View.OnClickListener() {
 //            @Override

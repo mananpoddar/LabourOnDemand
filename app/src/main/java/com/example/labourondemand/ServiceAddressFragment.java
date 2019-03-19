@@ -3,12 +3,23 @@ package com.example.labourondemand;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 /**
@@ -19,7 +30,12 @@ import android.widget.TextView;
  * Use the {@link ServiceAddressFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ServiceAddressFragment extends Fragment {
+public class ServiceAddressFragment extends Fragment implements OnMapReadyCallback {
+
+   GoogleMap mGoogleMap;
+   MapView mMapView;
+   View mView;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -69,19 +85,26 @@ public class ServiceAddressFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_service_address, container, false);
+        mView= inflater.inflate(R.layout.fragment_service_address, container, false);
 
-        a1 = view.findViewById(R.id.service_address_tv_line1);
-        a2 = view.findViewById(R.id.service_address_tv_line2);
-        landmark = view.findViewById(R.id.service_address_tv_landmark);
-        city = view.findViewById(R.id.service_address_tv_city);
 
         //city.setText(services.getCity());
         //landmark.setText(services.getLandmark());
       //  a1.setText(services.getAddressLine1());
       //  a2.setText(services.getAddressLine2());
 
-        return view;
+        return mView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mView = (MapView) mView.findViewById(R.id.map_view);
+        if(mMapView != null){
+            mMapView.onCreate(null);
+            mMapView.onResume();
+            mMapView.getMapAsync(this);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -106,6 +129,17 @@ public class ServiceAddressFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        MapsInitializer.initialize(getContext());
+        mGoogleMap = googleMap;
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(40.68,-74.4)).title("statue").snippet("safd"));
+        CameraPosition Liberty = CameraPosition.builder().target(new LatLng(40.68,-74.4)).zoom(16).bearing(0).tilt(45).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition((Liberty)));
     }
 
     /**
