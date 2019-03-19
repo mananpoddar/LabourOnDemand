@@ -100,7 +100,7 @@
                     android:background="@color/white">
 
                     <ImageView
-                        android:id="@+id/activity_form2_iv_skill"
+                        android:id="@+id/form2_skill_iv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -121,7 +121,7 @@
                         android:text="Carpenter"
                         android:textSize="@dimen/text_size_large"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/activity_form2_iv_skill"
+                        app:layout_constraintStart_toEndOf="@+id/form2_skill_iv"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </android.support.constraint.ConstraintLayout>
@@ -533,20 +533,6 @@
         </android.support.v4.widget.NestedScrollView>
 
     </FrameLayout>-->
-
-    <ProgressBar
-        android:visibility="gone"
-        android:id="@+id/form2_pb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
 

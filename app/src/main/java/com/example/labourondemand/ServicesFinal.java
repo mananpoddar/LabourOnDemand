@@ -17,6 +17,7 @@ public class ServicesFinal implements Serializable {
     private Double destinationLatitude, destinationLongitude;
     private CustomerFinal customer;
     private ArrayList<LabourerFinal> labourers;
+    private GeoPoint destination;
     private String startTime, endTime;
     private Boolean isPaid, isApplyable;
 
@@ -175,13 +176,13 @@ public class ServicesFinal implements Serializable {
         this.labourers = labourers;
     }
 
-   /* public GeoPoint getDestination() {
+    public GeoPoint getDestination() {
         return destination;
     }
 
     public void setDestination(GeoPoint destination) {
         this.destination = destination;
-    }*/
+    }
 
     public String getStartTime() {
         return startTime;

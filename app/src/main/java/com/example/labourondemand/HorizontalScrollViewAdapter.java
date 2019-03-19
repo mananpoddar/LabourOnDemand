@@ -197,10 +197,10 @@ class HorizontalScrollViewAdapter extends RecyclerView.Adapter<HorizontalScrollV
             }
         } else if (skills.get(position).equals("Chef")) {
             if (skill.equals("Chef")) {
-                holder.photo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cooking_colour));
+                holder.photo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cooking_no_colour));
                 holder.constraintLayout.setBackgroundColor(context.getResources().getColor(R.color.lightBlue));
             } else {
-                holder.photo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cooking_no_colour));
+                holder.photo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cooking_colour));
                 holder.constraintLayout.setBackgroundColor(context.getResources().getColor(R.color.white));
             }
         }

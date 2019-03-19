@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -21,19 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <service
-            android:name=".MyLocationService"
-            android:enabled="true"
-            android:exported="true"></service>
 
-        <receiver android:name=".MyLocation" />
-        <!--
-        <activity android:name=".BackgroundServiceActivity">
-
-
-
-        </activity>
-        -->
         <service
             android:name=".notifications.MyService"
             android:enabled="true"
@@ -42,14 +29,17 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <!--
-<service android:name=".java.MyFirebaseMessagingService">
+
+        <!--<service android:name=".java.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-        -->
-        <activity android:name=".PaymentActivity" />
+        </service>-->
+
+
+
+        <activity android:name=".PaymentActivity"></activity>
+
         <activity android:name=".ReviewActivity2" />
         <activity
             android:name=".Form2Activity"
@@ -65,7 +55,9 @@
         -->
         <activity android:name=".LabourerJobsActivity" />
         <activity android:name=".LabourerHistoryActivity" />
-        <activity android:name=".LabourerHomeActivity" />
+        <activity android:name=".LabourerHomeActivity">
+
+        </activity>
         <activity android:name=".CustomerHistoryActivity" />
         <activity android:name=".CustomerJobsActivity" />
         <activity android:name=".GeoFireActivity" />
@@ -104,7 +96,7 @@
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile2"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"  />
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".FormActivity"
             android:label="@string/title_activity_form2"
@@ -133,25 +125,20 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity android:name=".CustomerMainActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <!--
-<service
+
+        <!--<service
             android:name=".notifications.MyFirebaseMessagingService"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
@@ -163,8 +150,8 @@
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
-        </service>
-        -->
+        </service>-->
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
@@ -174,6 +161,12 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        
+        <service android:name=".notifications.NotificationService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

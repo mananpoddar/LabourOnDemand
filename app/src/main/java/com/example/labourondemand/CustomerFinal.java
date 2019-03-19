@@ -15,23 +15,6 @@ public class CustomerFinal extends User implements Serializable {
     private ArrayList<ServicesFinal> historyServices, currentServices, incomingServices;
     private Double destinationLatitude, destinationLongitude;
     private HashMap<String, Marker> labourersLocation;
-    private String notPaidService, notReviewedService;
-
-    public String getNotPaidService() {
-        return notPaidService;
-    }
-
-    public void setNotPaidService(String notPaidService) {
-        this.notPaidService = notPaidService;
-    }
-
-    public String getNotReviewedService() {
-        return notReviewedService;
-    }
-
-    public void setNotReviewedService(String notReviewedService) {
-        this.notReviewedService = notReviewedService;
-    }
 
     @Override
     public String toString() {

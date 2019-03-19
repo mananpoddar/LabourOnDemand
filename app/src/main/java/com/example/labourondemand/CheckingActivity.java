@@ -52,9 +52,8 @@ public class CheckingActivity extends AppCompatActivity {
             Log.d(TAG, "send to login : Checking");
             sendToLogin();
         }else {
+            Log.d("cdsc","csdc");
             current_user_id = mAuth.getCurrentUser().getUid();
-            Log.d("Checking Activity",current_user_id+"!");
-
             Log.d(TAG, current_user_id);
 
             firebaseFirestore.collection("uid").document(current_user_id)
