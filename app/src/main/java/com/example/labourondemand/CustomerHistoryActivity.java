@@ -53,6 +53,9 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
     private Context context;
     private static final String TAG = "CustomerHistoryActivity";
 
+    private CustomerFinal customer;
+
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
