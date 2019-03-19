@@ -52,8 +52,10 @@ public class ServiceDescriptionFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     private ServicesFinal services;
     private LabourerFinal labourerFinal;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
