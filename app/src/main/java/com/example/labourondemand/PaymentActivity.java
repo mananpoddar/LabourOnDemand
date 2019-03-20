@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,11 +64,55 @@ public class PaymentActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         servicesFinal = (ServicesFinal) getIntent().getExtras().getSerializable("services");
         customerFinal = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
+        Log.d("customer Payment",customerFinal.toString()+"!");
+        Log.d("services Payment ",servicesFinal.toString()+"!");
+
         recyclerView = findViewById(R.id.payment_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        if (servicesFinal == null) {
+            firebaseFirestore.collection("services").document(customerFinal.getNotPaidService())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
+                            servicesFinal.setServiceId(documentSnapshot.getId());
+                            servicesFinal.setSelectedLabourers(new ArrayList<>());
+                            Log.d("servic Payment",servicesFinal.toString()+"!");
+                            labourerAdapter = new LabourerAdapter(getApplicationContext(), servicesFinal);
+                            recyclerView.setAdapter(labourerAdapter);
+                            for (String s : servicesFinal.getSelectedLabourerUID()) {
 
-        if (servicesFinal.getSelectedLabourers() == null) {
+                                firebaseFirestore.collection("labourer").document(s)
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                LabourerFinal labourerFinal = documentSnapshot.toObject(LabourerFinal.class);
+                                                labourerFinal.setId(documentSnapshot.getId());
+                                                labourerAdapter.added(labourerFinal);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                            }
+                                        });
+                            }
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+        } else {
+            servicesFinal.setSelectedLabourers(new ArrayList<LabourerFinal>());
+            Log.d("payment SELECTEDLABOUR ",servicesFinal.toString()+"!");
             labourerAdapter = new LabourerAdapter(this, servicesFinal);
             recyclerView.setAdapter(labourerAdapter);
 
@@ -90,10 +136,10 @@ public class PaymentActivity extends AppCompatActivity {
                         });
             }
 
-        } else {
+        }/* else {
             labourerAdapter = new LabourerAdapter(this, servicesFinal);
             recyclerView.setAdapter(labourerAdapter);
-        }
+        }*/
 
 
         pay = findViewById(R.id.payment_pay_btn);

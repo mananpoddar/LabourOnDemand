@@ -61,7 +61,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
         fab = findViewById(R.id.labourer_main_fab);
         navigationView = findViewById(R.id.labourer_main_nav);
         recyclerView = findViewById(R.id.dashboard_labourer_rv);
-        visibleText = findViewById(R.id.visible);
+        visibleText = findViewById(R.id.noApplied);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         dashboardAdapter = new DashboardAdapter(LabourerMainActivity.this,new ArrayList<ServicesFinal>(),0);
@@ -117,7 +117,7 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                             if (labourer.getServices() != null) {
                                 Log.d("tagggg",labourer.getSkill()+"!");
                                 ArrayList<String> s = labourer.getServices();
-                                System.out.println(s.get(0));
+                                Log.d("LabourMainActivity",s+"!");
                                 fetchServices(s);
                             }else{
 
@@ -138,44 +138,51 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
 
     private void fetchServices(ArrayList<String> laborservices) {
 
-        firebaseFirestore.collection("services").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                            ServicesFinal services;
-                            Log.d("tag",labourer.getSkill()+"!"+documentSnapshot.get("skill")+"!"+documentSnapshot.getData().toString());
-                            for(int i=0;i<laborservices.size();i++)
-                                if(documentSnapshot.getId().equals(laborservices.get(i))){
-                                    services = documentSnapshot.toObject(ServicesFinal.class);
-                                    services.setServiceId(documentSnapshot.getId());
+        if(laborservices != null && laborservices.size()>0) {
+            visibleText.setVisibility(View.GONE);
+            firebaseFirestore.collection("services").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                ServicesFinal services;
+                                Log.d("tag", labourer.getSkill() + "!" + documentSnapshot.get("skill") + "!" + documentSnapshot.getData().toString());
+                                for (int i = 0; i < laborservices.size(); i++) {
+                                    if (documentSnapshot.getId().equals(laborservices.get(i))) {
+                                        services = documentSnapshot.toObject(ServicesFinal.class);
+                                        services.setServiceId(documentSnapshot.getId());
 
-                                    final ServicesFinal finalServices = services;
-                                    firebaseFirestore.collection("customer").document(services.getCustomerUID()).get()
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        final ServicesFinal finalServices = services;
+                                        firebaseFirestore.collection("customer").document(services.getCustomerUID()).get()
+                                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                                                    finalServices.setCustomer(documentSnapshot.toObject(CustomerFinal.class));
-                                                    dashboardAdapter.added(finalServices);
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.d(tag,"error fetchService2 : "+e.toString());
-                                                }
-                                            });
+                                                        finalServices.setCustomer(documentSnapshot.toObject(CustomerFinal.class));
+                                                        dashboardAdapter.added(finalServices);
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d(tag, "error fetchService2 : " + e.toString());
+                                                    }
+                                                });
+                                    }
                                 }
+                            }
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(tag,"error fetchService1 : "+e.toString());
-                    }
-                });
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(tag, "error fetchService1 : " + e.toString());
+                        }
+                    });
+        }else{
+            visibleText.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @Override

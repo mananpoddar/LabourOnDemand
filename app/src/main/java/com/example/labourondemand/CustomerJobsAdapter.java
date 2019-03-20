@@ -238,6 +238,10 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
         return labourers.size();
     }
 
+    public void setLabourers(ArrayList<LabourerFinal> labourers) {
+        this.labourers = labourers;
+        notifyDataSetChanged();
+    }
 
     public void clear() {
         labourers.clear();

@@ -50,7 +50,7 @@ public class LabourerAdapter extends RecyclerView.Adapter<LabourerAdapter.MyView
     @Override
     public void onBindViewHolder(final LabourerAdapter.MyViewHolder holder, final int position) {
 
-        LabourerFinal labourer = servicesFinals.getLabourers().get(position);
+        LabourerFinal labourer = servicesFinals.getSelectedLabourers().get(position);
         holder.name.setText(labourer.getName());
 
         Glide.with(context).load(labourer.getImage()).into(holder.photo);
@@ -58,7 +58,11 @@ public class LabourerAdapter extends RecyclerView.Adapter<LabourerAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return this.servicesFinals.getLabourers().size();
+        if(servicesFinals.getSelectedLabourers() == null)
+        {
+            servicesFinals.setSelectedLabourers(new ArrayList<>());
+        }
+        return this.servicesFinals.getSelectedLabourers().size();
     }
 
     public void added(LabourerFinal c){
