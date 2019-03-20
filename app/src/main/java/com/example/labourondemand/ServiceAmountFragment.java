@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +88,7 @@ public class ServiceAmountFragment extends Fragment {
     private Button submit;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,6 +101,7 @@ public class ServiceAmountFragment extends Fragment {
         submit = view.findViewById(R.id.service_amount_btn_submit);
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+        progressBar = view.findViewById(R.id.service_amount_pb);
 
 
         // Dummy comment
@@ -110,7 +113,7 @@ public class ServiceAmountFragment extends Fragment {
             public void onClick(final View v) {
 
                 if(labourerAmount.getText().toString() != null) {
-
+                    progressBar.setVisibility(View.VISIBLE);
                     HashMap<String, HashMap<String, Long>> map = new HashMap<>();
                     HashMap<String, Long> m = new HashMap<>();
 
@@ -144,7 +147,9 @@ public class ServiceAmountFragment extends Fragment {
                                     HashMap<String, String> lab = new HashMap<>();
                                     lab.put("currentService", sid);
 
-
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(view.getContext(),"Applied for the Service",Toast.LENGTH_LONG).show();
+                                    getActivity().onBackPressed();
 
                                     /*firebaseFirestore.collection("labourer").document(firebaseAuth.getUid())
                                             .set(lab, SetOptions.merge())

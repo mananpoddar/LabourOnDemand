@@ -17,8 +17,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -67,27 +71,58 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
 
         viewPager = findViewById(R.id.customer_jobs_vp);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
+        viewPager.setAdapter(viewPagerAdapter);
         currentServices = customer.getIncomingServices();
 
         if(currentServices == null)
         {
             customer.setIncomingServices(new ArrayList<>());
             currentServices = customer.getIncomingServices();
+
+            firebaseFirestore.collection("services").whereEqualTo("customerUID",customer.getId())
+                    .whereEqualTo("status","incoming")
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                                ServicesFinal servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
+                                servicesFinal.setServiceId(documentSnapshot.getId());
+                                servicesFinal.setApplyable(documentSnapshot.getBoolean("isApplyable"));
+                                servicesFinal.setPaid(documentSnapshot.getBoolean("isPaid"));
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("customer", customer);
+                                bundle.putSerializable("service", servicesFinal);
+                                CustomerJobsFragment customerJobsFragment = new CustomerJobsFragment();
+                                customerJobsFragment.setArguments(bundle);
+                                viewPagerAdapter.addFragment(customerJobsFragment, "Job");
+                                viewPagerAdapter.notifyDataSetChanged();
+
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+
+        }else{
+            for (int i = 0; i < currentServices.size(); i++) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("customer", customer);
+                bundle.putSerializable("service", currentServices.get(i));
+                CustomerJobsFragment customerJobsFragment = new CustomerJobsFragment();
+                customerJobsFragment.setArguments(bundle);
+                viewPagerAdapter.addFragment(customerJobsFragment, "Job" + i);
+                viewPagerAdapter.notifyDataSetChanged();
+            }
         }
-
-
         //should be inside a for loop through all fragments
-        for (int i = 0; i < currentServices.size(); i++) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("customer", customer);
-            bundle.putSerializable("service", currentServices.get(i));
-            CustomerJobsFragment customerJobsFragment = new CustomerJobsFragment();
-            customerJobsFragment.setArguments(bundle);
-            viewPagerAdapter.addFragment(customerJobsFragment, "Job" + i);
-        }
 
-        viewPager.setAdapter(viewPagerAdapter);
+        //viewPager.setAdapter(viewPagerAdapter);
 
     }
 

@@ -60,6 +60,13 @@
             android:textColor="@color/white"
             android:background="@color/orange"/>
 
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/service_amount_pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
     </LinearLayout>
 
 </ScrollView>

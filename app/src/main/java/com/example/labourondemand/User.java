@@ -217,4 +217,25 @@ public class User implements Serializable/*implements Parcelable*/{
         this.services = services;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", dob='" + dob + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", addressLine1='" + addressLine1 + '\'' +
+                ", addressLine2='" + addressLine2 + '\'' +
+                ", addressLine3='" + addressLine3 + '\'' +
+                ", id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", currentLocation=" + currentLocation +
+                ", phone=" + phone +
+                ", wallet=" + wallet +
+                ", services=" + services +
+                ", servicesFinal=" + servicesFinal +
+                '}';
+    }
 }

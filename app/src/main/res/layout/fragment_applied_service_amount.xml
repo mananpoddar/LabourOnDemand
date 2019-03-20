@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="1000"
+            android:drawableLeft="@drawable/ic_rupee"
             android:textSize="@dimen/text_size_normal" />
 
         <TextView
@@ -43,11 +44,10 @@
             android:id="@+id/service_amount_tiet_labourer_amount"
             android:layout_width="match_parent"
             android:inputType="number"
+            android:drawableLeft="@drawable/ic_rupee"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_normal"
-            android:hint="Amount"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary">
+            android:hint="Amount">
         </TextView>
 
 

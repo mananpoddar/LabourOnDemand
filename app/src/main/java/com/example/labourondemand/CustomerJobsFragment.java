@@ -29,8 +29,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.StringTokenizer;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -97,8 +100,9 @@ public class CustomerJobsFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private TextView noResponse;
     private ImageView skillPic;
-    private Button done, sort;
-    private TextView jobTitle, jobDescription, startTime;
+    private Button done, sortPrice, sortRating;
+    private TextView jobTitle, jobDescription, startTime, startDate;
+    private SessionManager sessionManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,6 +114,7 @@ public class CustomerJobsFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
+        sessionManager = new SessionManager(view.getContext());
 //        Spinner spin = (Spinner) view.findViewById(R.id.spinner);
 //        spin.setOnItemSelectedListener();
 //
@@ -125,10 +130,40 @@ public class CustomerJobsFragment extends Fragment {
         jobTitle = view.findViewById(R.id.customer_jobs_title);
         jobDescription = view.findViewById(R.id.customer_jobs_jobDescription);
         startTime = view.findViewById(R.id.customer_jobs_start_time_tv);
+        startDate = view.findViewById(R.id.customer_jobs_start_time1_tv);
 
         jobTitle.setText(currentService.getTitle());
         jobDescription.setText(currentService.getDescription());
-        startTime.setText(currentService.getStartTime());
+
+        //show correct date and time
+        StringTokenizer tokenizer = new StringTokenizer(currentService.getStartTime(), "/");
+        String stTime = "", stDate = "";
+
+        if(tokenizer.hasMoreTokens())
+            stDate += (tokenizer.nextToken() + "/");
+        if(tokenizer.hasMoreTokens())
+            stDate += (tokenizer.nextToken() + "/");
+        if(tokenizer.hasMoreTokens())
+            stDate += (tokenizer.nextToken());
+
+        //format to indian form date
+//        String pattern = "dd/MM/yyyy";
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+//
+//        try {
+//            stDate = new SimpleDateFormat("dd/MM/yyyy").format(simpleDateFormat.parse(stDate));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+
+        if(tokenizer.hasMoreTokens())
+            stTime += (tokenizer.nextToken() + ":");
+        if(tokenizer.hasMoreTokens())
+            stTime += (tokenizer.nextToken());
+
+
+        startTime.setText(stTime);
+        startDate.setText(stDate);
 
         skillPic = view.findViewById(R.id.customer_jobs_toolbox);
 
@@ -159,7 +194,8 @@ public class CustomerJobsFragment extends Fragment {
         spin.setAdapter(aa);*/
 
         done = view.findViewById(R.id.customer_jobs_done_btn);
-        sort = view.findViewById(R.id.customer_jobs_sort_btn);
+        sortPrice = view.findViewById(R.id.customer_jobs_sort_btn);
+        sortRating = view.findViewById(R.id.customer_jobs_sort1_btn);
         Log.d("currentService", currentService.toString() + "!");
         Log.d("customerinFragment", customer.toString() + "!");
 
@@ -168,17 +204,26 @@ public class CustomerJobsFragment extends Fragment {
             currentService.setLabourers(new ArrayList<>());
         }
 
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortLabourerBasedOnPrice();
-            }
-        });
-
-        customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService);
+        customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService, customer);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(customerJobsAdapter);
         recyclerView.setHasFixedSize(false);
+
+        sortPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(customerJobsAdapter.getItemCount() != 0)
+                    sortLabourerBasedOnPrice();
+            }
+        });
+
+        sortRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(customerJobsAdapter.getItemCount() != 0)
+                    sortLabourerBasedOnRating();
+            }
+        });
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,7 +243,9 @@ public class CustomerJobsFragment extends Fragment {
                 st = st+mYear+"/"+mMonth+"/"+mDay;
                 st = st+"/"+mHour+"/"+mMinute;
                 if(customerJobsAdapter.isDone()){
-                    firebaseFirestore.collection("service").document(currentService.getServiceId())
+                   Log.d("isDONE",customerJobsAdapter.getService().getCustomerUID()+"!");
+
+                    firebaseFirestore.collection("services").document(currentService.getServiceId())
                             .update("endTime",st)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -209,8 +256,11 @@ public class CustomerJobsFragment extends Fragment {
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
+                                                    customer.setNotPaidService(currentService.getServiceId());
+                                                    customer.setNotReviewedService(currentService.getServiceId());
+                                                    sessionManager.saveCustomer(customer);
                                                     Intent intent = new Intent(view.getContext(),PaymentActivity.class);
-                                                    intent.putExtra("service",currentService);
+                                                    intent.putExtra("services",customerJobsAdapter.getService());
                                                     intent.putExtra("customer",customer);
                                                     startActivity(intent);
                                                 }
@@ -218,17 +268,17 @@ public class CustomerJobsFragment extends Fragment {
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
+                                                    Log.d("No Failure222",e.toString()+"!");
 
                                                 }
                                             });
-
 
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-
+                                    Log.d("No Failure111",e.toString()+"!");
                                 }
                             });
                 }else{
@@ -252,8 +302,11 @@ public class CustomerJobsFragment extends Fragment {
 
                         if (snapshot != null && snapshot.exists()) {
                             Log.d(TAG, "Current data: " + snapshot.getData());
+                            Log.d("snapshotListen JOB frag",snapshot.getData()+"!");
                             ServicesFinal updatedService = snapshot.toObject(ServicesFinal.class);
                             updatedService.setServiceId(snapshot.getId());
+                            updatedService.setApplyable(snapshot.getBoolean("isApplyable"));
+                            updatedService.setPaid(snapshot.getBoolean("isPaid"));
                             customerJobsAdapter.clear();
                             customerJobsAdapter.setService(updatedService);
 
@@ -266,6 +319,7 @@ public class CustomerJobsFragment extends Fragment {
                                                 @Override
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     LabourerFinal labourerFinal = documentSnapshot.toObject(LabourerFinal.class);
+                                                    labourerFinal.setId(documentSnapshot.getId());
                                                     customerJobsAdapter.addLabourer(labourerFinal);
                                                 }
                                             })
@@ -302,8 +356,12 @@ public class CustomerJobsFragment extends Fragment {
                     min = i;
                 }
             }
-            customerJobsAdapter.swapItems(i, min);
+            LabourerFinal tempLabourer = labourers.get(min);
+            labourers.set(min, labourers.get(i));
+            labourers.set(i, tempLabourer);
         }
+
+        customerJobsAdapter.setLabourers(labourers);
     }
 
     void sortLabourerBasedOnRating() {
@@ -316,9 +374,12 @@ public class CustomerJobsFragment extends Fragment {
                     max = i;
                 }
             }
-            customerJobsAdapter.swapItems(i, max);
+            LabourerFinal tempLabourer = labourers.get(max);
+            labourers.set(max, labourers.get(i));
+            labourers.set(i, tempLabourer);
         }
 
+        customerJobsAdapter.setLabourers(labourers);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
