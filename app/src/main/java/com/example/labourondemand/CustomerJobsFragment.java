@@ -175,7 +175,7 @@ public class CustomerJobsFragment extends Fragment {
             }
         });
 
-        customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService);
+        customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService, customer);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(customerJobsAdapter);
         recyclerView.setHasFixedSize(false);
@@ -198,6 +198,8 @@ public class CustomerJobsFragment extends Fragment {
                 st = st+mYear+"/"+mMonth+"/"+mDay;
                 st = st+"/"+mHour+"/"+mMinute;
                 if(customerJobsAdapter.isDone()){
+                    Log.d("isDONE",customerJobsAdapter.getService().getSelectedLabourers().size()+"!");
+
                     firebaseFirestore.collection("service").document(currentService.getServiceId())
                             .update("endTime",st)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
