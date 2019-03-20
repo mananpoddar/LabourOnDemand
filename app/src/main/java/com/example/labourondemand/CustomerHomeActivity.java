@@ -142,7 +142,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                         if (!task.isSuccessful()) {
-                            Log.w("cd", "getInstanceId failed", task.getException());
+                            Log.w("not Successful token", "getInstanceId failed", task.getException());
                             return;
                         }
 
@@ -170,6 +170,7 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Log.d("TOKEN Failure111",e.toString());
 
                     }
                 });
@@ -425,11 +426,11 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         } else if (id == R.id.nav_send) {
 
         } else if (id == R.id.nav_logout) {
-
-            /*firebaseAuth.signOut();
+            firebaseAuth.signOut();
+            session.logoutUser();
             Intent intent = new Intent(CustomerHomeActivity.this, LoginActivity.class);
             startActivity(intent);
-            finish();*/
+            finish();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

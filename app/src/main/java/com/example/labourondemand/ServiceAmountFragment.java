@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 
@@ -74,16 +76,19 @@ public class ServiceAmountFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            services = bundle.getParcelable("services");
+            services = (ServicesFinal)bundle.getSerializable("services");
+            labourerFinal = (LabourerFinal)bundle.getSerializable("labourer");
+
         }
     }
-
-    private Services services;
+    private LabourerFinal labourerFinal;
+    private ServicesFinal services;
     private TextView customerAmount;
     private TextInputEditText labourerAmount;
     private Button submit;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,31 +101,55 @@ public class ServiceAmountFragment extends Fragment {
         submit = view.findViewById(R.id.service_amount_btn_submit);
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+        progressBar = view.findViewById(R.id.service_amount_pb);
 
-        customerAmount.setText(String.valueOf(services.getCustomerAmount()));
+
+        // Dummy comment
+      //  customerAmount.setText(String.valueOf(services.getCustomerAmount()));
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
 
                 if(labourerAmount.getText().toString() != null) {
-
+                    progressBar.setVisibility(View.VISIBLE);
                     HashMap<String, HashMap<String, Long>> map = new HashMap<>();
                     HashMap<String, Long> m = new HashMap<>();
-                    m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
 
-                    //TODO: updating labourResponse ;
+                    //System.out.println(services.toString());
+                    Log.d("amount fragment",services.toString());
+                    m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
+                    services.setLabourerResponses(m);
+//                    //TODO: updating labourResponse ;
+
+
+                    //System.out.println(services.toString());
+                    Log.d("amount fragment",services.toString());
+                    m.put(firebaseAuth.getUid(), Long.valueOf(labourerAmount.getText().toString()));
+                    services.setLabourerResponses(m);
+//                    //TODO: updating labourResponse ;
                     map.put("labourerResponses", m);
-                    services.setCustomerAmount(Long.valueOf(labourerAmount.getText().toString()));
-                    final String sid = services.getServiceID();
+
+                    final String sid = services.getServiceId();
+
                     //TODO:services.setLabourerResponses(m);
-                    Log.d("tag",sid+"!"+m.toString());
+                    Log.d("labourerResponse",sid+"!"+m.toString());
+
+          //          Log.d("first service",labourerFinal.getServices().get(0));
+                    firebaseFirestore.collection("labourer").document(firebaseAuth.getUid()).update("services", FieldValue.arrayUnion(sid));
+
+
                     firebaseFirestore.collection("services").document(sid).set(map,SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     HashMap<String, String> lab = new HashMap<>();
                                     lab.put("currentService", sid);
+
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(view.getContext(),"Applied for the Service",Toast.LENGTH_LONG).show();
+                                    getActivity().onBackPressed();
 
                                     /*firebaseFirestore.collection("labourer").document(firebaseAuth.getUid())
                                             .set(lab, SetOptions.merge())

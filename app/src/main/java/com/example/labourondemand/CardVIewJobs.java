@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +23,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
+import static com.example.labourondemand.R.drawable.ic_carpenter_tools_colour;
+import static com.example.labourondemand.R.drawable.ic_plumber_tools;
 
 
 /**
@@ -47,7 +52,7 @@ public class CardVIewJobs extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private CustomerFinal customerFinal;
-
+    private LabourerFinal labourerFinal;
     public CardVIewJobs() {
         // Required empty public constructor
     }
@@ -82,16 +87,19 @@ public class CardVIewJobs extends Fragment {
             Log.d(TAG, "onCreate: having fun");
            // display = bundle.getString("key", "Error");
             servicesFinal = (ServicesFinal) bundle.get("services");
+            labourerFinal = (LabourerFinal) bundle.get("labourer");
             Log.d(TAG, "onCreate: servicesFinal: " + servicesFinal.toString()+"!");
         }
 
     }
 
+    View view;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_card_view_jobs, container, false);
+        view = inflater.inflate(R.layout.fragment_card_view_jobs, container, false);
 
         Bundle bundle = this.getArguments();
         if(bundle != null) {
@@ -112,14 +120,18 @@ public class CardVIewJobs extends Fragment {
         //}
         TextView amount = view.findViewById(R.id.fragment_card_view_jobs_tv_customer_amount);
         amount.setText(servicesFinal.getCustomerAmount().toString());
-        fetchCustomer(servicesFinal.getCustomerUID());
+        customerFinal = (CustomerFinal)fetchCustomer(servicesFinal.getCustomerUID());
         //Log.d("NULL?",servicesFinal.getCustomerUID());
         Log.d("Service info", servicesFinal.getCustomerUID());
 
         //servicesFinal.setCustomer(fetchCustomer(servicesFinal.getCustomerUID()));
 
-        //TextView name = view.findViewById(R.id.fragment_card_view_jobs_tv_name);
-        //name.setText(servicesFinal.getCustomer().getName());
+
+//        Log.d("Customer in cardView",customerFinal.toString());
+//        TextView name = view.findViewById(R.id.fragment_card_view_jobs_tv_name);
+//        name.setText(customerFinal.getName());
+//        TextView title = view.findViewById(R.id.fragment_card_view_jobs_tv_title);
+//        title.setText(servicesFinal.getTitle());
 
         View cardVIewJobs = view.findViewById(R.id.fragment_card_view_jobs_cv);
 
@@ -128,6 +140,7 @@ public class CardVIewJobs extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), DetailServiceActivity.class);
                 intent.putExtra("services",servicesFinal);
+                intent.putExtra("labourer",labourerFinal);
                 startActivity(intent);
             }
         });
@@ -181,9 +194,35 @@ public class CardVIewJobs extends Fragment {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         //labourer = new Labourer();
                         if (documentSnapshot.getData() != null) {
-                            customerFinal = documentSnapshot.toObject(CustomerFinal.class);
+                            customerFinal = (CustomerFinal) documentSnapshot.toObject(CustomerFinal.class);
                             Log.d("fetched", documentSnapshot.getData().toString() + "!");
-
+                            Log.d("Customer in cardView",customerFinal.toString());
+                            TextView name = view.findViewById(R.id.fragment_card_view_jobs_tv_name);
+                            name.setText(customerFinal.getName());
+                            TextView title = view.findViewById(R.id.fragment_card_view_jobs_tv_title);
+                            title.setText(servicesFinal.getTitle());
+                            CircleImageView image = view.findViewById(R.id.fragment_card_view_jobs_civ_photo);
+                            if(customerFinal.getImage() != "null"){
+                                Glide.with(view.getContext()).load(customerFinal.getImage()).into(image);
+                            }
+//                            if(servicesFinal.getSkill().equals("Carpenter")) {
+//                                title.setCompoundDrawablesRelativeWithIntrinsicBounds(ic_carpenter_tools_colour,null,null,null);
+//                            }
+//                            if(servicesFinal.getSkill().equals("Plumber")) {
+//                                title.setCompoundDrawablesRelativeWithIntrinsicBounds(ic_plumber_tools,null,null,null);
+//                            }
+//                            if(servicesFinal.getSkill().equals("Electrician")) {
+//                                title.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_electric_colour,null,null,null);
+//                            }
+//                            if(servicesFinal.getSkill().equals("Painter")) {
+//                                title.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_paint_roller,null,null,null);
+//                            }
+//                            if(servicesFinal.getSkill().equals("Constructor")) {
+//                                title.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_construction_colour,null,null,null);
+//                            }
+//                            if(servicesFinal.getSkill().equals("Chef")) {
+//                                title.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_cooking_colour,null,null,null);
+//                            }
                         } else {
                             Log.d("not fetched", "null");
                         }
@@ -192,7 +231,7 @@ public class CardVIewJobs extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                            Log.d("onFailure","null");
                     }
                 });
         return customerFinal;

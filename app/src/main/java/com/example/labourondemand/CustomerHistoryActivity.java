@@ -53,6 +53,7 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
     private Context context;
     private static final String TAG = "CustomerHistoryActivity";
     private CustomerHistoryAdapter customerHistoryAdapter;
+    private SessionManager sessionManager;
 //    private CustomerFinal customer;
 
 
@@ -64,6 +65,7 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
 
         customer = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
 
+        sessionManager = new SessionManager(getApplicationContext());
         toolbar = findViewById(R.id.customer_history_tb);
         drawerLayout = findViewById(R.id.customer_history_dl);
         navigationView = findViewById(R.id.customer_history_nv);
@@ -216,6 +218,7 @@ public class CustomerHistoryActivity extends AppCompatActivity implements Naviga
         } else if (id == R.id.nav_logout) {
 
             firebaseAuth.signOut();
+            sessionManager.logoutUser();
             Intent intent = new Intent(CustomerHistoryActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();

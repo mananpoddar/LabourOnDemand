@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,17 +53,20 @@ public class ServiceDescriptionFragment extends Fragment {
         return fragment;
     }
 
+    private ServicesFinal services;
+    private LabourerFinal labourerFinal;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            services = bundle.getParcelable("services");
+            services = (ServicesFinal) bundle.getSerializable("services");
+
         }
     }
 
-    private ServicesFinal services;
     private TextView tags, description, skill;
 
     @Override
@@ -76,9 +78,8 @@ public class ServiceDescriptionFragment extends Fragment {
         description = view.findViewById(R.id.service_description_tv_description);
         tags = view.findViewById(R.id.service_description_tv_tags);
 
-        Log.d("Service passed",services.toString());
-        skill.setText(services.getSkill());
-        description.setText(services.getDescription());
+        skill.setText(services.getSkill().toString());
+        description.setText(services.getDescription().toString());
         return view;
     }
 
