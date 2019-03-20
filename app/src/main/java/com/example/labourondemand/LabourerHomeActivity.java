@@ -338,8 +338,11 @@ public class LabourerHomeActivity extends AppCompatActivity implements Navigatio
 
                     return true;
                 case R.id.bottom_navigation_jobs:
-
+                    Intent intent = new Intent(LabourerHomeActivity.this, LabourerMainActivity.class);
+                    intent.putExtra("labourer",labourerFinal);
+                    startActivity(intent);
                     return true;
+
             }
             return false;
         }

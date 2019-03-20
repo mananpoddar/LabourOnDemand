@@ -52,8 +52,8 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
         firebaseAuth = FirebaseAuth.getInstance();
 
         if(getIntent().getExtras() != null) {
-            currentService = getIntent().getStringExtra("currentService");
-            labourer = (LabourerFinal) getIntent().getExtras().get("labourer");
+            //currentService = getIntent().getStringExtra("currentService");
+            //labourer = (LabourerFinal) getIntent().getExtras().get("labourer");
         }
 
         toolbar = findViewById(R.id.labourer_main_tb);
@@ -64,11 +64,11 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
         visibleText = findViewById(R.id.visible);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        dashboardAdapter = new DashboardAdapter(getApplicationContext(),new ArrayList<Services>(),0);
+        dashboardAdapter = new DashboardAdapter(LabourerMainActivity.this,new ArrayList<ServicesFinal>(),0);
         recyclerView.setAdapter(dashboardAdapter);
         recyclerView.setHasFixedSize(false);
 
-        if( currentService == null ){
+        /*if( currentService == null ){
 
             if(labourer.getName() == null) {
                 fetchFromFirebase();
@@ -78,7 +78,8 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
             visibleText.setVisibility(View.GONE);
         }else{
             visibleText.setVisibility(View.VISIBLE);
-        }
+        }*/
+        fetchFromFirebase();
 
         setSupportActionBar(toolbar);
 
@@ -113,9 +114,11 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                             labourer = documentSnapshot.toObject(LabourerFinal.class);
                             Log.d(tag, documentSnapshot.getData().toString() + "!");
 
-                            if (labourer.getCurrentService() == null) {
+                            if (labourer.getServices() != null) {
                                 Log.d("tagggg",labourer.getSkill()+"!");
-                                fetchServices();
+                                ArrayList<String> s = labourer.getServices();
+                                System.out.println(s.get(0));
+                                fetchServices(s);
                             }else{
 
                             }
@@ -133,35 +136,37 @@ public class LabourerMainActivity extends AppCompatActivity implements Navigatio
                 });
     }
 
-    private void fetchServices() {
+    private void fetchServices(ArrayList<String> laborservices) {
 
         firebaseFirestore.collection("services").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                            Services services = new Services() ;
+                            ServicesFinal services;
                             Log.d("tag",labourer.getSkill()+"!"+documentSnapshot.get("skill")+"!"+documentSnapshot.getData().toString());
-                            if(documentSnapshot.getString("skill").equals(labourer.getSkill())){
-                                services = documentSnapshot.toObject(Services.class);
-                                services.setServiceID(documentSnapshot.getId());
-                                final Services finalServices = services;
-                                firebaseFirestore.collection("customer").document(services.getCustomerUID()).get()
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            for(int i=0;i<laborservices.size();i++)
+                                if(documentSnapshot.getId().equals(laborservices.get(i))){
+                                    services = documentSnapshot.toObject(ServicesFinal.class);
+                                    services.setServiceId(documentSnapshot.getId());
 
-                                                finalServices.setCustomer(documentSnapshot.toObject(Customer.class));
-                                                dashboardAdapter.added(finalServices);
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.d(tag,"error fetchService2 : "+e.toString());
-                                            }
-                                        });
-                            }
+                                    final ServicesFinal finalServices = services;
+                                    firebaseFirestore.collection("customer").document(services.getCustomerUID()).get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                                    finalServices.setCustomer(documentSnapshot.toObject(CustomerFinal.class));
+                                                    dashboardAdapter.added(finalServices);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d(tag,"error fetchService2 : "+e.toString());
+                                                }
+                                            });
+                                }
                         }
                     }
                 })
