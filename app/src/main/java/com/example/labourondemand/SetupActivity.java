@@ -335,6 +335,8 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
             image = uri.toString();
         }
 
+        userMap.put("email",session.getEmail());
+        userMap.put("password",session.getPassword());
         userMap.put("name", name.getText().toString());
         userMap.put("phone", Long.valueOf(phone.getText().toString()));
         userMap.put("city", city.getText().toString());
@@ -354,12 +356,12 @@ public class SetupActivity extends AppCompatActivity /*implements DetailsSetupFr
             labourerFinal = new LabourerFinal(userId, name.getText().toString(), image, dob.getText().toString(), city.getText().toString(),
                     state.getText().toString(), a1.getText().toString(), a2.getText().toString(), a3.getText().toString(),
                     Long.valueOf(phone.getText().toString()), 0L, new ArrayList<String>(),false,selectedStrings,
-                    Long.valueOf(workExperience.getText().toString()));
+                    Long.valueOf(workExperience.getText().toString()), session.getEmail(), session.getPassword());
 
         } else {
             customerFinal = new CustomerFinal(userId, name.getText().toString(), image, dob.getText().toString(), city.getText().toString(),
                     state.getText().toString(), a1.getText().toString(), a2.getText().toString(), a3.getText().toString(),
-                    Long.valueOf(phone.getText().toString()), 0L, new ArrayList<String>());
+                    Long.valueOf(phone.getText().toString()), 0L, new ArrayList<String>(),session.getEmail(), session.getPassword());
             /*session.createProfileCustomer(name.getText().toString(),"null",dob.getText().toString(),city.getText().toString(),state.getText().toString(),
                     Long.valueOf(phone.getText().toString()),a1.getText().toString(),a2.getText().toString(),a3.getText().toString());*/
         }

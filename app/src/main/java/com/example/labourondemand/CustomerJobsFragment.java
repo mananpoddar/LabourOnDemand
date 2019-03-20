@@ -96,8 +96,9 @@ public class CustomerJobsFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private TextView noResponse;
-    private Button done;
     private ImageView skillPic;
+    private Button done, sort;
+    private TextView jobTitle, jobDescription, startTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,6 +119,16 @@ public class CustomerJobsFragment extends Fragment {
 //        //Setting the ArrayAdapter data on the Spinner
 //        spin.setAdapter(aa);
 
+        /*Spinner spin = (Spinner) view.findViewById(R.id.spinner);
+        spin.setOnItemSelectedListener();*/
+
+        jobTitle = view.findViewById(R.id.customer_jobs_title);
+        jobDescription = view.findViewById(R.id.customer_jobs_jobDescription);
+        startTime = view.findViewById(R.id.customer_jobs_start_time_tv);
+
+        jobTitle.setText(currentService.getTitle());
+        jobDescription.setText(currentService.getDescription());
+        startTime.setText(currentService.getStartTime());
 
         skillPic = view.findViewById(R.id.customer_jobs_toolbox);
 
@@ -141,9 +152,14 @@ public class CustomerJobsFragment extends Fragment {
         {
             skillPic.setImageDrawable(view.getContext().getDrawable(R.drawable.ic_cooking_colour));
         }
+       /* //Creating the ArrayAdapter instance having the country list
+        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,country);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        spin.setAdapter(aa);*/
 
         done = view.findViewById(R.id.customer_jobs_done_btn);
-
+        sort = view.findViewById(R.id.customer_jobs_sort_btn);
         Log.d("currentService", currentService.toString() + "!");
         Log.d("customerinFragment", customer.toString() + "!");
 
@@ -151,6 +167,14 @@ public class CustomerJobsFragment extends Fragment {
         if (currentService.getLabourers() == null) {
             currentService.setLabourers(new ArrayList<>());
         }
+
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortLabourerBasedOnPrice();
+            }
+        });
+
         customerJobsAdapter = new CustomerJobsAdapter(getActivity(), currentService);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(customerJobsAdapter);
@@ -159,6 +183,9 @@ public class CustomerJobsFragment extends Fragment {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Log.d("service in done",currentService.toString()+"!");
+                Log.d("service from adapter",customerJobsAdapter.getService().toString());
                 String st = "";
                 int mYear, mMonth, mDay, mHour, mMinute;
                 final Calendar c = Calendar.getInstance();
@@ -170,45 +197,45 @@ public class CustomerJobsFragment extends Fragment {
 
                 st = st+mYear+"/"+mMonth+"/"+mDay;
                 st = st+"/"+mHour+"/"+mMinute;
-               /* if(customerJobsAdapter.isDone()){
+                if(customerJobsAdapter.isDone()){
+                    firebaseFirestore.collection("service").document(currentService.getServiceId())
+                            .update("endTime",st)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    firebaseFirestore.collection("customer").document(customer.getId())
+                                            .update("notPaidService",currentService.getServiceId(),
+                                                    "notReviewedService",currentService.getServiceId())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Intent intent = new Intent(view.getContext(),PaymentActivity.class);
+                                                    intent.putExtra("service",currentService);
+                                                    intent.putExtra("customer",customer);
+                                                    startActivity(intent);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
 
+                                                }
+                                            });
+
+
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
                 }else{
-                    Toast.makeText(view.getContext(),"")
-                }*/
-
-               firebaseFirestore.collection("service").document(currentService.getServiceId())
-                       .update("endTime",st)
-                       .addOnSuccessListener(new OnSuccessListener<Void>() {
-                           @Override
-                           public void onSuccess(Void aVoid) {
-                               firebaseFirestore.collection("customer").document(customer.getId())
-                                       .update("notPaidService",currentService.getServiceId(),
-                                               "notReviewedService",currentService.getServiceId())
-                                       .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                           @Override
-                                           public void onSuccess(Void aVoid) {
-                                               Intent intent = new Intent(view.getContext(),PaymentActivity.class);
-                                               intent.putExtra("service",currentService);
-                                               intent.putExtra("customer",customer);
-                                               startActivity(intent);
-                                           }
-                                       })
-                                       .addOnFailureListener(new OnFailureListener() {
-                                           @Override
-                                           public void onFailure(@NonNull Exception e) {
-
-                                           }
-                                       });
+                    Toast.makeText(getContext(),"Labourer havent been assigned",Toast.LENGTH_LONG).show();
+                }
 
 
-                           }
-                       })
-                       .addOnFailureListener(new OnFailureListener() {
-                           @Override
-                           public void onFailure(@NonNull Exception e) {
-
-                           }
-                       });
             }
         });
 
@@ -226,7 +253,7 @@ public class CustomerJobsFragment extends Fragment {
                         if (snapshot != null && snapshot.exists()) {
                             Log.d(TAG, "Current data: " + snapshot.getData());
                             ServicesFinal updatedService = snapshot.toObject(ServicesFinal.class);
-
+                            updatedService.setServiceId(snapshot.getId());
                             customerJobsAdapter.clear();
                             customerJobsAdapter.setService(updatedService);
 

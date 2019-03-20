@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/service_amount_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingBottom="@dimen/padding_normal">
+
+        <TextView
+            android:id="@+id/service_amount_customer_amount_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_larger"
+            android:text="Customer Expectation"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_small" />
+
+        <TextView
+            android:id="@+id/service_amount_tv_customer_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1000"
+            android:textSize="@dimen/text_size_normal" />
+
+        <TextView
+            android:id="@+id/service_amount_tv_labourer_amount_label"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_larger"
+            android:text="Amount you Entered:"
+            android:ems="20"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_small" />
+
+        <TextView
+            android:id="@+id/service_amount_tiet_labourer_amount"
+            android:layout_width="match_parent"
+            android:inputType="number"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_normal"
+            android:hint="Amount"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary">
+        </TextView>
+
+
+
+    </LinearLayout>
+
+</ScrollView>

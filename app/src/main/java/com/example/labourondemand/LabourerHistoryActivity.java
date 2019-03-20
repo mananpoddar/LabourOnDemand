@@ -64,6 +64,7 @@ public class LabourerHistoryActivity extends AppCompatActivity implements Naviga
         navigationView.setCheckedItem(2);
         navigationView.setNavigationItemSelectedListener(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.getMenu().getItem(0).setChecked(true);
 
 
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

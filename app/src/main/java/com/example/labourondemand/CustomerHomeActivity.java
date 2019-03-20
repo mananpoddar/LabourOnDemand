@@ -425,11 +425,11 @@ public class CustomerHomeActivity extends AppCompatActivity implements OnMapRead
         } else if (id == R.id.nav_send) {
 
         } else if (id == R.id.nav_logout) {
-
-            /*firebaseAuth.signOut();
+            firebaseAuth.signOut();
+            session.logoutUser();
             Intent intent = new Intent(CustomerHomeActivity.this, LoginActivity.class);
             startActivity(intent);
-            finish();*/
+            finish();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

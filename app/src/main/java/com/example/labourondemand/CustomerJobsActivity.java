@@ -13,14 +13,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 public class CustomerJobsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        CustomerJobsFragment.OnFragmentInteractionListener{
+        CustomerJobsFragment.OnFragmentInteractionListener {
 
     protected DrawerLayout drawerLayout;
     protected NavigationView navigationView;
@@ -32,6 +35,8 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
     private CustomerFinal customer;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
+    private ArrayList<ServicesFinal> currentServices;
+    private SessionManager sessionManager;
 
 
     @SuppressLint("ResourceType")
@@ -45,6 +50,7 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
         navigationView = findViewById(R.id.customer_jobs_nv);
         navigation = findViewById(R.id.bottom_nav_view);
 
+        sessionManager = new SessionManager(getApplicationContext());
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         setSupportActionBar(toolbar);
@@ -56,24 +62,30 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.getMenu().getItem(2).setChecked(true);
 
-
-        Bundle bundle = new Bundle();
         customer = (CustomerFinal) getIntent().getSerializableExtra("customer");
-        bundle.putSerializable("customer", customer);
+        Log.d("customer Jobs", customer.toString() + "!");
 
         viewPager = findViewById(R.id.customer_jobs_vp);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        //there should be multiple jobs
-        CustomerJobsFragment customerJobsFragment1 = new CustomerJobsFragment();
-        CustomerJobsFragment customerJobsFragment2 = new CustomerJobsFragment();
+        currentServices = customer.getIncomingServices();
 
-        customerJobsFragment1.setArguments(bundle);
-        customerJobsFragment1.setArguments(bundle);
+        if(currentServices == null)
+        {
+            customer.setIncomingServices(new ArrayList<>());
+            currentServices = customer.getIncomingServices();
+        }
+
 
         //should be inside a for loop through all fragments
-        viewPagerAdapter.addFragment(customerJobsFragment1, "Job1");
-        viewPagerAdapter.addFragment(customerJobsFragment2, "Job2");
+        for (int i = 0; i < currentServices.size(); i++) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("customer", customer);
+            bundle.putSerializable("service", currentServices.get(i));
+            CustomerJobsFragment customerJobsFragment = new CustomerJobsFragment();
+            customerJobsFragment.setArguments(bundle);
+            viewPagerAdapter.addFragment(customerJobsFragment, "Job" + i);
+        }
 
         viewPager.setAdapter(viewPagerAdapter);
 
@@ -86,14 +98,14 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.bottom_navigation_home:
-                    Intent intent = new Intent(CustomerJobsActivity.this,CustomerHomeActivity.class);
-                    intent.putExtra("customer",customer);
+                    Intent intent = new Intent(CustomerJobsActivity.this, CustomerHomeActivity.class);
+                    intent.putExtra("customer", customer);
                     startActivity(intent);
                     finish();
                     return true;
                 case R.id.bottom_navigation_history:
-                    Intent intent1 = new Intent(CustomerJobsActivity.this,CustomerHistoryActivity.class);
-                    intent1.putExtra("customer",customer);
+                    Intent intent1 = new Intent(CustomerJobsActivity.this, CustomerHistoryActivity.class);
+                    intent1.putExtra("customer", customer);
                     startActivity(intent1);
                     finish();
                     return true;
@@ -144,6 +156,7 @@ public class CustomerJobsActivity extends AppCompatActivity implements Navigatio
         } else if (id == R.id.nav_logout) {
 
             firebaseAuth.signOut();
+            sessionManager.logoutUser();
             Intent intent = new Intent(CustomerJobsActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
