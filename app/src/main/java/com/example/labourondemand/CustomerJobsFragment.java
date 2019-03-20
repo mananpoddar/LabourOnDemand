@@ -198,9 +198,9 @@ public class CustomerJobsFragment extends Fragment {
                 st = st+mYear+"/"+mMonth+"/"+mDay;
                 st = st+"/"+mHour+"/"+mMinute;
                 if(customerJobsAdapter.isDone()){
-                    Log.d("isDONE",customerJobsAdapter.getService().getSelectedLabourers().size()+"!");
+                   Log.d("isDONE",customerJobsAdapter.getService().getCustomerUID()+"!");
 
-                    firebaseFirestore.collection("service").document(currentService.getServiceId())
+                    firebaseFirestore.collection("services").document(currentService.getServiceId())
                             .update("endTime",st)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -220,6 +220,7 @@ public class CustomerJobsFragment extends Fragment {
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
+                                                    Log.d("No Failure222",e.toString()+"!");
 
                                                 }
                                             });
@@ -230,7 +231,7 @@ public class CustomerJobsFragment extends Fragment {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-
+                                    Log.d("No Failure111",e.toString()+"!");
                                 }
                             });
                 }else{
