@@ -16,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.labourondemand.notifications.Api;
@@ -47,6 +49,8 @@ public class PaymentActivity extends AppCompatActivity {
     private LabourerAdapter labourerAdapter;
     private ProgressBar progressBar;
     private SessionManager sessionManager;
+    private TextView amount, title, endTime, numOfLabourers;
+    private ImageView skill;
 
 
     @Override
@@ -56,6 +60,13 @@ public class PaymentActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(getApplicationContext());
 
+        progressBar = findViewById(R.id.payment_pb);
+        title = findViewById(R.id.payment_title_tv);
+        amount = findViewById(R.id.payment_amount_tv);
+        endTime = findViewById(R.id.payment_end_time);
+        numOfLabourers = findViewById(R.id.payment_numOfLabourers);
+        skill = findViewById(R.id.payment_iv);
+
         toolbar = findViewById(R.id.payment_tb);
         toolbar.setTitle("Make Payment");
         setSupportActionBar(toolbar);
@@ -64,11 +75,11 @@ public class PaymentActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         servicesFinal = (ServicesFinal) getIntent().getExtras().getSerializable("services");
         customerFinal = (CustomerFinal) getIntent().getExtras().getSerializable("customer");
-        Log.d("customer Payment",customerFinal.toString()+"!");
-        Log.d("services Payment ",servicesFinal.toString()+"!");
+        Log.d("customer Payment", customerFinal.toString() + "!");
+        //Log.d("services Payment ",servicesFinal.toString()+"!");
 
         recyclerView = findViewById(R.id.payment_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         if (servicesFinal == null) {
             firebaseFirestore.collection("services").document(customerFinal.getNotPaidService())
@@ -78,8 +89,26 @@ public class PaymentActivity extends AppCompatActivity {
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             servicesFinal = documentSnapshot.toObject(ServicesFinal.class);
                             servicesFinal.setServiceId(documentSnapshot.getId());
+
+                            title.setText(servicesFinal.getTitle());
+                            numOfLabourers.setText(servicesFinal.getNumOfLabourers() + " Labourers");
+                            amount.setText((servicesFinal.getNumOfLabourers() * servicesFinal.getCustomerAmount()) + "");
+                            if (servicesFinal.getSkill().equals("Carpenter")) {
+                                skill.setImageDrawable(getDrawable(R.drawable.ic_carpenter_tools_colour));
+                            } else if (servicesFinal.getSkill().equals("Plumber")) {
+                                skill.setImageDrawable(getDrawable(R.drawable.ic_plumber_tools));
+                            } else if (servicesFinal.getSkill().equals("Electrician")) {
+                                skill.setImageDrawable(getDrawable(R.drawable.ic_electric_colour));
+                            } else if (servicesFinal.getSkill().equals("Painter")) {
+                                skill.setImageDrawable(getDrawable(R.drawable.ic_paint_roller));
+                            } else if (servicesFinal.getSkill().equals("Constructor")) {
+                                skill.setImageDrawable(getDrawable(R.drawable.ic_construction_colour));
+                            } else if (servicesFinal.getSkill().equals("Chef")) {
+                                skill.setImageDrawable(getDrawable(R.drawable.ic_cooking_colour));
+                            }
+
                             servicesFinal.setSelectedLabourers(new ArrayList<>());
-                            Log.d("servic Payment",servicesFinal.toString()+"!");
+                            Log.d("servic Payment", servicesFinal.toString() + "!");
                             labourerAdapter = new LabourerAdapter(getApplicationContext(), servicesFinal);
                             recyclerView.setAdapter(labourerAdapter);
                             for (String s : servicesFinal.getSelectedLabourerUID()) {
@@ -111,8 +140,26 @@ public class PaymentActivity extends AppCompatActivity {
                         }
                     });
         } else {
+
+            title.setText(servicesFinal.getTitle());
+            numOfLabourers.setText(servicesFinal.getNumOfLabourers() + " Labourers");
+            amount.setText((servicesFinal.getNumOfLabourers() * servicesFinal.getCustomerAmount()) + "");
+            if (servicesFinal.getSkill().equals("Carpenter")) {
+                skill.setImageDrawable(getDrawable(R.drawable.ic_carpenter_tools_colour));
+            } else if (servicesFinal.getSkill().equals("Plumber")) {
+                skill.setImageDrawable(getDrawable(R.drawable.ic_plumber_tools));
+            } else if (servicesFinal.getSkill().equals("Electrician")) {
+                skill.setImageDrawable(getDrawable(R.drawable.ic_electric_colour));
+            } else if (servicesFinal.getSkill().equals("Painter")) {
+                skill.setImageDrawable(getDrawable(R.drawable.ic_paint_roller));
+            } else if (servicesFinal.getSkill().equals("Constructor")) {
+                skill.setImageDrawable(getDrawable(R.drawable.ic_construction_colour));
+            } else if (servicesFinal.getSkill().equals("Chef")) {
+                skill.setImageDrawable(getDrawable(R.drawable.ic_cooking_colour));
+            }
+
             servicesFinal.setSelectedLabourers(new ArrayList<LabourerFinal>());
-            Log.d("payment SELECTEDLABOUR ",servicesFinal.toString()+"!");
+            Log.d("payment SELECTEDLABOUR ", servicesFinal.toString() + "!");
             labourerAdapter = new LabourerAdapter(this, servicesFinal);
             recyclerView.setAdapter(labourerAdapter);
 
@@ -144,93 +191,136 @@ public class PaymentActivity extends AppCompatActivity {
 
         pay = findViewById(R.id.payment_pay_btn);
 
+
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                check(v);
+            }
+        });
 
-                progressBar.setVisibility(View.VISIBLE);
-                firebaseFirestore.collection("customer").document(customerFinal.getId())
-                        .update("wallet", customerFinal.getWallet() - (servicesFinal.getNumOfLabourers() * servicesFinal.getCustomerAmount()),
-                                "notPaidService", null,
-                                "notReviewedService", servicesFinal.getServiceId())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                customerFinal.setWallet(customerFinal.getWallet() - (servicesFinal.getNumOfLabourers() * servicesFinal.getCustomerAmount()));
-                                sessionManager.saveCustomer(customerFinal);
-                                for (LabourerFinal labourerFinal : servicesFinal.getLabourers()) {
-                                    firebaseFirestore.collection("labourer").document(labourerFinal.getId())
-                                            .update("wallet", labourerFinal.getWallet() + servicesFinal.getCustomerAmount())
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    if (servicesFinal.getLabourers().indexOf(labourerFinal) == servicesFinal.getLabourers().size() - 1) {
-                                                        progressBar.setVisibility(View.GONE);
-                                                        Intent intent = new Intent(PaymentActivity.this, ReviewActivity.class);
-                                                        intent.putExtra("customer", customerFinal);
-                                                        intent.putExtra("services", labourerAdapter.getService());
-                                                        startActivity(intent);
-                                                        finish();
-                                                    }
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
+    }
 
-                                                }
-                                            });
-                                    firebaseFirestore.collection("labourer").document(labourerFinal.getId())
-                                            .get()
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    String token = documentSnapshot.getString("token");
-                                                    Retrofit retrofit = new Retrofit.Builder()
-                                                            .baseUrl("https://labourondemand-8e636.firebaseapp.com/api/")
-                                                            .addConverterFactory(GsonConverterFactory.create())
-                                                            .build();
+    public void check(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
 
-                                                    Api api = retrofit.create(Api.class);
-                                                    String title = "PAYMENT RECEIVED";
-                                                    String body = "payment received";
-                                                    Call<ResponseBody> call = api.sendNotification(token, title, body);
+// ...Irrelevant code for customizing the buttons and title
+        LayoutInflater inflater = LayoutInflater.from(v.getContext());
+        final View dialogView = inflater.inflate(R.layout.dialog_confirm_password, null);
+        builder.setView(dialogView);
 
-                                                    call.enqueue(new Callback<ResponseBody>() {
+        builder.setTitle("Confirm Password");
+                /*AlertDialog alertDialog = builder.create();
+                alertDialog.show();*/
+
+        builder.setPositiveButton("Verify", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText password = dialogView.findViewById(R.id.wallet_et_password);
+
+                if (password.getText().toString().equals(customerFinal.getPassword())) {
+                    // do payent
+                    compute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_LONG).show();
+
+                }
+
+
+            }
+
+        });
+        builder.setView(dialogView);
+        builder.show();
+    }
+
+    public void compute()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+
+        firebaseFirestore.collection("customer").document(customerFinal.getId())
+                .update("wallet", customerFinal.getWallet() - (servicesFinal.getNumOfLabourers() * servicesFinal.getCustomerAmount()),
+                        "notPaidService", null,
+                        "notReviewedService", servicesFinal.getServiceId())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        for (LabourerFinal labourerFinal : servicesFinal.getSelectedLabourers()) {
+                            firebaseFirestore.collection("labourer").document(labourerFinal.getId())
+                                    .update("wallet", labourerFinal.getWallet() + servicesFinal.getCustomerAmount())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            firebaseFirestore.collection("labourer").document(labourerFinal.getId())
+                                                    .get()
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                         @Override
-                                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                            try {
-                                                                Toast.makeText(context, response.body().string(), Toast.LENGTH_LONG).show();
-                                                            } catch (IOException e) {
-                                                                e.printStackTrace();
-                                                            }
+                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                            String token = documentSnapshot.getString("token");
+                                                            Retrofit retrofit = new Retrofit.Builder()
+                                                                    .baseUrl("https://labourondemand-8e636.firebaseapp.com/api/")
+                                                                    .addConverterFactory(GsonConverterFactory.create())
+                                                                    .build();
+
+                                                            Api api = retrofit.create(Api.class);
+                                                            String title = "Payment Received from " + customerFinal.getName();
+                                                            String body = "Job : " + servicesFinal.getTitle();
+                                                            Call<ResponseBody> call = api.sendNotification(token, title, body);
+
+                                                            call.enqueue(new Callback<ResponseBody>() {
+                                                                @Override
+                                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                                    try {
+                                                                        Toast.makeText(context, response.body().string(), Toast.LENGTH_LONG).show();
+                                                                    } catch (IOException e) {
+                                                                        e.printStackTrace();
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                                }
+                                                            });
                                                         }
-
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
                                                         @Override
-                                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                        public void onFailure(@NonNull Exception e) {
 
                                                         }
                                                     });
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
+                                            if (servicesFinal.getSelectedLabourers().indexOf(labourerFinal) == servicesFinal.getSelectedLabourers().size() - 1) {
+                                                customerFinal.setNotPaidService(null);
+                                                customerFinal.setWallet(customerFinal.getWallet() - (servicesFinal.getNumOfLabourers() * servicesFinal.getCustomerAmount()));
+                                                sessionManager.saveCustomer(customerFinal);
+                                                progressBar.setVisibility(View.GONE);
+                                                Intent intent = new Intent(PaymentActivity.this, ThankYouActivity.class);
+                                                intent.putExtra("customer", customerFinal);
+                                                intent.putExtra("services", labourerAdapter.getService());
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
 
-                                                }
-                                            });
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
+                                        }
+                                    });
+
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
 
-                            }
-                        });
-            }
-        });
+                    }
+                });
 
     }
 }

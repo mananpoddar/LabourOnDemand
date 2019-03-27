@@ -11,26 +11,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CustomerHistoryAdapter extends RecyclerView.Adapter<CustomerHistoryAdapter.ViewHolder> {
-
-    private static final String TAG = "LabourerHistoryRVAdapter";
+public class LabourerHistoryAdapter extends RecyclerView.Adapter<LabourerHistoryAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<ServicesFinal> services;
-    private View view;
+
     //    private ServicesFinal services;
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView jobImage, labourerImage;
@@ -50,21 +40,21 @@ public class CustomerHistoryAdapter extends RecyclerView.Adapter<CustomerHistory
         }
     }
 
-    public CustomerHistoryAdapter(Context context, ArrayList<ServicesFinal> services) {
+    public LabourerHistoryAdapter(Context context, ArrayList<ServicesFinal> services) {
         this.services = services;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public CustomerHistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LabourerHistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_labourer_history_item, parent, false);
-        CustomerHistoryAdapter.ViewHolder holder = new CustomerHistoryAdapter.ViewHolder(view);
+        LabourerHistoryAdapter.ViewHolder holder = new LabourerHistoryAdapter.ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomerHistoryAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull LabourerHistoryAdapter.ViewHolder viewHolder, int position) {
         ServicesFinal service = services.get(viewHolder.getAdapterPosition());
 
         viewHolder.jobcost.setText(String.valueOf(service.getCustomerAmount()));
@@ -96,7 +86,9 @@ public class CustomerHistoryAdapter extends RecyclerView.Adapter<CustomerHistory
             viewHolder.jobImage.setImageDrawable(context.getDrawable(R.drawable.ic_cooking_colour));
 
         }
+
         viewHolder.time.setText(service.getStartTime());
+
     }
 
     @Override
@@ -109,5 +101,4 @@ public class CustomerHistoryAdapter extends RecyclerView.Adapter<CustomerHistory
         services.add(servicesFinal);
         notifyItemInserted(services.indexOf(servicesFinal));
     }
-
 }
