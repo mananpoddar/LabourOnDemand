@@ -99,7 +99,10 @@ public class CustomerJobsAdapter extends RecyclerView.Adapter<CustomerJobsAdapte
         final LabourerFinal labourer = labourers.get(position);
         Glide.with(context).load(labourer.getImage()).into(holder.photo);
         holder.name.setText(labourer.getName());
-        holder.price.setText(String.valueOf(service.getLabourerResponses().get(labourer.getId())));
+        if(service.getLabourerResponses() != null){
+            holder.price.setText(String.valueOf(service.getLabourerResponses().get(labourer.getId())));
+        }
+
         holder.accept.setText("Accept");
         if (labourer.getAverageRating() == null) {
             holder.rating.setText("No Rating");
